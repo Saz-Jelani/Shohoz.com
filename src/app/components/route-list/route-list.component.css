@@ -1,0 +1,44 @@
+.panel {
+  background: #ffffff;
+  border: 1px solid #d8e6dd;
+  color: #1d2430;
+  box-shadow: 0 8px 18px rgba(16, 77, 53, 0.06);
+}
+
+.section-title {
+  font-size: 1.2rem;
+  color: #1c2d3a;
+  font-weight: 700;
+}
+
+.muted {
+  color: #6b7b8a;
+}
+
+.route-item {
+  padding: 0.9rem 0;
+  border-bottom: 1px solid #e6efea;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.route-item:last-child {
+  border-bottom: 0;
+}
+
+.route-name {
+  font-size: 1rem;
+  color: #1d2b39;
+}
+
+.fare {
+  color: #0a8e62;
+  font-weight: 700;
+}
+
+@media (max-width: 767.98px) {
+  .panel {
+    padding: 1rem !important;
+  }
+}

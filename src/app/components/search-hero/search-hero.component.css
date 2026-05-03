@@ -1,0 +1,209 @@
+.hero-wrap {
+  position: relative;
+  margin-bottom: 92px;
+}
+
+.hero-illustration {
+  height: 420px;
+  border-radius: 0 0 16px 16px;
+  background: #edf3ef00;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-banner-img {
+  width: 100%;
+  height: 79%;
+  object-fit: cover;
+  display: block;
+}
+
+.search-floating {
+  position: absolute;
+  left: 50%;
+  bottom: 119px;
+  transform: translateX(-50%);
+  width: min(1211px, calc(100% - 32px));
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 18px;
+  border: 1px solid #e3e7e4;
+  padding: 21px 20px 22px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.trip-toggle {
+  display: flex;
+  gap: 2.4rem;
+  margin-bottom: 15px;
+
+}
+
+.trip-btn {
+  border: 0;
+  background: transparent;
+  color: #9ca4af;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+}
+
+.trip-btn.active {
+  color: #111418;
+}
+
+.radio-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  border: 2px solid #b7bdc6;
+  display: inline-block;
+}
+
+.trip-btn.active .radio-dot {
+  border-color: #111418;
+  box-shadow: inset 0 0 0 4px #fff, inset 0 0 0 8px #111418;
+}
+
+.search-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 54px 1.15fr 1.12fr 160px;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.field-card {
+  border: 1px solid #d6dcda;
+  background: #fff;
+  border-radius: 12px;
+  padding: 5px 12px;
+  min-height: 54px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.field-card label {
+  color: #119663;
+  font-size: 1.05rem;
+  display: block;
+  margin-bottom: 2px;
+  line-height: 1.1;
+}
+
+.field-card input {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #98a1ad;
+  outline: none;
+  padding: 0;
+}
+
+.field-icon {
+  position: absolute;
+  top: 52%;
+  left: 14px;
+  transform: translateY(-50%);
+  color: #119663;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.field-icon.pin {
+  font-size: 0.95rem;
+}
+
+.field-card label,
+.field-card input {
+  padding-left: 20px;
+}
+
+.swap-btn {
+  border: 0;
+  background: transparent;
+  font-size: 1.85rem;
+  color: #193154;
+  padding: 0;
+  line-height: 1;
+}
+
+.search-btn {
+  border: 0;
+  border-radius: 12px;
+  background: #0e9f48;
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0.4px;
+  min-height: 54px;
+}
+
+.date-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.date-col input,
+.date-col label {
+  padding-left: 0;
+}
+
+@media (max-width: 991.98px) {
+  .hero-illustration {
+    height: 170px;
+  }
+
+  .search-floating {
+    position: static;
+    transform: none;
+    width: 100%;
+    margin-top: -24px;
+  }
+
+  .search-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .trip-btn {
+    font-size: 1.1rem;
+  }
+
+  .radio-dot {
+    width: 16px;
+    height: 16px;
+  }
+
+  .trip-btn.active .radio-dot {
+    box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 7px #111418;
+  }
+
+  .field-card label {
+    font-size: 0.92rem;
+  }
+
+  .field-card input {
+    font-size: 1.75rem;
+  }
+
+  .search-btn {
+    font-size: 1.1rem;
+    min-height: 56px;
+  }
+
+  .swap-btn {
+    justify-self: center;
+    transform: rotate(90deg);
+    font-size: 2rem;
+  }
+
+  .hero-wrap {
+    margin-bottom: 24px;
+  }
+}

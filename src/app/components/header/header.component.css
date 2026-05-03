@@ -1,0 +1,224 @@
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: #fff;
+  border-bottom: 1px solid #d9e2dc;
+  overflow: visible;
+}
+
+.nav-wrap {
+  padding: 13px 20px;
+  overflow: visible;
+}
+
+@media (min-width: 768px) {
+  .nav-wrap {
+    padding: 13px 40px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .nav-wrap {
+    padding: 11px 90px;
+  }
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+@media (min-width: 1200px) {
+  .brand-row {
+    gap: 3rem;
+  }
+}
+
+.logo {
+  width: 110px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.service-menu {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  overflow: visible;
+}
+
+@media (min-width: 1200px) {
+  .service-menu {
+    gap: 1.05rem;
+  }
+}
+
+.service-btn {
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 12px;
+  padding: 8px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 600;
+  color: #101820;
+  position: relative;
+  white-space: nowrap;
+  font-size: 0.95rem;
+  overflow: visible;
+}
+
+@media (min-width: 1200px) {
+  .service-btn {
+    padding: 10px 15px;
+    font-size: 1rem;
+  }
+}
+
+.service-btn.active {
+  border-color: #9ed5bb;
+  color: #0c935f;
+  background: #f4fbf7;
+}
+
+.service-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.beta {
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #fff;
+  background: #ff473a;
+  border-radius: 6px;
+  padding: 1px 5px;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.call-btn {
+  border: 0;
+  border-radius: 999px;
+  background: #f6921e;
+  color: #fff;
+  font-weight: 700;
+  padding: 9px 18px;
+}
+
+.login-link {
+  border: 0;
+  background: transparent;
+  color: #16233a;
+  font-size: 1.05rem;
+}
+
+.mobile-row,
+.menu-toggle-btn,
+.mobile-mode-menu {
+  display: none;
+}
+
+@media (max-width: 991.98px) {
+  .brand-row {
+    display: none;
+  }
+  
+  .mobile-row {
+    display: flex !important;
+  }
+  
+  .menu-toggle-btn {
+    display: inline-flex !important;
+  }
+
+  .mobile-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  .mobile-logo {
+    width: 94px;
+    height: 38px;
+    object-fit: contain;
+  }
+
+  .mobile-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .mobile-login {
+    border: 0;
+    background: transparent;
+    color: #17243b;
+    font-size: 1.1rem;
+    padding: 0;
+  }
+
+  .menu-toggle-btn {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 40px;
+    height: 36px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #d2e2d9;
+    border-radius: 8px;
+    background: #fff;
+  }
+
+  .menu-toggle-btn span {
+    width: 16px;
+    height: 2px;
+    background: #1a2a3f;
+  }
+
+  .mobile-mode-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: #fff;
+    border: 1px solid #dce8e1;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    padding: 0.45rem;
+    min-width: 120px;
+  }
+
+  .mobile-mode-menu.open {
+    display: block;
+  }
+
+  .mobile-mode-btn {
+    width: 100%;
+    border: 0;
+    text-align: left;
+    padding: 8px;
+    border-radius: 8px;
+    background: transparent;
+    font-weight: 600;
+  }
+
+  .mobile-mode-btn:hover {
+    background: #f3f9f6;
+  }
+}

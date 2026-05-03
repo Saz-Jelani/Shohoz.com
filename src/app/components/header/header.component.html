@@ -1,0 +1,42 @@
+<nav class="top-nav">
+  <div class="container nav-wrap">
+    <div class="brand-row">
+      <img src="assets/logo_icon.png" alt="Shohoz" class="logo" />
+
+      <div class="service-menu">
+        <button
+          *ngFor="let item of services"
+          type="button"
+          class="service-btn"
+          [class.active]="item.label === selectedMode"
+          (click)="item.label === 'Bus' || item.label === 'Train' ? selectMode(item.label) : null"
+        >
+          <img *ngIf="item.icon.includes('.png')" [src]="item.icon" alt="{{item.label}}" class="service-icon" />
+          <span *ngIf="!item.icon.includes('.png')" class="service-icon">{{ item.icon }}</span>
+          <span>{{ item.label }}</span>
+          <span *ngIf="item.beta" class="beta">BETA</span>
+        </button>
+      </div>
+
+      <div class="nav-actions">
+        <button type="button" class="call-btn">?? 16374</button>
+        <button type="button" class="login-link">Login</button>
+      </div>
+    </div>
+
+    <div class="mobile-row">
+      <img src="assets/logo_icon.png" alt="Shohoz" class="mobile-logo" />
+      <div class="mobile-actions">
+        <button type="button" class="mobile-login">Login</button>
+        <button type="button" class="menu-toggle-btn" (click)="toggleMobileMenu()" [attr.aria-expanded]="isMobileMenuOpen">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+      <div class="mobile-mode-menu" [class.open]="isMobileMenuOpen">
+        <button *ngFor="let mode of travelModes" type="button" class="mobile-mode-btn" (click)="selectMode(mode)">
+          {{ mode }}
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>

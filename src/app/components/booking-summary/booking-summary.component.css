@@ -1,0 +1,26 @@
+.panel {
+  background: #ffffff;
+  border: 1px solid #d8e6dd;
+  color: #1d2430;
+  box-shadow: 0 8px 18px rgba(16, 77, 53, 0.06);
+}
+
+.section-title {
+  font-size: 1.2rem;
+  color: #1c2d3a;
+  font-weight: 700;
+}
+
+.muted {
+  color: #6b7b8a;
+}
+
+.summary {
+  border-color: #c8e3d6;
+}
+
+.total-row {
+  border-top: 1px dashed #d3e6dc;
+  color: #0a8e62;
+  font-size: 1.05rem;
+}

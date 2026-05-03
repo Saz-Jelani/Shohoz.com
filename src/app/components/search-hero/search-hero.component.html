@@ -1,0 +1,45 @@
+<section class="hero-wrap">
+  <div class="hero-illustration">
+    <img src="assets/Picture2.png" alt="Shohoz hero banner" class="hero-banner-img" />
+  </div>
+
+  <div class="search-floating">
+    <div class="trip-toggle">
+      <button type="button" class="btn trip-btn" [class.active]="tripType === 'One Way'" (click)="setTripType('One Way')">
+        <span class="radio-dot"></span> One Way
+      </button>
+      <button type="button" class="btn trip-btn" [class.active]="tripType === 'Round Trip'" (click)="setTripType('Round Trip')">
+        <span class="radio-dot"></span> Round Way
+      </button>
+    </div>
+
+    <div class="search-grid">
+      <div class="field-card">
+        <span class="field-icon">➤</span>
+        <label>From</label>
+        <input [value]="fromCity" />
+      </div>
+
+      <button class="swap-btn" (click)="swapRoute()">⇄</button>
+
+      <div class="field-card">
+        <span class="field-icon pin">●</span>
+        <label>To</label>
+        <input [value]="toCity" />
+      </div>
+
+      <div class="field-card date-card">
+        <div class="date-col">
+          <label>Journey Date</label>
+          <input value="Pick a date" />
+        </div>
+        <div class="date-col">
+          <label>Return Date</label>
+          <input value="Pick a date" />
+        </div>
+      </div>
+
+      <button class="search-btn">SEARCH</button>
+    </div>
+  </div>
+</section>

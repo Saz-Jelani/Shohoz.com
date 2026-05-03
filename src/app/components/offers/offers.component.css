@@ -1,0 +1,33 @@
+.panel {
+  background: #ffffff;
+  border: 1px solid #d8e6dd;
+  color: #1d2430;
+  box-shadow: 0 8px 18px rgba(16, 77, 53, 0.06);
+}
+
+.section-title {
+  font-size: 1.2rem;
+  color: #1c2d3a;
+  font-weight: 700;
+}
+
+.offer {
+  padding: 0.85rem;
+  border-radius: 0.75rem;
+  border: 1px solid #e0ece5;
+  margin-bottom: 0.75rem;
+  background: #f8fcfa;
+}
+
+.offer:last-child {
+  margin-bottom: 0;
+}
+
+.offer-title {
+  font-size: 1rem;
+  color: #1b2a38;
+}
+
+.muted {
+  color: #6b7b8a;
+}
