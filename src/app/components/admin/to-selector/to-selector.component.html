@@ -1,0 +1,19 @@
+<div class="field-group" [class.locked]="disabled">
+  <label>To</label>
+  <label class="check-row">
+    <input type="checkbox" [disabled]="disabled" [checked]="isAllSelected" (change)="onToggleAll($any($event.target).checked)" />
+    <span>Select all</span>
+  </label>
+
+  <div class="to-list">
+    <label *ngFor="let location of availableLocations" class="check-row">
+      <input
+        type="checkbox"
+        [disabled]="disabled"
+        [checked]="isSelected(location)"
+        (change)="onToggleLocation(location, $any($event.target).checked)"
+      />
+      <span>{{ location }}</span>
+    </label>
+  </div>
+</div>

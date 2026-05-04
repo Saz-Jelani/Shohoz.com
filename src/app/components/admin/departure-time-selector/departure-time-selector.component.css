@@ -1,0 +1,19 @@
+.field-group {
+  background: #ffffff;
+  border: 1px solid #d8e3dc;
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 10px 24px rgb(18 47 31 / 8%);
+}
+
+.field-group.locked {
+  opacity: 0.58;
+}
+
+.time-list {
+  max-height: 200px;
+  overflow: auto;
+  display: grid;
+  gap: 4px;
+  color: #223e59;
+}

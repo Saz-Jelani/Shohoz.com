@@ -1,0 +1,30 @@
+<section class="login-page">
+  <div class="login-left">
+    <img [src]="slideImages[currentSlideIndex]" alt="Shohoz travel" />
+    <div class="left-overlay">
+      <h2>Think Tickets, Think Shohoz</h2>
+    </div>
+  </div>
+
+  <div class="login-right">
+    <div class="brand">shohoz</div>
+    <form class="login-card" (ngSubmit)="onSubmit()">
+      <h1>Welcome</h1>
+      <p class="sub">Login with your Shohoz account and enjoy a seamless journey across all services</p>
+
+      <label>Email <span>*</span></label>
+      <input type="email" name="email" [(ngModel)]="email" placeholder="Enter Your Email" required />
+
+      <label>Password <span>*</span></label>
+      <input type="password" name="password" [(ngModel)]="password" placeholder="••••••••" required />
+
+      <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+      <a class="forgot" href="javascript:void(0)">Forgot Password</a>
+
+      <button type="submit">Log In</button>
+      <p class="create">Don't have an account? <a routerLink="/register">Create Account</a></p>
+    </form>
+    <small class="copy">© Shohoz 2026</small>
+  </div>
+</section>

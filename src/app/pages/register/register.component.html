@@ -1,0 +1,60 @@
+<section class="register-page">
+  <div class="register-left">
+    <img [src]="slideImages[currentSlideIndex]" alt="Shohoz travel" />
+    <div class="left-overlay">
+      <h2>Think Tickets, Think Shohoz</h2>
+    </div>
+  </div>
+
+  <div class="register-right">
+    <div class="brand">shohoz</div>
+    <form class="register-card" (ngSubmit)="onSubmit()">
+      <h1>Create an account</h1>
+      <p class="sub">Create your account once and enjoy a seamless journey across all Shohoz services.</p>
+
+      <div class="grid-two">
+        <div>
+          <label>First Name <span>*</span></label>
+          <input type="text" name="firstName" [(ngModel)]="firstName" placeholder="Enter first name" required />
+        </div>
+        <div>
+          <label>Last Name <span>*</span></label>
+          <input type="text" name="lastName" [(ngModel)]="lastName" placeholder="Enter last name" required />
+        </div>
+      </div>
+
+      <div class="grid-two">
+        <div>
+          <label>Mobile Number <span>*</span></label>
+          <input type="text" name="mobile" [(ngModel)]="mobile" placeholder="Enter your mobile number" required />
+        </div>
+        <div>
+          <label>Email <span>*</span></label>
+          <input type="email" name="email" [(ngModel)]="email" placeholder="Enter your email" required />
+        </div>
+      </div>
+
+      <div>
+        <label>Gender <span>*</span></label>
+        <div class="gender-row">
+          <button type="button" [class.active]="gender === 'Male'" (click)="gender = 'Male'">Male</button>
+          <button type="button" [class.active]="gender === 'Female'" (click)="gender = 'Female'">Female</button>
+        </div>
+      </div>
+
+      <div>
+        <label>Password <span>*</span></label>
+        <input type="password" name="password" [(ngModel)]="password" placeholder="••••••••" required />
+      </div>
+
+      <div>
+        <label>Confirm Password <span>*</span></label>
+        <input type="password" name="confirmPassword" [(ngModel)]="confirmPassword" placeholder="••••••••" required />
+      </div>
+
+      <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+      <button class="submit-btn" type="submit">Create Account</button>
+      <p class="switch">Already have an account? <a routerLink="/login">Login</a></p>
+    </form>
+  </div>
+</section>

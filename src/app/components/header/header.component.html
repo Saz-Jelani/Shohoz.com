@@ -20,14 +20,14 @@
 
       <div class="nav-actions">
         <button type="button" class="call-btn">?? 16374</button>
-        <button type="button" class="login-link">Login</button>
+        <button type="button" class="login-link" routerLink="/login">Login</button>
       </div>
     </div>
 
     <div class="mobile-row">
       <img src="assets/logo_icon.png" alt="Shohoz" class="mobile-logo" />
       <div class="mobile-actions">
-        <button type="button" class="mobile-login">Login</button>
+        <button type="button" class="mobile-login" routerLink="/login">Login</button>
         <button type="button" class="menu-toggle-btn" (click)="toggleMobileMenu()" [attr.aria-expanded]="isMobileMenuOpen">
           <span></span><span></span><span></span>
         </button>

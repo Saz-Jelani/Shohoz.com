@@ -1,0 +1,25 @@
+.field-group {
+  background: #ffffff;
+  border: 1px solid #d8e3dc;
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 10px 24px rgb(18 47 31 / 8%);
+}
+
+.field-group.locked {
+  opacity: 0.58;
+}
+
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  color: #213a54;
+}
+
+.to-list {
+  max-height: 200px;
+  overflow: auto;
+  margin-top: 8px;
+}

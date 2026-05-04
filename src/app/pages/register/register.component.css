@@ -1,0 +1,173 @@
+.register-page {
+  height: 100vh;
+  background: #f4f5f4;
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  overflow: hidden;
+}
+
+.register-left img {
+  width: 95%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0 64px 64px 0;
+}
+
+.left-overlay {
+  position: absolute;
+  left: 30px;
+  bottom: 40px;
+  color: #fff;
+}
+
+.left-overlay h2 {
+  margin: 0;
+  font-size: clamp(1.9rem, 3vw, 3rem);
+  font-weight: 800;
+}
+
+.register-left {
+  position: relative;
+  height: 100vh;
+}
+
+.register-right {
+  height: 100vh;
+  padding: 14px 32px 12px;
+  overflow: hidden;
+}
+
+.brand {
+  margin-left: auto;
+  width: fit-content;
+  color: #0b9e49;
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.register-card {
+  width: min(720px, 100%);
+  margin: 8px auto 0;
+  display: grid;
+  gap: 8px;
+}
+
+.register-card h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.sub {
+  margin: 0 0 6px;
+  color: #3d4d5f;
+  font-size: 1rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 3px;
+  color: #2e4051;
+  font-size: 1rem;
+}
+
+label span {
+  color: #ff4b4b;
+}
+
+input {
+  width: 100%;
+  min-height: 42px;
+  border-radius: 12px;
+  border: 1px solid #cdd8d2;
+  background: transparent;
+  padding: 0 14px;
+  font-size: 1rem;
+}
+
+.grid-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.gender-row {
+  display: flex;
+  gap: 10px;
+}
+
+.gender-row button {
+  min-height: 42px;
+  min-width: 92px;
+  border: 1px solid #cdd8d2;
+  border-radius: 10px;
+  background: #fff;
+  color: #1f3550;
+  font-size: 1rem;
+}
+
+.gender-row button.active {
+  border-color: #0e9f48;
+  color: #0e9f48;
+}
+
+.verify-box {
+  margin-top: 6px;
+  width: 280px;
+  min-height: 46px;
+  background: #2f3135;
+  color: #fff;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+}
+
+.submit-btn {
+  min-height: 42px;
+  border: 0;
+  border-radius: 12px;
+  background: #0e9f48;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.switch {
+  text-align: center;
+  color: #374a5c;
+  font-size: 1rem;
+}
+
+.switch a {
+  color: #008348;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.error {
+  color: #c52f2f;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 991.98px) {
+  .register-page {
+    height: auto;
+    grid-template-columns: 1fr;
+    overflow: visible;
+  }
+
+  .register-left {
+    display: none;
+  }
+
+  .register-right {
+    height: auto;
+    padding: 16px;
+    overflow: visible;
+  }
+
+  .grid-two {
+    grid-template-columns: 1fr;
+  }
+}

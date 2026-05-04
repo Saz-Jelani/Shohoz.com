@@ -1,0 +1,55 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
+})
+export class LoginComponent implements OnInit, OnDestroy {
+  email = '';
+  password = '';
+  errorMessage = '';
+
+  readonly slideImages: string[] = [
+    encodeURI('assets/log_reg/download (1).jpg'),
+    encodeURI('assets/log_reg/download (2).jpg'),
+    encodeURI('assets/log_reg/download.jpg'),
+    encodeURI('assets/log_reg/Good Evening.jpg'),
+    encodeURI('assets/log_reg/sunset bus.jpg')
+  ];
+  currentSlideIndex = 0;
+  private slideTimer?: ReturnType<typeof setInterval>;
+
+  constructor(private readonly authService: AuthService, private readonly router: Router) {}
+
+  ngOnInit(): void {
+    this.slideTimer = setInterval(() => {
+      this.currentSlideIndex = (this.currentSlideIndex + 1) % this.slideImages.length;
+    }, 2000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.slideTimer) {
+      clearInterval(this.slideTimer);
+    }
+  }
+
+  onSubmit(): void {
+    this.errorMessage = '';
+    this.authService.login(this.email, this.password).subscribe({
+      next: (ok) => {
+        if (ok) {
+          this.router.navigate(['/']);
+          return;
+        }
+
+        this.errorMessage = 'Invalid email or password';
+      },
+      error: () => {
+        this.errorMessage = 'Server connection failed. Run: npm run db';
+      }
+    });
+  }
+}

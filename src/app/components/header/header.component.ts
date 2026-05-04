@@ -9,6 +9,7 @@ export class HeaderComponent {
   @Input() travelModes: string[] = [];
   @Input() selectedMode = 'Bus';
   @Output() modeChange = new EventEmitter<string>();
+  @Output() serviceClick = new EventEmitter<string>();
 
   isMobileMenuOpen = false;
   services = [
@@ -22,6 +23,7 @@ export class HeaderComponent {
 
   selectMode(mode: string): void {
     this.modeChange.emit(mode);
+    this.serviceClick.emit(mode);
     this.isMobileMenuOpen = false;
   }
 

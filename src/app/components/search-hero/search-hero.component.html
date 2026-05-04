@@ -1,10 +1,10 @@
-<section class="hero-wrap">
-  <div class="hero-illustration">
+<section class="hero-wrap" [class.compact-mode]="compactView">
+  <div class="hero-illustration" *ngIf="!compactView">
     <img src="assets/Picture2.png" alt="Shohoz hero banner" class="hero-banner-img" />
   </div>
 
   <div class="search-floating">
-    <div class="trip-toggle">
+    <div class="trip-toggle" *ngIf="!showInlineResults">
       <button type="button" class="btn trip-btn" [class.active]="tripType === 'One Way'" (click)="setTripType('One Way')">
         <span class="radio-dot"></span> One Way
       </button>
@@ -15,31 +15,194 @@
 
     <div class="search-grid">
       <div class="field-card">
-        <span class="field-icon">➤</span>
-        <label>From</label>
-        <input [value]="fromCity" />
+        <span class="field-icon">&#10148;</span>
+        <label *ngIf="!showInlineResults">From</label>
+        <input
+          [(ngModel)]="fromCity"
+          [placeholder]="fromPlaceholder"
+          (input)="onCityInput('from')"
+          (focus)="onCityFocus('from')"
+          (blur)="hideDropdown('from')"
+        />
+        <ul class="suggestion-list" *ngIf="showFromDropdown && fromSuggestions.length > 0">
+          <li *ngFor="let district of fromSuggestions" (mousedown)="selectSuggestion('from', district)">
+            {{ district }}
+          </li>
+        </ul>
       </div>
 
-      <button class="swap-btn" (click)="swapRoute()">⇄</button>
+      <button class="swap-btn" type="button" (click)="swapRoute()">&#8644;</button>
 
       <div class="field-card">
-        <span class="field-icon pin">●</span>
-        <label>To</label>
-        <input [value]="toCity" />
+        <span class="field-icon pin">&#9679;</span>
+        <label *ngIf="!showInlineResults">To</label>
+        <input
+          [(ngModel)]="toCity"
+          [placeholder]="toPlaceholder"
+          (input)="onCityInput('to')"
+          (focus)="onCityFocus('to')"
+          (blur)="hideDropdown('to')"
+        />
+        <ul class="suggestion-list" *ngIf="showToDropdown && toSuggestions.length > 0">
+          <li *ngFor="let district of toSuggestions" (mousedown)="selectSuggestion('to', district)">
+            {{ district }}
+          </li>
+        </ul>
       </div>
 
       <div class="field-card date-card">
         <div class="date-col">
-          <label>Journey Date</label>
-          <input value="Pick a date" />
+          <label *ngIf="!showInlineResults">Journey Date</label>
+          <label
+            *ngIf="!journeyDate"
+            class="add-journey-trigger"
+            role="button"
+            tabindex="0"
+            (click)="openJourneyPicker(journeyDateInput)"
+            (keydown.enter)="openJourneyPicker(journeyDateInput)"
+          >
+            Pick a date
+          </label>
+          <input
+            #journeyDateInput
+            type="date"
+            [(ngModel)]="journeyDate"
+            [min]="today"
+            (ngModelChange)="onJourneyDateChange()"
+            [class.hidden-return-input]="!journeyDate"
+          />
         </div>
-        <div class="date-col">
-          <label>Return Date</label>
-          <input value="Pick a date" />
+        <div class="date-col return-col">
+          <label *ngIf="returnDate && !showInlineResults" class="return-date-label">Return Date</label>
+          <label
+            *ngIf="!returnDate"
+            class="add-return-trigger"
+            role="button"
+            tabindex="0"
+            (click)="openReturnPicker(returnDateInput)"
+            (keydown.enter)="openReturnPicker(returnDateInput)"
+          >
+            {{ showInlineResults ? '+ ADD RETURN' : '+ ADD RETURN TRIP' }}
+          </label>
+          <input
+            #returnDateInput
+            type="date"
+            [(ngModel)]="returnDate"
+            [min]="journeyDate || today"
+            [class.hidden-return-input]="!returnDate"
+          />
         </div>
       </div>
 
-      <button class="search-btn">SEARCH</button>
+      <button class="search-btn" type="button" (click)="onSearch()">SEARCH</button>
+    </div>
+  </div>
+
+  <div class="progress-strip" *ngIf="showInlineResults">
+    <div class="container progress-inner">
+      <span class="active-step">Choose Departing Ticket</span>
+      <span>Passenger Details</span>
+      <span>Review &amp; Pay</span>
+    </div>
+  </div>
+</section>
+
+<section class="result-wrap container" *ngIf="showInlineResults && (searchResults.length > 0 || errorMessage)">
+  <p class="search-error" *ngIf="errorMessage">{{ errorMessage }}</p>
+  <div class="results-layout">
+    <aside class="filters-panel">
+      <div class="filter-head">
+        <h4>Filters</h4>
+        <button type="button" (click)="resetFilters()">RESET</button>
+      </div>
+
+      <label class="filter-label">BUS TYPE</label>
+      <label class="check-item"><input type="checkbox" [(ngModel)]="filterAc" /> AC</label>
+      <label class="check-item"><input type="checkbox" [(ngModel)]="filterNonAc" /> Non AC</label>
+
+      <label class="filter-label">OPERATOR</label>
+      <select [(ngModel)]="selectedOperator"><option value="">Search Operator</option><option *ngFor="let op of operatorOptions" [value]="op">{{ op }}</option></select>
+
+      <label class="filter-label">BOARDING POINT</label>
+      <select [(ngModel)]="selectedBoarding"><option value="">Search Boarding</option><option *ngFor="let bp of boardingOptions" [value]="bp">{{ bp }}</option></select>
+
+      <label class="filter-label">DROPPING POINT</label>
+      <select [(ngModel)]="selectedDropping"><option value="">Search Dropping</option><option *ngFor="let dp of droppingOptions" [value]="dp">{{ dp }}</option></select>
+
+      <label class="filter-label">DEPARTURE TIME</label>
+      <button type="button" class="time-pill" [class.active]="departureWindow==='afternoon'" (click)="departureWindow='afternoon'">Afternoon 12:00 PM - 06:00 PM</button>
+      <button type="button" class="time-pill" [class.active]="departureWindow==='evening'" (click)="departureWindow='evening'">Evening After 06:00 PM</button>
+
+      <label class="filter-label">ARRIVAL TIME</label>
+      <button type="button" class="time-pill" [class.active]="arrivalWindow==='early'" (click)="arrivalWindow='early'">Early Morning Before 06:00 AM</button>
+      <button type="button" class="time-pill" [class.active]="arrivalWindow==='morning'" (click)="arrivalWindow='morning'">Morning 06:00 AM - 12:00 PM</button>
+      <button type="button" class="time-pill" [class.active]="arrivalWindow==='afternoon'" (click)="arrivalWindow='afternoon'">Afternoon 12:00 PM - 06:00 PM</button>
+    </aside>
+
+    <div class="cards-col">
+      <div class="top-sort-bar">
+        <button type="button" [class.active]="fareSort==='asc'" (click)="fareSort='asc'">LOW TO HIGH</button>
+        <button type="button" [class.active]="fareSort==='desc'" (click)="fareSort='desc'">HIGH TO LOW</button>
+      </div>
+
+      <article class="bus-card" *ngFor="let bus of sortedFilteredSearchResults">
+        <div class="bus-head-row">
+          <div class="operator-block">
+            <img [src]="bus.operatorImage || 'assets/operators/green-line.svg'" [alt]="bus.operatorName" class="operator-logo" />
+            <div>
+              <h3>{{ bus.operatorName }}</h3>
+              <p>{{ bus.busName }} | {{ bus.serviceType }}</p>
+              <p class="route-line">Route: {{ bus.from }} - {{ bus.to }}</p>
+            </div>
+          </div>
+
+          <div class="time-block">
+            <strong>{{ bus.departureTime }}</strong>
+            <span>{{ formatDateLabel(bus.departureDate) }}</span>
+            <small>{{ bus.from }}</small>
+          </div>
+
+          <div class="duration-block">
+            <span class="duration-text">{{ getDuration(bus) }}</span>
+            <div class="duration-line">
+              <span class="duration-icon">&#128652;</span>
+              <span class="duration-track"></span>
+              <span class="duration-dot"></span>
+            </div>
+          </div>
+
+          <div class="time-block">
+            <strong>{{ bus.arrivalTime }}</strong>
+            <span>{{ formatDateLabel(bus.departureDate) }}</span>
+            <small>{{ bus.to }}</small>
+          </div>
+
+          <div class="price-block">
+            <div class="fare-book-row">
+              <div class="fare-col">
+                <strong class="old-price" *ngIf="getDiscountAmount(bus) > 0">&#2547;{{ bus.price }}</strong>
+                <strong class="new-price">&#2547;{{ getDisplayPrice(bus) }}</strong>
+              </div>
+              <div class="book-col">
+                <button type="button" disabled>BOOK TICKET</button>
+                <span><b>{{ getAvailableSeats(bus) }}</b> Seat(s) Available</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="discount-strip" *ngIf="getDiscountAmount(bus) > 0">
+          Get {{ getDiscountAmount(bus) }} TK Discount
+        </div>
+
+        <div class="meta-row">
+          <span>Cancellation Policy</span>
+          <span>Boarding Point</span>
+          <span>Dropping Point</span>
+          <span>Amenities</span>
+          <strong>Info: Departs from {{ bus.from }} on {{ bus.departureDate }} at {{ bus.departureTime }}</strong>
+        </div>
+      </article>
     </div>
   </div>
 </section>

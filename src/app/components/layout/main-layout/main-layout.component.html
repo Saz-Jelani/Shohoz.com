@@ -1,0 +1,12 @@
+<div class="layout-shell">
+  <app-header
+    [travelModes]="travelModes"
+    [selectedMode]="selectedMode"
+    (modeChange)="onModeChange($event)"
+    (serviceClick)="onServiceClick($event)"
+  ></app-header>
+  <main class="layout-content">
+    <router-outlet></router-outlet>
+  </main>
+  <app-footer></app-footer>
+</div>

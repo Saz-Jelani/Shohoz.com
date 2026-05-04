@@ -1,6 +1,9 @@
 .top-nav {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
   z-index: 1000;
   background: #fff;
   border-bottom: 1px solid #d9e2dc;
@@ -168,7 +171,7 @@
     border: 0;
     background: transparent;
     color: #17243b;
-    font-size: 1.1rem;
+    font-size: 1rem;
     padding: 0;
   }
 

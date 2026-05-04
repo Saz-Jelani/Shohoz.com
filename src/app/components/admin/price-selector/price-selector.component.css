@@ -1,0 +1,31 @@
+.field-group {
+  background: #ffffff;
+  border: 1px solid #d8e3dc;
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 10px 24px rgb(18 47 31 / 8%);
+}
+
+.field-group.locked {
+  opacity: 0.58;
+}
+
+.price-grid {
+  border-top: 1px solid #e5ece8;
+  margin-top: 8px;
+  padding-top: 10px;
+}
+
+h4 {
+  margin: 0 0 6px;
+  color: #16304b;
+}
+
+.radio-pack {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  color: #243f5a;
+}

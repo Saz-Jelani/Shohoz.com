@@ -1,0 +1,264 @@
+<section class="admin-wrap container">
+  <div class="title-row">
+    <h1>Bus Management Console</h1>
+    <p>Select route details with controlled step-by-step flow.</p>
+  </div>
+
+  <div class="top-grid">
+    <div class="field-group">
+      <label>From</label>
+      <select [ngModel]="selectedFrom" (ngModelChange)="onFromChange($event)">
+        <option value="">Select location</option>
+        <option *ngFor="let location of locations" [value]="location">{{ location }}</option>
+      </select>
+      <label class="mt8">Departure Date</label>
+      <input type="date" [min]="today" [ngModel]="selectedDepartureDate" (ngModelChange)="onDepartureDateChange($event)" />
+    </div>
+
+    <div class="field-group" [class.locked]="!canPickOperator">
+      <label>Operator Name</label>
+      <select [disabled]="!canPickOperator" [ngModel]="selectedOperatorId" (ngModelChange)="onOperatorChange($event)">
+        <option [ngValue]="null">Select operator</option>
+        <option *ngFor="let operator of operators" [ngValue]="operator.id">{{ operator.label }}</option>
+      </select>
+      <img *ngIf="selectedOperatorLogo" [src]="selectedOperatorLogo" alt="Operator" class="operator-preview" />
+    </div>
+
+    <div class="field-group" [class.locked]="!canPickBusName">
+      <label>Bus Name</label>
+      <select [disabled]="!canPickBusName" [ngModel]="selectedBusNameId" (ngModelChange)="onBusNameChange($event)">
+        <option [ngValue]="null">Select bus name</option>
+        <option *ngFor="let bus of busNames" [ngValue]="bus.id">{{ bus.label }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="field-group bus-no-group" [class.locked]="!canPickBusNumber">
+    <label>Bus Number (Max 3)</label>
+    <p class="hint">Format: 0 + operatorId + busNameId + serial (example: 0111, 0112, 0113)</p>
+    <div class="bus-no-list">
+      <label *ngFor="let busNo of generatedBusNumbers">
+        <input
+          type="checkbox"
+          [disabled]="!canPickBusNumber || (!selectedBusNumbers.includes(busNo) && selectedBusNumbers.length >= 3) || !isBusSelectableFrom(busNo)"
+          [checked]="selectedBusNumbers.includes(busNo)"
+          (change)="onBusNumberToggle(busNo, $any($event.target).checked)"
+        />
+        {{ busNo }}
+        <small
+          *ngIf="getBusBookedText(busNo)"
+          class="bus-booked-note"
+          role="button"
+          tabindex="0"
+          (click)="showBusBookedNotice(busNo)"
+          (keydown.enter)="showBusBookedNotice(busNo)"
+        >
+          <span class="info-dot">i</span> {{ getBusBookedText(busNo) }}
+        </small>
+      </label>
+    </div>
+  </div>
+
+  <div class="trip-list" *ngIf="busTripConfigs.length > 0">
+    <article class="trip-card" *ngFor="let trip of busTripConfigs; let i = index; trackBy: trackByBusNumber">
+      <h3>Bus {{ i + 1 }}: {{ trip.busNumber }}</h3>
+
+      <div class="trip-grid">
+        <div>
+          <label>Departure Time</label>
+          <select [ngModel]="trip.departureTime" (ngModelChange)="updateTrip(trip.busNumber, 'departureTime', $event)">
+            <option value="">Select departure</option>
+            <option *ngFor="let time of timeOptions" [value]="time">{{ time }}</option>
+          </select>
+        </div>
+
+        <div class="boarding-group">
+          <label>Boarding Points ({{ selectedFrom }})</label>
+          <div class="point-row" *ngFor="let point of trip.boardingPoints; let pointIndex = index; trackBy: trackByIndex">
+            <input
+              type="text"
+              [disabled]="isBoardingDisabled(trip)"
+              [ngModel]="point"
+              (ngModelChange)="updateBoardingPoint(trip.busNumber, pointIndex, $event)"
+              placeholder="Boarding point name"
+            />
+            <span class="time-chip">{{ trip.boardingPointTimes[pointIndex] || getBoardingPointTime(trip.departureTime, pointIndex) }}</span>
+          </div>
+          <button type="button" class="mini-btn add-btn" [disabled]="isBoardingDisabled(trip)" (click)="addBoardingPoint(trip.busNumber)">Add Boarding Point</button>
+        </div>
+
+        <div>
+          <label>To (only one)</label>
+          <select [disabled]="isToDisabled(trip)" [ngModel]="trip.to" (ngModelChange)="updateTrip(trip.busNumber, 'to', $event)">
+            <option value="">Select destination</option>
+            <option *ngFor="let location of availableToLocations" [value]="location">{{ location }}</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Service Type (AC / Non AC)</label>
+          <div class="type-row">
+            <label>
+              <input
+                type="radio"
+                [disabled]="isServiceTypeDisabled(trip)"
+                [name]="'service-' + trip.busNumber"
+                [checked]="trip.serviceType === 'AC'"
+                (change)="onTripTypeChange(trip.busNumber, 'AC')"
+              />
+              AC
+            </label>
+            <label>
+              <input
+                type="radio"
+                [disabled]="isServiceTypeDisabled(trip)"
+                [name]="'service-' + trip.busNumber"
+                [checked]="trip.serviceType === 'Non AC'"
+                (change)="onTripTypeChange(trip.busNumber, 'Non AC')"
+              />
+              Non AC
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label>Price</label>
+          <div class="price-row" *ngIf="trip.serviceType === 'AC'">
+            <label *ngFor="let fare of acPriceOptions">
+              <input
+                type="radio"
+                [disabled]="isPriceDisabled(trip)"
+                [name]="'price-' + trip.busNumber"
+                [checked]="trip.price === fare"
+                (change)="onTripPriceChange(trip.busNumber, fare)"
+              />
+              {{ fare }}
+            </label>
+          </div>
+          <div class="price-row" *ngIf="trip.serviceType === 'Non AC'">
+            <label *ngFor="let fare of nonAcPriceOptions">
+              <input
+                type="radio"
+                [disabled]="isPriceDisabled(trip)"
+                [name]="'price-' + trip.busNumber"
+                [checked]="trip.price === fare"
+                (change)="onTripPriceChange(trip.busNumber, fare)"
+              />
+              {{ fare }}
+            </label>
+          </div>
+          <label class="mt8">Discount Amount (Optional)</label>
+          <input
+            type="number"
+            [disabled]="isPriceDisabled(trip) || !trip.price"
+            [ngModel]="trip.discountPrice"
+            (ngModelChange)="onTripDiscountPriceChange(trip.busNumber, $event)"
+            [attr.max]="trip.price || null"
+            min="1"
+            placeholder="Enter discount amount"
+          />
+          <p class="hint" *ngIf="trip.price && trip.discountPrice">Final Fare: {{ trip.price - trip.discountPrice }} TK</p>
+          <p class="hint" *ngIf="trip.price && !trip.discountPrice">Discount amount must be less than selected price.</p>
+          <p class="hint" *ngIf="!trip.serviceType">Select AC or Non AC first.</p>
+        </div>
+
+        <div>
+          <label>Arrival Time</label>
+          <select [disabled]="isArrivalDisabled(trip)" [ngModel]="trip.arrivalTime" (ngModelChange)="updateTrip(trip.busNumber, 'arrivalTime', $event)">
+            <option value="">Select arrival</option>
+            <option *ngFor="let time of timeOptions" [value]="time">{{ time }}</option>
+          </select>
+          <p class="hint" *ngIf="trip.departureTime && trip.arrivalTime">
+            Total Time: {{ getTravelDuration(trip.departureTime, trip.arrivalTime) }}
+          </p>
+        </div>
+      </div>
+
+      <div class="seat-section" *ngIf="trip.arrivalTime">
+        <h4>Seat View (40)</h4>
+        <div class="bus-shell">
+          <div class="bus-head">
+            <span class="door-mark">Door</span>
+            <div class="right-cockpit">
+              <span class="steer-mark">
+                <img src="assets/steering-wheel.svg" alt="Steering" />
+              </span>
+              <span class="driver-mark">Driver Seat</span>
+            </div>
+          </div>
+          <div class="seat-map">
+            <div class="seat-row" *ngFor="let row of getSeatRows()">
+              <button
+                type="button"
+                class="seat-btn"
+                [class.unavailable]="isSeatUnavailable(trip, row.leftA)"
+                (click)="toggleSeat(trip.busNumber, row.leftA)"
+              >
+                {{ row.leftA }}
+              </button>
+              <button
+                type="button"
+                class="seat-btn"
+                [class.unavailable]="isSeatUnavailable(trip, row.leftB)"
+                (click)="toggleSeat(trip.busNumber, row.leftB)"
+              >
+                {{ row.leftB }}
+              </button>
+              <div class="aisle"></div>
+              <button
+                type="button"
+                class="seat-btn"
+                [class.unavailable]="isSeatUnavailable(trip, row.rightA)"
+                (click)="toggleSeat(trip.busNumber, row.rightA)"
+              >
+                {{ row.rightA }}
+              </button>
+              <button
+                type="button"
+                class="seat-btn"
+                [class.unavailable]="isSeatUnavailable(trip, row.rightB)"
+                (click)="toggleSeat(trip.busNumber, row.rightB)"
+              >
+                {{ row.rightB }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <p class="hint">Available: {{ getAvailableSeatCount(trip) }} seats</p>
+        <p class="hint" *ngIf="trip.unavailableSeats.length === 0">Unavailable: None</p>
+        <p class="hint" *ngIf="trip.unavailableSeats.length > 0">
+          Unavailable: {{ trip.unavailableSeats.join(', ') }}
+        </p>
+
+        <div class="trip-actions">
+          <button
+            type="button"
+            class="ok-btn"
+            [disabled]="!trip.to || !trip.serviceType || !trip.price || !trip.departureTime || !trip.arrivalTime"
+            (click)="markBusReady(trip.busNumber)"
+          >
+            OK
+          </button>
+          <button type="button" class="reset-btn" (click)="resetBus(trip.busNumber)">Reset Bus</button>
+        </div>
+        <p class="ok" *ngIf="trip.isReady">Bus is ready. It will save only after Confirm.</p>
+      </div>
+    </article>
+  </div>
+
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+  <p class="ok" *ngIf="successMessage">{{ successMessage }}</p>
+  <div class="page-actions">
+    <button type="button" (click)="confirmSchedule()" [disabled]="isSubmitting || !isReadyToConfirm">
+      {{ isSubmitting ? 'Saving...' : 'Confirm' }}
+    </button>
+    <button type="button" class="reset-btn" (click)="resetAll()">Reset All</button>
+  </div>
+
+  <div class="notice-toast" [class.show]="showNotice">
+    <div class="notice-card">
+      <button type="button" class="notice-close" (click)="closeNotice()">×</button>
+      <p>{{ noticeMessage }}</p>
+    </div>
+  </div>
+</section>

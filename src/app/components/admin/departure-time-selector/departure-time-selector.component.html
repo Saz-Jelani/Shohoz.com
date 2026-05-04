@@ -1,0 +1,15 @@
+<div class="field-group" [class.locked]="disabled">
+  <label>Departure Time</label>
+  <div class="time-list">
+    <label *ngFor="let time of timeOptions">
+      <input
+        type="radio"
+        [disabled]="disabled"
+        name="departure-time"
+        [checked]="selectedTime === time"
+        (change)="selectedTimeChange.emit(time)"
+      />
+      {{ time }}
+    </label>
+  </div>
+</div>

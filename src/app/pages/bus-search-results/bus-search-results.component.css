@@ -1,0 +1,5 @@
+.results-page {
+  padding-top: 22px;
+  background: #fff;
+  min-height: calc(100vh - 80px);
+}

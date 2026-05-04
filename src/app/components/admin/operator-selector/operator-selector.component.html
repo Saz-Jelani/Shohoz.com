@@ -1,0 +1,20 @@
+<div class="field-group" [class.locked]="disabled">
+  <label>Operator Name</label>
+  <select [disabled]="disabled" [ngModel]="operatorName" (ngModelChange)="operatorNameChange.emit($event)">
+    <option value="">Select operator</option>
+    <option *ngFor="let operator of operators" [value]="operator">{{ operator }}</option>
+  </select>
+
+  <label>Bus Name</label>
+  <input
+    type="text"
+    [disabled]="disabled"
+    [ngModel]="customBusName"
+    (ngModelChange)="customBusNameChange.emit($event)"
+    placeholder="Type bus name (optional)"
+  />
+  <select [disabled]="disabled" [ngModel]="busName" (ngModelChange)="busNameChange.emit($event)">
+    <option value="">Or select bus name</option>
+    <option *ngFor="let bus of busOptions" [value]="bus">{{ bus }}</option>
+  </select>
+</div>

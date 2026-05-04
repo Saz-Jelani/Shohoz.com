@@ -1,0 +1,7 @@
+<div class="field-group">
+  <label>From</label>
+  <select [ngModel]="selectedFrom" (ngModelChange)="selectedFromChange.emit($event)">
+    <option value="">Select location</option>
+    <option *ngFor="let location of locations" [value]="location">{{ location }}</option>
+  </select>
+</div>

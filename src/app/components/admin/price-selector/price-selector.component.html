@@ -1,0 +1,32 @@
+<div class="field-group" [class.locked]="disabled">
+  <label>Price (AC / Non AC)</label>
+  <div class="price-grid" *ngFor="let row of prices; let rowIndex = index">
+    <h4>{{ row.to }}</h4>
+    <div class="radio-pack">
+      <span>AC</span>
+      <label *ngFor="let fare of acOptions">
+        <input
+          type="radio"
+          [disabled]="disabled"
+          [name]="'ac-' + rowIndex"
+          [checked]="row.acFare === fare"
+          (change)="updateFare(row.to, 'acFare', fare)"
+        />
+        {{ fare }}
+      </label>
+    </div>
+    <div class="radio-pack">
+      <span>Non AC</span>
+      <label *ngFor="let fare of nonAcOptions">
+        <input
+          type="radio"
+          [disabled]="disabled"
+          [name]="'non-ac-' + rowIndex"
+          [checked]="row.nonAcFare === fare"
+          (change)="updateFare(row.to, 'nonAcFare', fare)"
+        />
+        {{ fare }}
+      </label>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+.site-footer {
+  background: #0f2238;
+  color: #dce7f4;
+  padding: 20px 0;
+  border-top: 3px solid #0da34d;
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+h4 {
+  margin: 0 0 4px;
+  color: #fff;
+}
+
+p {
+  margin: 0;
+}
+
+.copy {
+  font-size: 0.9rem;
+}
+
+@media (max-width: 767px) {
+  .footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
