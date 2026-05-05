@@ -9,7 +9,7 @@
         <span class="radio-dot"></span> One Way
       </button>
       <button type="button" class="btn trip-btn" [class.active]="tripType === 'Round Trip'" (click)="setTripType('Round Trip')">
-        <span class="radio-dot"></span> Round Way
+        <span class="radio-dot" [class.rotating]="isRadioAnimating"></span> Round Way
       </button>
     </div>
 
@@ -29,6 +29,7 @@
             {{ district }}
           </li>
         </ul>
+
       </div>
 
       <button class="swap-btn" type="button" (click)="swapRoute()">&#8644;</button>
@@ -48,6 +49,7 @@
             {{ district }}
           </li>
         </ul>
+
       </div>
 
       <div class="field-card date-card">
@@ -63,14 +65,19 @@
           >
             Pick a date
           </label>
+          <div *ngIf="journeyDate" class="date-display" role="button" tabindex="0" (click)="openJourneyPicker(journeyDateInput)" (keydown.enter)="openJourneyPicker(journeyDateInput)">
+            <div class="date-value">{{ formatDateLabel(journeyDate) }}</div>
+            <div class="date-day" *ngIf="!router.url.startsWith('/bus/search')">{{ getDateDay(journeyDate) }}</div>
+          </div>
           <input
             #journeyDateInput
             type="date"
             [(ngModel)]="journeyDate"
             [min]="today"
             (ngModelChange)="onJourneyDateChange()"
-            [class.hidden-return-input]="!journeyDate"
+            [class.hidden-return-input]="journeyDate"
           />
+
         </div>
         <div class="date-col return-col">
           <label *ngIf="returnDate && !showInlineResults" class="return-date-label">Return Date</label>
@@ -84,18 +91,28 @@
           >
             {{ showInlineResults ? '+ ADD RETURN' : '+ ADD RETURN TRIP' }}
           </label>
+          <div *ngIf="returnDate" class="date-display" role="button" tabindex="0" (click)="openReturnPicker(returnDateInput)" (keydown.enter)="openReturnPicker(returnDateInput)">
+            <div class="date-value">{{ formatDateLabel(returnDate) }}</div>
+            <div class="date-day" *ngIf="!router.url.startsWith('/bus/search')">{{ getDateDay(returnDate) }}</div>
+          </div>
           <input
             #returnDateInput
             type="date"
             [(ngModel)]="returnDate"
             [min]="journeyDate || today"
-            [class.hidden-return-input]="!returnDate"
+            [class.hidden-return-input]="returnDate"
           />
         </div>
       </div>
 
       <button class="search-btn" type="button" (click)="onSearch()">SEARCH</button>
     </div>
+    <div class="field-errors" *ngIf="(fromError || toError || dateError) && !showInlineResults">
+      <p class="field-error from-error" *ngIf="fromError">{{ fromError }}</p>
+      <p class="field-error to-error" *ngIf="toError">{{ toError }}</p>
+      <p class="field-error date-error" *ngIf="dateError">{{ dateError }}</p>
+    </div>
+      <p class="search-error" *ngIf="errorMessage && !showInlineResults">{{ errorMessage }}</p>
   </div>
 
   <div class="progress-strip" *ngIf="showInlineResults">
@@ -107,9 +124,17 @@
   </div>
 </section>
 
-<section class="result-wrap container" *ngIf="showInlineResults && (searchResults.length > 0 || errorMessage)">
-  <p class="search-error" *ngIf="errorMessage">{{ errorMessage }}</p>
-  <div class="results-layout">
+<section class="result-wrap container" *ngIf="showInlineResults">
+  <!-- Empty state when no search results -->
+  <div class="empty-search" *ngIf="searchResults.length === 0 && !errorMessage">
+    <div class="empty-illustration" aria-hidden="true">
+      <img src="assets/no_trips (1).svg" alt="No trips" />
+    </div>
+    <p class="empty-text">No bus found for selected dates or cities. Please try different dates or cities. For support call our call centre @ <b class="phone">16374</b> and we might arrange the tickets for you.</p>
+  </div>
+
+  <!-- Results and filters when we have data or an error -->
+  <div *ngIf="searchResults.length > 0 || errorMessage" class="results-layout">
     <aside class="filters-panel">
       <div class="filter-head">
         <h4>Filters</h4>
@@ -140,6 +165,7 @@
     </aside>
 
     <div class="cards-col">
+      <p class="search-error" *ngIf="errorMessage">{{ errorMessage }}</p>
       <div class="top-sort-bar">
         <button type="button" [class.active]="fareSort==='asc'" (click)="fareSort='asc'">LOW TO HIGH</button>
         <button type="button" [class.active]="fareSort==='desc'" (click)="fareSort='desc'">HIGH TO LOW</button>

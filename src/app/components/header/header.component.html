@@ -1,7 +1,7 @@
 <nav class="top-nav">
   <div class="container nav-wrap">
     <div class="brand-row">
-      <img src="assets/logo_icon.png" alt="Shohoz" class="logo" />
+      <a routerLink="/" aria-label="Shohoz home"><img src="assets/logo_icon.png" alt="Shohoz" class="logo" /></a>
 
       <div class="service-menu">
         <button
@@ -25,7 +25,7 @@
     </div>
 
     <div class="mobile-row">
-      <img src="assets/logo_icon.png" alt="Shohoz" class="mobile-logo" />
+      <a routerLink="/" aria-label="Shohoz home"><img src="assets/logo_icon.png" alt="Shohoz" class="mobile-logo" /></a>
       <div class="mobile-actions">
         <button type="button" class="mobile-login" routerLink="/login">Login</button>
         <button type="button" class="menu-toggle-btn" (click)="toggleMobileMenu()" [attr.aria-expanded]="isMobileMenuOpen">

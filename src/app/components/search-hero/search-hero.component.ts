@@ -24,6 +24,8 @@ export class SearchHeroComponent implements OnInit {
 
   allSchedules: BusScheduleEntry[] = [];
   searchResults: BusScheduleEntry[] = [];
+  // Master list of possible locations (includes locations without active schedules)
+  masterLocations: string[] = ['Dhaka', 'Chattogram', "Cox's Bazar", 'Sylhet', 'Rajshahi', 'Khulna', 'Barishal', 'Rangpur'];
   allLocations: string[] = [];
   availableFromLocations: string[] = [];
   availableToLocations: string[] = [];
@@ -32,6 +34,9 @@ export class SearchHeroComponent implements OnInit {
   showFromDropdown = false;
   showToDropdown = false;
   errorMessage = '';
+  fromError = '';
+  toError = '';
+  dateError = '';
   filterAc = false;
   filterNonAc = false;
   selectedOperator = '';
@@ -40,10 +45,11 @@ export class SearchHeroComponent implements OnInit {
   departureWindow = '';
   arrivalWindow = '';
   fareSort: '' | 'asc' | 'desc' = '';
+  isRadioAnimating = false;
 
   constructor(
     private readonly busManagementService: BusManagementService,
-    private readonly router: Router,
+    public readonly router: Router,
     private readonly route: ActivatedRoute
   ) {}
 
@@ -52,6 +58,10 @@ export class SearchHeroComponent implements OnInit {
       this.fromCity = this.route.snapshot.queryParamMap.get('from') ?? '';
       this.toCity = this.route.snapshot.queryParamMap.get('to') ?? '';
       this.journeyDate = this.route.snapshot.queryParamMap.get('date') ?? '';
+      this.returnDate = this.route.snapshot.queryParamMap.get('returnDate') ?? '';
+      if (this.returnDate) {
+        this.tripType = 'Round Trip';
+      }
     }
     this.loadSchedules();
   }
@@ -122,6 +132,11 @@ export class SearchHeroComponent implements OnInit {
   }
 
   openReturnPicker(input: HTMLInputElement): void {
+    this.tripType = 'Round Trip';
+    this.isRadioAnimating = true;
+    setTimeout(() => {
+      this.isRadioAnimating = false;
+    }, 600);
     if (typeof input.showPicker === 'function') {
       input.showPicker();
       return;
@@ -138,32 +153,66 @@ export class SearchHeroComponent implements OnInit {
   }
 
   onSearch(): void {
+    // clear previous errors
     this.errorMessage = '';
+    this.fromError = '';
+    this.toError = '';
+    this.dateError = '';
+
+    // Home (floating) search shows per-field errors under each field.
+    if (!this.showInlineResults) {
+      let hasError = false;
+      if (!this.fromCity) {
+        this.fromError = 'Please choose departure city.';
+        hasError = true;
+      }
+      if (!this.toCity) {
+        this.toError = 'Please choose destination city.';
+        hasError = true;
+      }
+      if (!this.journeyDate) {
+        this.dateError = 'Please select date of your journey';
+        hasError = true;
+      }
+      if (hasError) {
+        this.searchResults = [];
+        return;
+      }
+
+      // no errors -> navigate to search page
+      this.router.navigate(['/bus/search'], {
+        queryParams: {
+          from: this.fromCity,
+          to: this.toCity,
+          date: this.journeyDate,
+          ...(this.returnDate && { returnDate: this.returnDate })
+        }
+      });
+      return;
+    }
+
+    // Inline results mode keeps previous behavior (general error message)
     if (!this.fromCity || !this.toCity || !this.journeyDate) {
       this.errorMessage = 'From, To and Journey Date select korte hobe.';
       this.searchResults = [];
       return;
     }
 
-    if (!this.showInlineResults) {
-      this.router.navigate(['/bus/search'], {
-        queryParams: {
-          from: this.fromCity,
-          to: this.toCity,
-          date: this.journeyDate
-        }
-      });
-      return;
-    }
-
-    this.searchResults = this.allSchedules.filter((item) => (
-      item.from.toLowerCase() === this.fromCity.toLowerCase()
-      && item.to.toLowerCase() === this.toCity.toLowerCase()
-      && item.departureDate === this.journeyDate
-    ));
+    this.searchResults = this.allSchedules.filter((item) => {
+      const routeMatches = item.from.toLowerCase() === this.fromCity.toLowerCase()
+        && item.to.toLowerCase() === this.toCity.toLowerCase();
+      const dateMatches = item.departureDate === this.journeyDate
+        || (this.returnDate && item.departureDate === this.returnDate);
+      return routeMatches && dateMatches;
+    });
 
     if (this.searchResults.length === 0) {
-      this.errorMessage = 'Ei route/date e kono bus pawa jayni.';
+      // For inline results show the empty state UI (do not set errorMessage)
+      if (!this.showInlineResults) {
+        this.errorMessage = 'Ei route/date e kono bus pawa jayni.';
+      } else {
+        this.errorMessage = '';
+      }
     }
   }
 
@@ -259,15 +308,24 @@ export class SearchHeroComponent implements OnInit {
     if (Number.isNaN(dt.getTime())) {
       return dateText;
     }
-    return dt.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+    return dt.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  getDateDay(dateText: string): string {
+    const dt = new Date(`${dateText}T00:00:00`);
+    if (Number.isNaN(dt.getTime())) {
+      return '';
+    }
+    return dt.toLocaleDateString('en-US', { weekday: 'long' });
   }
 
   private loadSchedules(): void {
     this.busManagementService.getAllSchedules().subscribe({
       next: (rows) => {
         this.allSchedules = rows;
-        this.availableFromLocations = [...new Set(rows.map((item) => item.from))].sort((a, b) => a.localeCompare(b));
-        this.allLocations = [...new Set(rows.flatMap((item) => [item.from, item.to]))].sort((a, b) => a.localeCompare(b));
+        // include master locations so dropdown shows every location even if no schedules exist for them
+        this.availableFromLocations = [...new Set([...this.masterLocations, ...rows.map((item) => item.from)])].sort((a, b) => a.localeCompare(b));
+        this.allLocations = [...new Set([...this.masterLocations, ...rows.flatMap((item) => [item.from, item.to])])].sort((a, b) => a.localeCompare(b));
         this.recomputeToLocations();
         this.updateSuggestions('from');
         if (this.showInlineResults && this.fromCity && this.toCity && this.journeyDate) {
