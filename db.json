@@ -221,5 +221,60 @@
       "createdByUserId": 1,
       "id": 7
     }
+  ],
+  "bookings": [
+    {
+      "userId": 2,
+      "userName": "sazzad jelani",
+      "email": "sazzad05101003@student.ndub.edu.bd",
+      "mobileNo": "",
+      "passengers": [
+        {
+          "firstName": "sazzad",
+          "lastName": "jelani",
+          "gender": "Male"
+        }
+      ],
+      "bus": {
+        "from": "Dhaka",
+        "operatorName": "Green Line",
+        "operatorImage": "assets/operators/greenline.png",
+        "busName": "Volvo B11R",
+        "busNumber": "0121",
+        "to": "Chattogram",
+        "serviceType": "AC",
+        "price": 1000,
+        "discountPrice": 9,
+        "departureDate": "2026-05-07",
+        "departureTime": "04:30 AM",
+        "arrivalTime": "07:30 AM",
+        "boardingPoints": [
+          "Gabtoli",
+          "Kallyanpur",
+          "Asad Gate",
+          "Farmgate",
+          "Sayedabad"
+        ],
+        "unavailableSeats": [],
+        "createdByUserId": 1,
+        "id": 7
+      },
+      "seats": [
+        "G3"
+      ],
+      "boardingPoint": "Farmgate",
+      "boardingTime": "6:00 AM",
+      "paymentMethod": "bKash",
+      "insuranceSelected": true,
+      "couponCode": "",
+      "ticketPrice": 1000,
+      "processingFee": 30,
+      "discountAmount": 9,
+      "insuranceAmount": 10,
+      "totalPayable": 1031,
+      "status": "booked",
+      "createdAt": "2026-05-05T13:15:29.055Z",
+      "id": 1
+    }
   ]
 }

@@ -1,52 +1,161 @@
 <section class="review-page" *ngIf="booking">
   <div class="progress-bar">
-    <span>Choose Departing Ticket</span>
-    <span class="chev">›</span>
-    <span>Passenger Details</span>
-    <span class="chev">›</span>
-    <strong>Review &amp; Pay</strong>
+    <div class="progress-inner">
+      <span>Choose Departing Ticket</span>
+      <span class="chev">&rsaquo;</span>
+      <span>Passenger Details</span>
+      <span class="chev">&rsaquo;</span>
+      <strong>Review &amp; Pay</strong>
+      <span class="timer" [class.warning]="showTimerWarning">{{ countdownLabel }}</span>
+    </div>
   </div>
 
   <div class="review-shell">
-    <section class="review-card">
-      <h1>Review &amp; Pay</h1>
-      <div class="review-grid">
-        <div>
-          <span>Passenger</span>
-          <strong>{{ passenger?.firstName }} {{ passenger?.lastName }}</strong>
-        </div>
-        <div>
-          <span>Mobile</span>
-          <strong>{{ passenger?.mobileNo }}</strong>
-        </div>
-        <div>
-          <span>Email</span>
-          <strong>{{ passenger?.email }}</strong>
-        </div>
-        <div>
-          <span>Seats</span>
-          <strong>{{ booking.seats.join(', ') }}</strong>
-        </div>
-      </div>
-    </section>
+    <div class="left-column">
+      <section class="info-strip insurance-strip">
+        <label class="check-line">
+          <input type="checkbox" [(ngModel)]="insuranceSelected" />
+          <span>Add &#2547;10 and secure my travel. I agree to the <a href="#">Terms &amp; Conditions</a></span>
+        </label>
+        <button type="button" class="benefits-link">Show Benefits <span>&#8964;</span></button>
+      </section>
 
-    <aside class="review-summary">
-      <h2>{{ booking.bus.operatorName }}</h2>
-      <p>{{ booking.bus.from }} to {{ booking.bus.to }}</p>
-      <div class="summary-row">
-        <span>Boarding Point</span>
-        <strong>{{ booking.boardingPoint }}</strong>
-      </div>
-      <div class="summary-row">
-        <span>Boarding Time</span>
-        <strong>{{ booking.boardingTime }}</strong>
-      </div>
-      <div class="summary-row total">
-        <span>Total</span>
-        <strong>Tk {{ fareTotal | number:'1.0-0' }}</strong>
-      </div>
-      <button type="button" class="pay-btn">PAY NOW</button>
-      <button type="button" class="back-btn" (click)="backToSearch()">Back to Search</button>
+      <section class="info-strip terms-strip">
+        <label class="check-line terms-line" [class.active]="termsAccepted">
+          <input type="checkbox" [(ngModel)]="termsAccepted" />
+          <span>
+            I am confirming that I have read, acknowledged and agree to the
+            <a href="#">Terms of Use</a>, <a href="#">Privacy Policy</a> and <a href="#">Cancellation Policy</a> of Shohoz.com
+          </span>
+        </label>
+      </section>
+
+      <section class="payment-method-card">
+        <div class="card-title">SELECT PAYMENT METHOD</div>
+        <div class="payment-grid">
+          <button type="button" class="method-card" [class.selected]="selectedPaymentMethod === 'bKash'" (click)="selectedPaymentMethod = 'bKash'">
+            <span class="method-badge bkash">b</span>
+            <span class="method-name">bKash</span>
+            <span class="method-check">&#10003;</span>
+          </button>
+          <button type="button" class="method-card" [class.selected]="selectedPaymentMethod === 'Nagad'" (click)="selectedPaymentMethod = 'Nagad'">
+            <span class="method-badge nagad">N</span>
+            <span class="method-name">Nagad</span>
+            <span class="method-check">&#10003;</span>
+          </button>
+          <button type="button" class="method-card" [class.selected]="selectedPaymentMethod === 'SSLCOMMERZ'" (click)="selectedPaymentMethod = 'SSLCOMMERZ'">
+            <span class="method-badge ssl">Z</span>
+            <span class="method-name">SSLCOMMERZ</span>
+            <span class="method-check">&#10003;</span>
+          </button>
+          <button type="button" class="method-card" [class.selected]="selectedPaymentMethod === 'Amex'" (click)="selectedPaymentMethod = 'Amex'">
+            <span class="method-badge amex">A</span>
+            <span class="method-name">Amex Cards</span>
+            <span class="method-check">&#10003;</span>
+          </button>
+          <button type="button" class="method-card" [class.selected]="selectedPaymentMethod === 'Visa'" (click)="selectedPaymentMethod = 'Visa'">
+            <span class="method-badge visa">V</span>
+            <span class="method-name">Visa Cards</span>
+            <span class="method-check">&#10003;</span>
+          </button>
+          <button type="button" class="method-card" [class.selected]="selectedPaymentMethod === 'MasterCard'" (click)="selectedPaymentMethod = 'MasterCard'">
+            <span class="method-badge master">M</span>
+            <span class="method-name">MasterCard Cards</span>
+            <span class="method-check">&#10003;</span>
+          </button>
+        </div>
+        <div class="notice-line">
+          <span class="notice-icon">i</span>
+          <span>Processing fee will be added with the ticket fare during payment, that will vary depending on MFS and Bank</span>
+        </div>
+      </section>
+    </div>
+
+    <aside class="right-column">
+      <section class="coupon-card">
+        <div class="coupon-input">
+          <span class="coupon-icon">&#10059;</span>
+          <input type="text" [(ngModel)]="couponCode" placeholder="Enter Coupon Code" />
+        </div>
+        <button type="button" class="apply-btn">APPLY</button>
+      </section>
+
+      <section class="summary-card">
+        <div class="summary-head">
+          <span class="summary-title">PAYMENT DETAILS</span>
+          <span class="summary-mode">Online Payment <span class="coin">৳</span></span>
+        </div>
+
+        <div class="summary-body">
+          <div class="operator-row">
+            <img [src]="getOperatorImage(booking.bus.operatorImage)" [alt]="booking.bus.operatorName" />
+            <div class="operator-copy">
+              <h2>{{ booking.bus.operatorName }}</h2>
+              <p>{{ booking.bus.busName }}</p>
+            </div>
+          </div>
+
+          <div class="payment-lines">
+            <div>
+              <span>Ticket Price</span>
+              <strong>&#2547;{{ ticketPrice | number:'1.0-0' }}</strong>
+            </div>
+            <div>
+              <span>Processing Fee</span>
+              <strong>&#2547;{{ processingFee | number:'1.0-0' }}</strong>
+            </div>
+            <div>
+              <span>Discount</span>
+              <strong>&#2547;{{ discountAmount | number:'1.0-0' }}</strong>
+            </div>
+            <div>
+              <span>Insurance Amount</span>
+              <strong>&#2547;{{ insuranceAmount | number:'1.0-0' }}</strong>
+            </div>
+          </div>
+
+          <div class="total-row">
+            <span>TOTAL PAYABLE</span>
+            <div class="total-values">
+              <del>&#2547;{{ (ticketPrice + processingFee + insuranceAmount) | number:'1.0-0' }}</del>
+              <strong>&#2547;{{ totalPayable | number:'1.0-0' }}</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="note-card">
+        <h3>Please Note</h3>
+        <ul>
+          <li>The Processing Fee and Bank Charges are non-refundable.</li>
+          <li>
+            Tickets purchased from Shohoz under any promotional campaigns/discounts/offers etc. are <strong>NON-refundable</strong>.
+            However, if the ticket is cancelled by the bus operator or Shohoz due to any unavoidable circumstance or operational issues,
+            the tickets will be eligible for refund excluding the cashback / discount amount.
+          </li>
+          <li>
+            Discounts and offers are subject to change and governed by the respective campaign partners' terms and conditions. Please verify all promotions before payment.
+          </li>
+        </ul>
+      </section>
+
+      <button
+        type="button"
+        class="pay-btn"
+        [class.active]="canProceedToPayment"
+        [disabled]="!canProceedToPayment"
+        (click)="proceedToPayment()"
+      >
+        PROCEED TO PAYMENT
+      </button>
+      <p class="submit-error" *ngIf="submitError">{{ submitError }}</p>
     </aside>
+  </div>
+
+  <div class="expiry-modal" *ngIf="showExpiryPopup">
+    <div class="expiry-card">
+      <h3>{{ expiryMessage }}</h3>
+      <p>We are taking you back to bus search now.</p>
+    </div>
   </div>
 </section>

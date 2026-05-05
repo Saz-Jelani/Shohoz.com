@@ -25,6 +25,8 @@ import { FooterComponent } from './components/footer/footer.component';
 import { BusSearchResultsComponent } from './pages/bus-search-results/bus-search-results.component';
 import { PassengerDetailsComponent } from './pages/passenger-details/passenger-details.component';
 import { ReviewPayComponent } from './pages/review-pay/review-pay.component';
+import { MyProfileComponent } from './pages/my-profile/my-profile.component';
+import { ChangePasswordComponent } from './pages/change-password/change-password.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +50,9 @@ import { ReviewPayComponent } from './pages/review-pay/review-pay.component';
     FooterComponent,
     BusSearchResultsComponent,
     PassengerDetailsComponent,
-    ReviewPayComponent
+    ReviewPayComponent,
+    MyProfileComponent,
+    ChangePasswordComponent
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
   providers: [],

@@ -119,6 +119,7 @@
   display: flex;
   align-items: center;
   gap: 0.9rem;
+  position: relative;
 }
 
 .call-btn {
@@ -135,6 +136,93 @@
   background: transparent;
   color: #16233a;
   font-size: 1.05rem;
+}
+
+.user-chip,
+.mobile-user-chip {
+  border: 1px solid #d2d6dc;
+  background: #fff;
+  border-radius: 12px;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 10px 5px 6px;
+  color: #223047;
+  font-weight: 700;
+}
+
+.user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: #d7dbe1;
+  color: #6b7280;
+  display: grid;
+  place-items: center;
+  font-size: 0.9rem;
+  flex: 0 0 auto;
+}
+
+.user-name {
+  max-width: 88px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-caret {
+  color: #a1a7b0;
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.user-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 280px;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid #e7e9ee;
+  border-radius: 10px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  display: none;
+  z-index: 1100;
+}
+
+.user-menu.open {
+  display: block;
+}
+
+.user-menu-item {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  color: #384151;
+  font-size: 0.98rem;
+}
+
+.user-menu-item:hover {
+  background: #f4f8f6;
+}
+
+.user-menu-item.logout {
+  border-top: 1px solid #eceff3;
+}
+
+.menu-icon {
+  width: 20px;
+  text-align: center;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .mobile-row,
@@ -173,6 +261,11 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    position: relative;
+  }
+
+  .mobile-user-chip {
+    max-width: 140px;
   }
 
   .mobile-login {
@@ -216,6 +309,24 @@
   }
 
   .mobile-mode-menu.open {
+    display: block;
+  }
+
+  .mobile-user-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 52px;
+    background: rgba(255, 255, 255, 0.98);
+    border: 1px solid #dce8e1;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    padding: 0.35rem 0;
+    min-width: 190px;
+    z-index: 1200;
+  }
+
+  .mobile-user-menu.open {
     display: block;
   }
 

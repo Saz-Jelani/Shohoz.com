@@ -15,6 +15,21 @@ export class AuthService {
     return this.http.post<AuthUser>(this.apiUrl, user);
   }
 
+  updateUser(userId: number, payload: Partial<AuthUser>): Observable<AuthUser> {
+    return this.http.patch<AuthUser>(`${this.apiUrl}/${userId}`, payload).pipe(
+      tap((updatedUser) => {
+        localStorage.setItem(this.userKey, JSON.stringify(updatedUser));
+        if (updatedUser.email) {
+          localStorage.setItem(this.tokenKey, updatedUser.email);
+        }
+      })
+    );
+  }
+
+  changePassword(userId: number, password: string): Observable<AuthUser> {
+    return this.updateUser(userId, { password });
+  }
+
   login(email: string, password: string): Observable<boolean> {
     return this.http
       .get<AuthUser[]>(`${this.apiUrl}?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`)

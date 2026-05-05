@@ -1,0 +1,44 @@
+<section class="profile-page">
+  <div class="container profile-grid">
+    <aside class="profile-card summary">
+      <div class="avatar">{{ initials }}</div>
+      <h1>{{ user?.name }}</h1>
+      <p>{{ user?.email }}</p>
+      <div class="meta-row">
+        <span>Account</span>
+        <strong>Logged In</strong>
+      </div>
+      <div class="meta-row">
+        <span>User ID</span>
+        <strong>#{{ user?.id }}</strong>
+      </div>
+    </aside>
+
+    <section class="profile-card editor">
+      <div class="panel-head">
+        <div>
+          <h2>My Profile</h2>
+          <p>Manage your account details</p>
+        </div>
+      </div>
+
+      <div class="field-grid">
+        <label>
+          <span>Full Name</span>
+          <input type="text" [(ngModel)]="fullName" placeholder="Enter your name" />
+        </label>
+        <label>
+          <span>Email</span>
+          <input type="email" [(ngModel)]="email" placeholder="Enter your email" />
+        </label>
+      </div>
+
+      <div class="feedback error" *ngIf="errorMessage">{{ errorMessage }}</div>
+      <div class="feedback success" *ngIf="message">{{ message }}</div>
+
+      <button type="button" class="save-btn" (click)="saveProfile()" [disabled]="saving">
+        {{ saving ? 'Saving...' : 'Save Changes' }}
+      </button>
+    </section>
+  </div>
+</section>

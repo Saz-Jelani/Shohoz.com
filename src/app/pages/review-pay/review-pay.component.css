@@ -1,125 +1,528 @@
 .review-page {
   min-height: 100%;
-  background: #f5f7fb;
+  background: #f4f7fb;
   padding-bottom: 28px;
 }
 
 .progress-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 22px;
+  width: 100%;
   background: #149144;
-  color: #e7f6eb;
-  font-size: 0.92rem;
-  font-weight: 600;
 }
 
-.progress-bar strong {
+.progress-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 60px;
+  width: min(1480px, calc(85vw - 96px));
+  margin: 0 auto;
+  padding: 0 22px;
+  box-sizing: border-box;
+  color: #eaf8ee;
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.progress-inner strong {
   color: #fff;
 }
 
-.progress-bar .chev {
-  color: rgba(255, 255, 255, 0.92);
-  font-size: 1.3rem;
+.progress-inner .chev {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 1.4rem;
   line-height: 1;
 }
 
-.review-shell {
-  width: min(1280px, calc(100vw - 48px));
-  margin: 34px auto 0;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 360px;
-  gap: 20px;
+.progress-inner .timer {
+  margin-left: auto;
+  background: #f59e0b;
+  color: #fff;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-weight: 800;
+  white-space: nowrap;
 }
 
-.review-card,
-.review-summary {
+.progress-inner .timer.warning {
+  background: #0f9d49;
+}
+
+.review-shell {
+width: min(1480px, calc(89vw - 163px));
+    margin: 24px auto 33px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 473px;
+    gap: 22px;
+    align-items: start;
+}
+
+.left-column,
+.right-column {
+  min-width: 0;
+}
+
+.info-strip,
+.payment-method-card,
+.coupon-card,
+.summary-card,
+.note-card {
   background: #fff;
-  border-radius: 18px;
+  border-radius: 16px;
   box-shadow: 0 8px 24px rgba(19, 35, 58, 0.05);
 }
 
-.review-card {
-  padding: 26px;
+.info-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
 }
 
-.review-card h1 {
-  margin: 0 0 24px;
-  font-size: 1.4rem;
+.check-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: #192433;
+  font-size: 0.96rem;
+  font-weight: 700;
+  line-height: 1.45;
 }
 
-.review-grid {
+.check-line input {
+  width: 20px;
+  height: 20px;
+  accent-color: #1173cf;
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+
+.check-line a {
+  color: #0e9d49;
+  text-decoration: underline;
+}
+
+.benefits-link {
+  border: 0;
+  background: transparent;
+  color: #0e9d49;
+  font-size: 0.98rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.benefits-link span {
+  font-size: 1rem;
+  margin-left: 4px;
+}
+
+.terms-strip {
+  padding-right: 14px;
+}
+
+.terms-line {
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.payment-method-card {
+  padding: 16px 14px 12px;
+}
+
+.card-title {
+  color: #a6aeb9;
+  font-size: 0.86rem;
+  font-weight: 800;
+  margin: 0 0 14px 2px;
+}
+
+.payment-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 18px 20px;
+  gap: 12px 16px;
 }
 
-.review-grid span,
-.summary-row span {
-  display: block;
-  color: #8b97a9;
+.method-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 0 12px;
+  border: 1px solid #ececef;
+  border-radius: 10px;
+  background: #f7f7f8;
+  color: #111827;
+  text-align: left;
+}
+
+.method-card.selected {
+  background: #fff;
+  border-color: #d5dae1;
+  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.04);
+}
+
+.method-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 800;
+  flex: 0 0 auto;
+}
+
+.method-badge.bkash { background: linear-gradient(135deg, #ea4c89, #c41647); }
+.method-badge.nagad { background: linear-gradient(135deg, #ff8c1a, #ff5d00); }
+.method-badge.ssl { background: linear-gradient(135deg, #3566b7, #0d4fb1); }
+.method-badge.amex { background: linear-gradient(135deg, #1674d1, #0f5aa8); }
+.method-badge.visa { background: linear-gradient(135deg, #214e9f, #2f74d8); }
+.method-badge.master { background: linear-gradient(135deg, #ea1d25, #f39a1d); }
+
+.method-name {
+  font-size: 0.94rem;
+  font-weight: 500;
+  flex: 1;
+}
+
+.method-check {
+  color: #d8d8dc;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.notice-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 2px 2px 0;
+  color: #184071;
   font-size: 0.84rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
 }
 
-.review-grid strong,
-.summary-row strong {
-  display: block;
-  margin-top: 6px;
-  color: #16202f;
+.notice-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: #1fa24a;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 0.9rem;
+  flex: 0 0 auto;
+}
+
+.coupon-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  margin-bottom: 16px;
+}
+
+.coupon-input {
+  flex: 1;
+  min-height: 44px;
+  background: #f4f4f6;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+}
+
+.coupon-input input {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  outline: none;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #9ca8b7;
+}
+
+.coupon-input input::placeholder {
+  color: #9ca8b7;
+}
+
+.coupon-icon {
+  color: #4b84c4;
   font-size: 1rem;
 }
 
-.review-summary {
-  padding: 22px;
-}
-
-.review-summary h2 {
-  margin: 0;
-  font-size: 1.08rem;
-}
-
-.review-summary p {
-  margin: 6px 0 18px;
-  color: #657084;
-}
-
-.summary-row {
-  padding: 14px 0;
-  border-top: 1px solid #edf0f4;
-}
-
-.summary-row.total strong {
-  font-size: 1.2rem;
-  color: #10a24f;
-}
-
-.pay-btn,
-.back-btn {
-  width: 100%;
-  min-height: 52px;
-  border-radius: 14px;
+.apply-btn {
+  min-width: 76px;
+  min-height: 40px;
   border: 0;
+  border-radius: 8px;
+  background: #2d6fc7;
+  color: #fff;
+  font-size: 0.9rem;
   font-weight: 800;
 }
 
-.pay-btn {
-  margin-top: 18px;
-  background: linear-gradient(180deg, #0cab4a, #0b9642);
+.summary-card {
+  padding: 16px 16px 12px;
+}
+
+.summary-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eceff3;
+}
+
+.summary-title {
+  color: #ff8a3d;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.summary-mode {
+  color: #6e7a8b;
+  font-size: 0.92rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.summary-mode .coin {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background: #ff9a3c;
   color: #fff;
+  display: inline-grid;
+  place-items: center;
+  font-size: 0.75rem;
 }
 
-.back-btn {
-  margin-top: 12px;
-  background: #eef2f6;
-  color: #273142;
+.summary-body {
+  border-left: 1px solid #eceff3;
+  border-right: 1px solid #eceff3;
+  border-bottom: 1px solid #eceff3;
+  border-radius: 0 0 18px 18px;
+  padding: 16px 18px 12px;
 }
 
-@media (max-width: 980px) {
+.operator-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.operator-row img {
+  width: 62px;
+  height: 38px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.operator-copy h2 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.operator-copy p {
+  margin: 3px 0 0;
+  color: #657084;
+  font-size: 0.84rem;
+}
+
+.payment-lines {
+  margin-top: 18px;
+  display: grid;
+  gap: 14px;
+}
+
+.payment-lines > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.payment-lines span {
+  color: #7a8696;
+  font-size: 0.9rem;
+}
+
+.payment-lines strong {
+  color: #1d232f;
+  font-size: 1.05rem;
+  font-weight: 400;
+}
+
+.total-row {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid #eceff3;
+}
+
+.total-row span {
+  color: #0da54e;
+  font-size: 0.98rem;
+  font-weight: 800;
+}
+
+.total-values {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.total-values del {
+  color: #8d97a4;
+  font-size: 0.9rem;
+}
+
+.total-values strong {
+  color: #ff8a3d;
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.note-card {
+  margin-top: 16px;
+  background: #f0faef;
+  padding: 14px 16px 14px;
+}
+
+.note-card h3 {
+  margin: 0 0 10px;
+  color: #0a9b48;
+  font-size: 0.98rem;
+  font-weight: 800;
+}
+
+.note-card ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #4b5563;
+  line-height: 1.3;
+  font-size: 0.78rem;
+}
+
+.note-card li + li {
+  margin-top: 8px;
+}
+
+.pay-btn {
+  width: 100%;
+  min-height: 46px;
+  margin-top: 14px;
+  border: 0;
+  border-radius: 14px;
+  background: #b7e4c7;
+  color: #fff;
+  font-weight: 800;
+}
+
+.pay-btn.active:not(:disabled) {
+  background: linear-gradient(180deg, #16b34a, #0f9d49);
+  box-shadow: 0 10px 22px rgba(15, 157, 73, 0.22);
+}
+
+.pay-btn:disabled {
+  opacity: 1;
+}
+
+.submit-error {
+  margin: 10px 4px 0;
+  color: #dc2626;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.expiry-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.38);
+  display: grid;
+  place-items: center;
+  z-index: 4000;
+}
+
+.expiry-card {
+  background: #0f9d49;
+  color: #fff;
+  width: min(420px, calc(100vw - 32px));
+  border-radius: 18px;
+  padding: 26px 24px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.28);
+  text-align: center;
+}
+
+.expiry-card h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.expiry-card p {
+  margin: 10px 0 0;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.92rem;
+}
+
+.note-card strong {
+  color: #ef4444;
+}
+
+@media (max-width: 1180px) {
   .review-shell {
     grid-template-columns: 1fr;
+  }
+
+  .right-column {
+    max-width: 620px;
+  }
+}
+
+@media (max-width: 767px) {
+  .progress-inner,
+  .review-shell {
+    width: min(100vw - 20px, 100%);
+  }
+
+  .progress-inner {
+    min-height: 64px;
+    padding: 0 14px;
+  }
+
+  .review-shell {
+    margin-top: 18px;
+  }
+
+  .payment-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .info-strip,
+  .coupon-card,
+  .summary-card,
+  .note-card {
+    border-radius: 14px;
+  }
+
+  .coupon-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .apply-btn {
+    width: 100%;
   }
 }

@@ -1,18 +1,20 @@
 <section class="passenger-page" *ngIf="booking">
   <div class="progress-bar">
-    <span>Choose Departing Ticket</span>
-    <span class="chev">&rsaquo;</span>
-    <strong>Passenger Details</strong>
-    <span class="chev">&rsaquo;</span>
-    <span>Review &amp; Pay</span>
-    <span class="timer">04m05s</span>
+    <div class="progress-inner">
+      <span class="step">Choose Departing Ticket</span>
+      <span class="chev">&rsaquo;</span>
+      <strong class="step active">Passenger Details</strong>
+      <span class="chev">&rsaquo;</span>
+      <span class="step">Review &amp; Pay</span>
+      <span class="timer" [class.warning]="showTimerWarning">{{ countdownLabel }}</span>
+    </div>
   </div>
 
   <div class="page-grid">
     <div class="left-column">
       <section class="contact-card">
         <div class="card-head">
-          <div class="icon-circle">☎</div>
+          <div class="icon-circle">&#9742;</div>
           <div>
             <h2>Contact Details</h2>
             <p>To receive your E-tickets &amp; updates</p>
@@ -41,23 +43,23 @@
         <p>Please provide the details of passenger</p>
       </div>
 
-      <section class="passenger-card">
+      <section class="passenger-card" *ngFor="let passenger of passengerForms; let i = index">
         <div class="card-head passenger-head">
-          <div class="avatar-circle">☺</div>
-          <h2>Passenger 1</h2>
+          <div class="avatar-circle">&#9786;</div>
+          <h2>Passenger {{ i + 1 }}</h2>
         </div>
 
         <div class="form-grid passenger-grid">
           <label>
             <span>First Name *</span>
             <div class="input-shell plain">
-              <input type="text" [(ngModel)]="firstName" />
+              <input type="text" [(ngModel)]="passenger.firstName" [name]="'firstName_' + i" />
             </div>
           </label>
           <label>
             <span>Last Name *</span>
             <div class="input-shell plain">
-              <input type="text" [(ngModel)]="lastName" />
+              <input type="text" [(ngModel)]="passenger.lastName" [name]="'lastName_' + i" />
             </div>
           </label>
         </div>
@@ -65,8 +67,8 @@
         <div class="gender-row">
           <span>Gender: *</span>
           <div class="gender-switch">
-            <button type="button" [class.active]="gender === 'Male'" (click)="gender = 'Male'">Male</button>
-            <button type="button" [class.active]="gender === 'Female'" (click)="gender = 'Female'">Female</button>
+            <button type="button" [class.active]="passenger.gender === 'Male'" (click)="passenger.gender = 'Male'">Male</button>
+            <button type="button" [class.active]="passenger.gender === 'Female'" (click)="passenger.gender = 'Female'">Female</button>
           </div>
         </div>
       </section>
@@ -75,7 +77,7 @@
     <aside class="summary-column">
       <section class="summary-card">
         <div class="operator-row">
-          <img [src]="booking.bus.operatorImage || 'assets/operators/greenline.png'" [alt]="booking.bus.operatorName" />
+          <img [src]="getOperatorImage(booking.bus.operatorImage)" [alt]="booking.bus.operatorName" />
           <div class="operator-copy">
             <h2>{{ booking.bus.operatorName }}</h2>
             <p>{{ booking.bus.busName }}</p>
@@ -113,13 +115,22 @@
 
         <div class="boarding-block">
           <span>BOARDING POINT</span>
-          <strong>{{ booking.boardingPoint }}</strong>
-          <small>{{ booking.boardingTime }}</small>
+          <div class="boarding-row">
+            <strong>{{ booking.boardingPoint }}</strong>
+            <small>{{ booking.boardingTime }}</small>
+          </div>
         </div>
       </section>
 
-      <button type="button" class="payment-btn" (click)="proceedToPayment()">PROCEED TO PAYMENT</button>
+      <button type="button" class="payment-btn" [class.active]="canProceedToPayment" [disabled]="!canProceedToPayment" (click)="proceedToPayment()">PROCEED TO PAYMENT</button>
       <p class="hint">In order to proceed to Review &amp; Pay, please fill up the required details.</p>
     </aside>
+  </div>
+
+  <div class="expiry-modal" *ngIf="showExpiryPopup">
+    <div class="expiry-card">
+      <h3>Your Booking Expire is Over, please Book again</h3>
+      <p>We are taking you back to bus search now.</p>
+    </div>
   </div>
 </section>

@@ -19,18 +19,100 @@
       </div>
 
       <div class="nav-actions">
-        <button type="button" class="call-btn">?? 16374</button>
-        <button type="button" class="login-link" routerLink="/login">Login</button>
+        <button type="button" class="call-btn">
+          <span aria-hidden="true">&#9742;</span>
+          <span>16374</span>
+        </button>
+
+        <ng-container *ngIf="isLoggedIn; else loggedOutLink">
+          <button type="button" class="user-chip" (click)="toggleUserMenu($event)">
+            <span class="user-avatar">{{ userInitial }}</span>
+            <span class="user-name">{{ userLabel }}</span>
+            <span class="user-caret" aria-hidden="true">&#9662;</span>
+          </button>
+          <div class="user-menu" [class.open]="isUserMenuOpen" (click)="$event.stopPropagation()">
+            <a class="user-menu-item" routerLink="/my-profile" (click)="isUserMenuOpen = false">
+              <span class="menu-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="8" r="3.2"></circle>
+                  <path d="M5.5 20c1.8-3.8 5-5.5 6.5-5.5s4.7 1.7 6.5 5.5"></path>
+                </svg>
+              </span>
+              <span>My Profile</span>
+            </a>
+            <a class="user-menu-item" routerLink="/change-password" (click)="isUserMenuOpen = false">
+              <span class="menu-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="5" y="10.5" width="14" height="9" rx="2"></rect>
+                  <path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"></path>
+                </svg>
+              </span>
+              <span>Change Password</span>
+            </a>
+            <button type="button" class="user-menu-item logout" (click)="logout()">
+              <span class="menu-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10 4.5H6.5A2.5 2.5 0 0 0 4 7v10a2.5 2.5 0 0 0 2.5 2.5H10"></path>
+                  <path d="M13 8l4 4-4 4"></path>
+                  <path d="M17 12H10"></path>
+                </svg>
+              </span>
+              <span>Logout</span>
+            </button>
+          </div>
+        </ng-container>
+
+        <ng-template #loggedOutLink>
+          <button type="button" class="login-link" routerLink="/login">Login</button>
+        </ng-template>
       </div>
     </div>
 
     <div class="mobile-row">
       <a routerLink="/" aria-label="Shohoz home"><img src="assets/logo_icon.png" alt="Shohoz" class="mobile-logo" /></a>
       <div class="mobile-actions">
-        <button type="button" class="mobile-login" routerLink="/login">Login</button>
+        <ng-container *ngIf="isLoggedIn; else mobileLoggedOut">
+          <button type="button" class="mobile-user-chip" (click)="toggleUserMenu($event)">
+            <span class="user-avatar">{{ userInitial }}</span>
+            <span class="user-name">{{ userLabel }}</span>
+          </button>
+        </ng-container>
+        <ng-template #mobileLoggedOut>
+          <button type="button" class="mobile-login" routerLink="/login">Login</button>
+        </ng-template>
         <button type="button" class="menu-toggle-btn" (click)="toggleMobileMenu()" [attr.aria-expanded]="isMobileMenuOpen">
           <span></span><span></span><span></span>
         </button>
+        <div class="mobile-user-menu" [class.open]="isUserMenuOpen" *ngIf="isLoggedIn" (click)="$event.stopPropagation()">
+          <a class="user-menu-item" routerLink="/my-profile" (click)="isUserMenuOpen = false">
+            <span class="menu-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="3.2"></circle>
+                <path d="M5.5 20c1.8-3.8 5-5.5 6.5-5.5s4.7 1.7 6.5 5.5"></path>
+              </svg>
+            </span>
+            <span>My Profile</span>
+          </a>
+          <a class="user-menu-item" routerLink="/change-password" (click)="isUserMenuOpen = false">
+            <span class="menu-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="10.5" width="14" height="9" rx="2"></rect>
+                <path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"></path>
+              </svg>
+            </span>
+            <span>Change Password</span>
+          </a>
+          <button type="button" class="user-menu-item logout" (click)="logout()">
+            <span class="menu-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 4.5H6.5A2.5 2.5 0 0 0 4 7v10a2.5 2.5 0 0 0 2.5 2.5H10"></path>
+                <path d="M13 8l4 4-4 4"></path>
+                <path d="M17 12H10"></path>
+              </svg>
+            </span>
+            <span>Logout</span>
+          </button>
+        </div>
       </div>
       <div class="mobile-mode-menu" [class.open]="isMobileMenuOpen">
         <button *ngFor="let mode of travelModes" type="button" class="mobile-mode-btn" (click)="selectMode(mode)">
