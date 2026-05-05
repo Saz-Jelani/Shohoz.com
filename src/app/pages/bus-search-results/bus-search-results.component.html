@@ -1,3 +1,233 @@
-<section class="results-page">
-  <app-search-hero [selectedMode]="selectedMode" [showInlineResults]="true" [compactView]="true"></app-search-hero>
+<section class="results-page" [class.drawer-open]="isDrawerOpen">
+  <app-search-hero
+    [selectedMode]="selectedMode"
+    [showInlineResults]="true"
+    [compactView]="true"
+    (bookTicket)="openDrawer($event)"
+  ></app-search-hero>
+
+  <div class="drawer-backdrop" *ngIf="isDrawerOpen" (click)="closeDrawer()"></div>
+
+  <aside class="booking-drawer" [class.open]="isDrawerOpen" *ngIf="selectedBus">
+    <header class="drawer-header">
+      <h2>{{ drawerTitle }}</h2>
+      <button type="button" class="close-btn" (click)="closeDrawer()">×</button>
+    </header>
+
+    <nav class="drawer-tabs">
+      <ul>
+        <li [class.active-trip-tab]="activeTab === 'seats'" (click)="setTab('seats')">
+          <img alt="Seat icon" width="24" height="21" class="trip-tab-icon" src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/seat.svg?v=1.0.4" />
+          <img alt="Seat green icon" width="24" height="21" class="trip-tab-green-icon" src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/seat-green.svg?v=1.0.4" />
+          <span>Seats</span>
+        </li>
+        <li [class.active-trip-tab]="activeTab === 'amenities'" (click)="setTab('amenities')">
+          <img alt="Amenities icon" width="21" height="20" class="trip-tab-icon" src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/amenities.svg?v=1.0.4" />
+          <img alt="Amenities green icon" width="21" height="20" class="trip-tab-green-icon" src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/amenities-green.svg?v=1.0.4" />
+          <span>Amenities</span>
+        </li>
+        <li [class.active-trip-tab]="activeTab === 'policies'" (click)="setTab('policies')">
+          <img alt="Policies icon" width="18" height="22" class="trip-tab-icon" src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/policies.svg?v=1.0.4" />
+          <img alt="Policies green icon" width="18" height="22" class="trip-tab-green-icon" src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/policies-green.svg?v=1.0.4" />
+          <span>Policies</span>
+        </li>
+        <li [class.active-trip-tab]="activeTab === 'details'" (click)="setTab('details')">
+          <img alt="Trip details icon" width="17" height="21" class="trip-tab-icon" src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/trip-details.svg?v=1.0.4" />
+          <img alt="Trip details green icon" width="17" height="21" class="trip-tab-green-icon" src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/trip-details-green.svg?v=1.0.4" />
+          <span>Trip Details</span>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="drawer-scroll">
+      <section class="bus-summary-card" *ngIf="activeTab === 'seats' || activeTab === 'amenities'">
+        <div class="bus-brand">
+          <img [src]="getOperatorImage(selectedBus.operatorImage)" [alt]="selectedBus.operatorName" />
+          <div>
+            <h3>{{ selectedBus.operatorName }}</h3>
+            <p>{{ selectedBus.busName }}</p>
+            <span>Coach No. {{ selectedBus.busNumber }}</span>
+          </div>
+        </div>
+
+        <div class="trip-meta">
+          <div class="meta-block">
+            <small>DEPARTURE</small>
+            <strong>{{ selectedBus.from }}</strong>
+            <span>{{ selectedBus.departureTime }}</span>
+            <p>{{ formatDateLabel(selectedBus.departureDate) }}</p>
+          </div>
+          <div class="meta-block align-right">
+            <small>ARRIVAL</small>
+            <strong>{{ selectedBus.to }}</strong>
+            <span>{{ selectedBus.arrivalTime }}</span>
+            <p>{{ formatDateLabel(selectedBus.departureDate) }}</p>
+          </div>
+          <div class="meta-divider"></div>
+        </div>
+
+        <p class="traffic-note">Trip time may delay due to traffic</p>
+        <div class="info-strip">
+          <span>Info</span>
+          <strong>Departs from {{ selectedBus.from }} on {{ formatDateLabel(selectedBus.departureDate).toUpperCase() }} at {{ selectedBus.departureTime }}</strong>
+        </div>
+      </section>
+
+      <section class="content-panel" [ngSwitch]="activeTab">
+        <div *ngSwitchCase="'seats'">
+          <h4>{{ drawerTitle }}</h4>
+          <div class="seat-alert">Maximum 4 seats can be selected.</div>
+
+          <div class="seat-legend">
+            <span><i class="legend-box available"></i> Available</span>
+            <span><i class="legend-box sold"></i> Sold</span>
+            <span><i class="legend-box selected"></i> Selected</span>
+          </div>
+
+          <div class="bus-shell">
+            <div class="bus-head">
+              <span class="door-mark">Door</span>
+              <div class="right-cockpit">
+                <span class="steer-mark">⌁</span>
+                <span class="driver-mark">Driver Seat</span>
+              </div>
+            </div>
+
+            <div class="seat-map">
+              <div class="seat-row" *ngFor="let row of seatRows; trackBy: trackBySeatRow">
+                <button
+                  type="button"
+                  class="seat-btn"
+                  [class.unavailable]="isSeatSold(row.leftA)"
+                  [class.selected]="isSeatSelected(row.leftA)"
+                  (click)="toggleSeat(row.leftA)"
+                >
+                  {{ row.leftA }}
+                </button>
+                <button
+                  type="button"
+                  class="seat-btn"
+                  [class.unavailable]="isSeatSold(row.leftB)"
+                  [class.selected]="isSeatSelected(row.leftB)"
+                  (click)="toggleSeat(row.leftB)"
+                >
+                  {{ row.leftB }}
+                </button>
+                <div class="aisle"></div>
+                <button
+                  type="button"
+                  class="seat-btn"
+                  [class.unavailable]="isSeatSold(row.rightA)"
+                  [class.selected]="isSeatSelected(row.rightA)"
+                  (click)="toggleSeat(row.rightA)"
+                >
+                  {{ row.rightA }}
+                </button>
+                <button
+                  type="button"
+                  class="seat-btn"
+                  [class.unavailable]="isSeatSold(row.rightB)"
+                  [class.selected]="isSeatSelected(row.rightB)"
+                  (click)="toggleSeat(row.rightB)"
+                >
+                  {{ row.rightB }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="'boarding'" class="tab-copy boarding-tab">
+          <h4>{{ drawerTitle }}</h4>
+          <div class="boarding-list">
+            <button
+              type="button"
+              class="boarding-row"
+              *ngFor="let stop of tripBoardingPoints; trackBy: trackByTripStop"
+              [class.active]="selectedBoardingPoint === stop.place"
+              (click)="selectBoardingPoint(stop)"
+            >
+              <span class="boarding-radio"></span>
+              <div class="boarding-main">
+                <strong>{{ stop.place }}</strong>
+                <p>{{ stop.city }}</p>
+                <div class="boarding-actions">
+                  <span class="mini-btn">Direction</span>
+                  <span class="mini-btn disabled">Landmarks</span>
+                </div>
+              </div>
+              <div class="boarding-time">{{ stop.time }}</div>
+            </button>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="'amenities'" class="tab-copy">
+          <h4>{{ drawerTitle }}</h4>
+          <div class="chip-grid">
+            <span>AC</span>
+            <span>Charging Point</span>
+            <span>Water</span>
+            <span>Reading Light</span>
+            <span>Recliner Seat</span>
+            <span>Mobile Friendly</span>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="'policies'" class="tab-copy">
+          <h4>{{ drawerTitle }}</h4>
+          <p>
+            This ticket has been issued by Shohoz.com on behalf of the bus operator. Shohoz.com is ONLY a bus ticket agent, it does not operate bus services of its own.
+          </p>
+          <p>
+            Shohoz.com's responsibilities include: Issuing a valid ticket for its network of bus operators; Providing refund and support in the event of cancellation.
+          </p>
+          <p>
+            Shohoz.com's responsibilities do not include: The bus not departing / reaching on time, operator cancelling the trip, changing the type of bus or seat. The bus operator's employees being rude or bus seats etc. not being up to the passenger's expectation. The baggage of the passenger getting lost / stolen / damaged. The passenger waiting at the wrong boarding point or the bus operator changing the boarding point. Fees charged by payment gateways, credit / debit cards, mobile payment gateways (e.g. bKash,Mycash) are non refundable due to the policies of the respective organizations, which is beyond Shohoz.com's control. Ticket delivery fee is non-refundable. The passengers are requested to arrive at the boarding point 20 minutes prior to bus departure time. If not, then the ticket will be considered cancelled. Without a physical copy of the ticket or SMS, passengers may not be allowed to board the bus. The bus operator reserves the right to cancel / delay trips, change buses and change seats due to unavoidable reasons. For ticket cancellation, passenger must call or visit Shohoz.com at least 12 hours (excluding 11 PM to 6 AM) before trip departure time. Each passenger can carry upto 10 Kg of luggage. The bus operator or Shohoz.com would not bear any consequences for the passenger carrying illegal goods. Tickets bought through Shohoz.com are not eligible for refund after the trip has departed, unless the trip was cancelled. All refund requests must be raised as per the cancellation policy of the respective bus operators. In case of strikes or trip cancellations by operators, refund requests must be made within 72 hours of trip departure time. No refunds will be processed without a written request in the correct format by SMS to 6969 or email to refunds@shohoz.com. Upon receiving refund requests in the format outlined below, Shohoz.com will process refund within 3 business days (excluding holidays / weekends). Refunds will be given only through bKash or bank transfer. For refunds through mobile payment gateways (e.g. bKash), a fee is charged by the mobile payment company.
+          </p>
+          <p class="policy-code">SHZ [Ticket PNR] [Personal bKash Number OR Bank details with Account Number, Bank Name, Branch Name and Routing Code]</p>
+        </div>
+
+        <div *ngSwitchCase="'details'" class="tab-copy">
+          <h4>{{ drawerTitle }}</h4>
+          <div class="trip-details-toggle">
+            <button type="button" [class.active]="tripDetailsView === 'boarding'" (click)="setTripDetailsView('boarding')">Boarding</button>
+            <button type="button" [class.active]="tripDetailsView === 'dropping'" (click)="setTripDetailsView('dropping')">Dropping</button>
+          </div>
+
+          <div class="trip-stop-list">
+            <div class="trip-stop" *ngFor="let stop of tripDetailStops; trackBy: trackByTripStop">
+              <div class="trip-stop-left">
+                <span>{{ stop.label }}</span>
+                <strong>{{ stop.time }}</strong>
+                <p>{{ formatDateLabel(stop.date) }}</p>
+              </div>
+              <div class="trip-stop-marker">
+                <span></span>
+              </div>
+              <div class="trip-stop-right">
+                <h5>{{ stop.place }}</h5>
+                <p>{{ stop.city }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer class="drawer-footer" *ngIf="activeTab === 'seats' || activeTab === 'boarding'">
+      <div class="selected-count">{{ activeTab === 'boarding' ? '1 ticket(s) selected' : (selectedSeats.length + ' ticket(s) selected') }}</div>
+      <div class="fare-total">Tk {{ selectedFare | number:'1.0-0' }}</div>
+      <button
+        type="button"
+        class="continue-btn"
+        [class.active]="activeTab === 'seats' ? selectedSeats.length > 0 : !!selectedBoardingPoint"
+        [disabled]="activeTab === 'seats' ? selectedSeats.length === 0 : !selectedBoardingPoint"
+        (click)="activeTab === 'seats' ? continueFromSeats() : continueFromBoarding()"
+      >
+        CONTINUE
+      </button>
+    </footer>
+  </aside>
 </section>
+
+

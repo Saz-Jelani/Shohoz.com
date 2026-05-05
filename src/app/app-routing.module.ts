@@ -7,6 +7,8 @@ import { AuthGuard } from './guards/auth.guard';
 import { AdminBusManagementComponent } from './pages/admin-bus-management/admin-bus-management.component';
 import { MainLayoutComponent } from './components/layout/main-layout/main-layout.component';
 import { BusSearchResultsComponent } from './pages/bus-search-results/bus-search-results.component';
+import { PassengerDetailsComponent } from './pages/passenger-details/passenger-details.component';
+import { ReviewPayComponent } from './pages/review-pay/review-pay.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -18,6 +20,8 @@ const routes: Routes = [
     children: [
       { path: '', component: HomeComponent },
       { path: 'bus/search', component: BusSearchResultsComponent },
+      { path: 'bus/passenger-details', component: PassengerDetailsComponent },
+      { path: 'bus/review-pay', component: ReviewPayComponent },
       { path: 'admin/bus-management', component: AdminBusManagementComponent }
     ]
   },

@@ -1,0 +1,52 @@
+<section class="review-page" *ngIf="booking">
+  <div class="progress-bar">
+    <span>Choose Departing Ticket</span>
+    <span class="chev">›</span>
+    <span>Passenger Details</span>
+    <span class="chev">›</span>
+    <strong>Review &amp; Pay</strong>
+  </div>
+
+  <div class="review-shell">
+    <section class="review-card">
+      <h1>Review &amp; Pay</h1>
+      <div class="review-grid">
+        <div>
+          <span>Passenger</span>
+          <strong>{{ passenger?.firstName }} {{ passenger?.lastName }}</strong>
+        </div>
+        <div>
+          <span>Mobile</span>
+          <strong>{{ passenger?.mobileNo }}</strong>
+        </div>
+        <div>
+          <span>Email</span>
+          <strong>{{ passenger?.email }}</strong>
+        </div>
+        <div>
+          <span>Seats</span>
+          <strong>{{ booking.seats.join(', ') }}</strong>
+        </div>
+      </div>
+    </section>
+
+    <aside class="review-summary">
+      <h2>{{ booking.bus.operatorName }}</h2>
+      <p>{{ booking.bus.from }} to {{ booking.bus.to }}</p>
+      <div class="summary-row">
+        <span>Boarding Point</span>
+        <strong>{{ booking.boardingPoint }}</strong>
+      </div>
+      <div class="summary-row">
+        <span>Boarding Time</span>
+        <strong>{{ booking.boardingTime }}</strong>
+      </div>
+      <div class="summary-row total">
+        <span>Total</span>
+        <strong>Tk {{ fareTotal | number:'1.0-0' }}</strong>
+      </div>
+      <button type="button" class="pay-btn">PAY NOW</button>
+      <button type="button" class="back-btn" (click)="backToSearch()">Back to Search</button>
+    </aside>
+  </div>
+</section>

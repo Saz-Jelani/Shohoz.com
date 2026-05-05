@@ -519,6 +519,7 @@ export class AdminBusManagementComponent implements OnInit {
       departureTime: trip.departureTime,
       arrivalTime: trip.arrivalTime,
       boardingPoints: trip.boardingPoints,
+      boardingPointTimes: trip.boardingPointTimes,
       unavailableSeats: trip.unavailableSeats,
       createdByUserId: currentUser.id as number
     }));

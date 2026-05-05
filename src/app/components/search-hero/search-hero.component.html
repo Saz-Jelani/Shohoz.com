@@ -231,7 +231,7 @@
                 <strong class="new-price">&#2547;{{ getDisplayPrice(bus) }}</strong>
               </div>
               <div class="book-col">
-                <button type="button" disabled>BOOK TICKET</button>
+                <button type="button" (click)="bookTicket.emit(bus)">BOOK TICKET</button>
                 <span><b>{{ getAvailableSeats(bus) }}</b> Seat(s) Available</span>
               </div>
             </div>

@@ -23,6 +23,8 @@ import { ArrivalTimeSelectorComponent } from './components/admin/arrival-time-se
 import { MainLayoutComponent } from './components/layout/main-layout/main-layout.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { BusSearchResultsComponent } from './pages/bus-search-results/bus-search-results.component';
+import { PassengerDetailsComponent } from './pages/passenger-details/passenger-details.component';
+import { ReviewPayComponent } from './pages/review-pay/review-pay.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +46,9 @@ import { BusSearchResultsComponent } from './pages/bus-search-results/bus-search
     ArrivalTimeSelectorComponent,
     MainLayoutComponent,
     FooterComponent,
-    BusSearchResultsComponent
+    BusSearchResultsComponent,
+    PassengerDetailsComponent,
+    ReviewPayComponent
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
   providers: [],

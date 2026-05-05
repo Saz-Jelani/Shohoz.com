@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BusScheduleEntry } from '../../models/bus-management.models';
 import { BusManagementService } from '../../services/bus-management.service';
@@ -13,6 +13,7 @@ export class SearchHeroComponent implements OnInit {
   @Input() selectedMode = 'Bus';
   @Input() showInlineResults = false;
   @Input() compactView = false;
+  @Output() bookTicket = new EventEmitter<BusScheduleEntry>();
 
   tripType: 'One Way' | 'Round Trip' = 'One Way';
   fromCity = '';

@@ -1,0 +1,125 @@
+<section class="passenger-page" *ngIf="booking">
+  <div class="progress-bar">
+    <span>Choose Departing Ticket</span>
+    <span class="chev">&rsaquo;</span>
+    <strong>Passenger Details</strong>
+    <span class="chev">&rsaquo;</span>
+    <span>Review &amp; Pay</span>
+    <span class="timer">04m05s</span>
+  </div>
+
+  <div class="page-grid">
+    <div class="left-column">
+      <section class="contact-card">
+        <div class="card-head">
+          <div class="icon-circle">☎</div>
+          <div>
+            <h2>Contact Details</h2>
+            <p>To receive your E-tickets &amp; updates</p>
+          </div>
+        </div>
+
+        <div class="form-grid contact-grid">
+          <label>
+            <span>Mobile No. *</span>
+            <div class="input-shell">
+              <small>+88</small>
+              <input type="text" [(ngModel)]="mobileNo" placeholder="01340004346" />
+            </div>
+          </label>
+          <label>
+            <span>Email *</span>
+            <div class="input-shell plain">
+              <input type="email" [(ngModel)]="email" placeholder="name@example.com" />
+            </div>
+          </label>
+        </div>
+      </section>
+
+      <div class="section-title">
+        <h3>Passenger Details</h3>
+        <p>Please provide the details of passenger</p>
+      </div>
+
+      <section class="passenger-card">
+        <div class="card-head passenger-head">
+          <div class="avatar-circle">☺</div>
+          <h2>Passenger 1</h2>
+        </div>
+
+        <div class="form-grid passenger-grid">
+          <label>
+            <span>First Name *</span>
+            <div class="input-shell plain">
+              <input type="text" [(ngModel)]="firstName" />
+            </div>
+          </label>
+          <label>
+            <span>Last Name *</span>
+            <div class="input-shell plain">
+              <input type="text" [(ngModel)]="lastName" />
+            </div>
+          </label>
+        </div>
+
+        <div class="gender-row">
+          <span>Gender: *</span>
+          <div class="gender-switch">
+            <button type="button" [class.active]="gender === 'Male'" (click)="gender = 'Male'">Male</button>
+            <button type="button" [class.active]="gender === 'Female'" (click)="gender = 'Female'">Female</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <aside class="summary-column">
+      <section class="summary-card">
+        <div class="operator-row">
+          <img [src]="booking.bus.operatorImage || 'assets/operators/greenline.png'" [alt]="booking.bus.operatorName" />
+          <div class="operator-copy">
+            <h2>{{ booking.bus.operatorName }}</h2>
+            <p>{{ booking.bus.busName }}</p>
+          </div>
+        </div>
+
+        <div class="fare-grid">
+          <div>
+            <span>FARE</span>
+            <strong>Tk {{ fareTotal | number:'1.0-0' }}</strong>
+          </div>
+          <div>
+            <span>SEATS</span>
+            <strong>{{ seatLabel }}</strong>
+          </div>
+        </div>
+
+        <div class="trip-grid">
+          <div>
+            <small>DEPARTURE</small>
+            <h4>{{ booking.bus.from }}</h4>
+            <strong>{{ booking.bus.departureTime }}</strong>
+            <p>{{ formatDateLabel(booking.bus.departureDate) }}</p>
+          </div>
+
+          <div class="trip-divider"></div>
+
+          <div class="align-right">
+            <small>ARRIVAL</small>
+            <h4>{{ booking.bus.to }}</h4>
+            <strong>{{ booking.bus.arrivalTime }}</strong>
+            <p>{{ formatDateLabel(booking.bus.departureDate) }}</p>
+          </div>
+        </div>
+
+        <div class="boarding-block">
+          <span>BOARDING POINT</span>
+          <strong>{{ booking.boardingPoint }}</strong>
+          <small>{{ booking.boardingTime }}</small>
+        </div>
+      </section>
+
+      <button type="button" class="payment-btn" (click)="proceedToPayment()">PROCEED TO PAYMENT</button>
+      <p class="hint">In order to proceed to Review &amp; Pay, please fill up the required details.</p>
+    </aside>
+  </div>
+</section>
