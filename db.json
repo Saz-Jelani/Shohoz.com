@@ -11,6 +11,12 @@
       "email": "sazzad05101003@student.ndub.edu.bd",
       "password": "sazzad",
       "id": 2
+    },
+    {
+      "name": "Sazzad zelany",
+      "email": "zelanysazzad@gmail.com",
+      "password": "Sazzad",
+      "id": 3
     }
   ],
   "operators": [

@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BusScheduleEntry } from '../../models/bus-management.models';
 import { BusManagementService } from '../../services/bus-management.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-search-hero',
@@ -19,6 +20,8 @@ export class SearchHeroComponent implements OnInit {
   journeyDate = '';
   returnDate = '';
   readonly today = new Date().toISOString().split('T')[0];
+
+  @ViewChild('fromInput') fromInput?: ElementRef<HTMLInputElement>;
   fromPlaceholder = 'From';
   toPlaceholder = 'To';
 
@@ -47,10 +50,13 @@ export class SearchHeroComponent implements OnInit {
   fareSort: '' | 'asc' | 'desc' = '';
   isRadioAnimating = false;
 
+  recentSearches: { from: string; to: string; date: string; returnDate?: string; tripType: 'One Way' | 'Round Trip'; createdAt: string }[] = [];
+
   constructor(
     private readonly busManagementService: BusManagementService,
     public readonly router: Router,
-    private readonly route: ActivatedRoute
+    private readonly route: ActivatedRoute,
+    private readonly authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -64,6 +70,7 @@ export class SearchHeroComponent implements OnInit {
       }
     }
     this.loadSchedules();
+    this.loadRecentSearches();
   }
 
   setTripType(type: 'One Way' | 'Round Trip'): void {
@@ -212,7 +219,7 @@ export class SearchHeroComponent implements OnInit {
         return;
       }
 
-      // no errors -> navigate to search page
+      // no errors -> navigate to search page (recent will be added only when results exist on the search page)
       this.router.navigate(['/bus/search'], {
         queryParams: {
           from: this.fromCity,
@@ -246,6 +253,11 @@ export class SearchHeroComponent implements OnInit {
       } else {
         this.errorMessage = '';
       }
+    }
+
+    // If inline results mode and we found buses, persist as recent (max 3)
+    if (this.showInlineResults && this.searchResults.length > 0) {
+      this.saveRecentSearch();
     }
   }
 
@@ -428,5 +440,60 @@ export class SearchHeroComponent implements OnInit {
       return mins >= 1080;
     }
     return true;
+  }
+
+  // Recent searches: persisted per-user via localStorage
+  private recentKey(): string {
+    const u = this.authService.getCurrentUser();
+    return u ? `recentSearches_${u.id}` : 'recentSearches_guest';
+  }
+
+  private loadRecentSearches(): void {
+    try {
+      const raw = localStorage.getItem(this.recentKey());
+      const arr = raw ? JSON.parse(raw) : [];
+      this.recentSearches = Array.isArray(arr) ? arr.slice(0, 3) : [];
+    } catch {
+      this.recentSearches = [];
+    }
+  }
+
+  private saveRecentSearch(): void {
+    const u = this.authService.getCurrentUser();
+    if (!u) return; // only persist for logged-in users
+    const entry = { from: this.fromCity, to: this.toCity, date: this.journeyDate, returnDate: this.returnDate || undefined, tripType: this.tripType, createdAt: new Date().toISOString() };
+    const key = `recentSearches_${u.id}`;
+    let arr: any[] = [];
+    try { arr = localStorage.getItem(key) ? JSON.parse(localStorage.getItem(key) as string) : []; } catch { arr = []; }
+    arr = arr.filter((s) => !(s.from === entry.from && s.to === entry.to && s.date === entry.date && s.returnDate === entry.returnDate));
+    arr.unshift(entry);
+    if (arr.length > 3) arr = arr.slice(0, 3);
+    try { localStorage.setItem(key, JSON.stringify(arr)); } catch {}
+    this.recentSearches = arr;
+  }
+
+  onRecentSearchClick(rs: any): void {
+    const params: any = { from: rs.from, to: rs.to, date: rs.date };
+    if (rs.returnDate) params.returnDate = rs.returnDate;
+    this.router.navigate(['/bus/search'], { queryParams: params });
+  }
+
+  clearSearchInputs(): void {
+    this.fromCity = '';
+    this.toCity = '';
+    this.journeyDate = '';
+    this.returnDate = '';
+    this.tripType = 'One Way';
+    this.errorMessage = '';
+    this.fromError = '';
+    this.toError = '';
+    this.dateError = '';
+    this.showFromDropdown = false;
+    this.showToDropdown = false;
+    setTimeout(() => this.fromInput?.nativeElement.focus(), 0);
+  }
+
+  startNewSearch(): void {
+    this.clearSearchInputs();
   }
 }

@@ -17,7 +17,7 @@
       <div class="field-card">
         <span class="field-icon">&#10148;</span>
         <label *ngIf="!showInlineResults">From</label>
-        <input
+        <input #fromInput
           [(ngModel)]="fromCity"
           [placeholder]="fromPlaceholder"
           (input)="onCityInput('from')"
@@ -113,6 +113,27 @@
       <p class="field-error date-error" *ngIf="dateError">{{ dateError }}</p>
     </div>
       <p class="search-error" *ngIf="errorMessage && !showInlineResults">{{ errorMessage }}</p>
+  </div>
+
+  <div class="recent-searches container" *ngIf="!showInlineResults && recentSearches.length > 0">
+    <h2 class="recent-heading">Your Recent Searches</h2>
+    <div class="recent-cards">
+      <div class="recent-card" *ngFor="let rs of recentSearches">
+        <div class="recent-icon"><img src="assets/copy.png" alt="history" class="recent-icon-img" /></div>
+        <div class="recent-body">
+          <h4>{{ rs.from }} → {{ rs.to }}</h4>
+          <p class="muted">{{ formatDateLabel(rs.date) }} <span *ngIf="rs.tripType === 'Round Trip'">→ {{ formatDateLabel(rs.returnDate || '') }}</span></p>
+          <p class="muted">{{ rs.tripType }}</p>
+          <a role="button" class="check-prices" (click)="onRecentSearchClick(rs)">Check Prices ›</a>
+        </div>
+      </div>
+      <button type="button" class="recent-card start-new" (click)="startNewSearch()">
+        <div class="recent-icon">🔍</div>
+        <div class="recent-body">
+          <h4>Start a new search</h4>
+        </div>
+      </button>
+    </div>
   </div>
 
   <div class="progress-strip" *ngIf="showInlineResults">
