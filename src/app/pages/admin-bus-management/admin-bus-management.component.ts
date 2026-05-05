@@ -4,6 +4,8 @@ import { forkJoin } from 'rxjs';
 import { BusScheduleEntry } from '../../models/bus-management.models';
 import { AuthService } from '../../services/auth.service';
 import { BusManagementService } from '../../services/bus-management.service';
+import { OperatorService } from '../../services/operator.service';
+import { Operator } from '../../models/operator.model';
 
 interface OptionWithId {
   id: number;
@@ -32,20 +34,15 @@ interface BusTripConfig {
 })
 export class AdminBusManagementComponent implements OnInit {
   readonly locations: string[] = ['Dhaka', 'Chattogram', "Cox's Bazar", 'Sylhet', 'Rajshahi', 'Khulna', 'Barishal', 'Rangpur'];
-  readonly operators: OptionWithId[] = [
-    { id: 1, label: 'Green Line' },
-    { id: 2, label: 'Hanif' },
-    { id: 3, label: 'Shohagh' },
-    { id: 4, label: 'Ena' },
-    { id: 5, label: 'Soudia' }
-  ];
-  readonly operatorLogos: Record<number, string> = {
-    1: 'assets/operators/green-line.svg',
-    2: 'assets/operators/hanif.svg',
-    3: 'assets/operators/shohagh.svg',
-    4: 'assets/operators/ena.svg',
-    5: 'assets/operators/soudia.svg'
-  };
+  operators: OptionWithId[] = [];
+  operatorLogos: Record<number, string> = {};
+  // admin operator management UI state
+  managingOperators = false;
+  newOperatorName = '';
+  newOperatorImageData: string | null = null; // data URI when uploaded
+  editingOperatorId: number | null = null;
+  editingOperatorName = '';
+  editingOperatorImageData: string | null = null;
   readonly busNames: OptionWithId[] = [
     { id: 1, label: 'Scania Coach' },
     { id: 2, label: 'Volvo B11R' },
@@ -86,13 +83,41 @@ export class AdminBusManagementComponent implements OnInit {
   constructor(
     private readonly authService: AuthService,
     private readonly busManagementService: BusManagementService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly operatorService: OperatorService
   ) {}
 
   ngOnInit(): void {
     if (!this.authService.isAdmin()) {
       this.router.navigate(['/']);
     }
+    // load operators from API (json-server)
+    this.loadOperators();
+  }
+
+  private loadOperators(): void {
+    this.operatorService.getAllOperators().subscribe({
+      next: (ops) => {
+        this.operators = ops.map((o) => ({ id: o.id ?? 0, label: o.label }));
+        // build logo map
+        this.operatorLogos = {};
+        ops.forEach((o) => {
+          if (o.id) {
+            this.operatorLogos[o.id] = o.operatorImage || '';
+          }
+        });
+      },
+      error: () => {
+        // fallback to default hardcoded operators if API not available
+        this.operators = [
+          { id: 1, label: 'Green Line' },
+          { id: 2, label: 'Hanif' },
+          { id: 3, label: 'Shohagh' },
+          { id: 4, label: 'Ena' },
+          { id: 5, label: 'Soudia' }
+        ];
+      }
+    });
   }
 
   get availableToLocations(): string[] {
@@ -108,6 +133,73 @@ export class AdminBusManagementComponent implements OnInit {
       return '';
     }
     return this.operatorLogos[this.selectedOperatorId] ?? '';
+  }
+
+  startEditOperator(id: number): void {
+    const op = this.operators.find((o) => o.id === id);
+    if (!op) return;
+    this.editingOperatorId = id;
+    this.editingOperatorName = op.label;
+    this.editingOperatorImageData = this.operatorLogos[id] || null;
+    this.newOperatorName = '';
+  }
+
+  cancelEdit(): void {
+    this.editingOperatorId = null;
+    this.editingOperatorName = '';
+    this.editingOperatorImageData = null;
+    this.newOperatorName = '';
+    this.newOperatorImageData = null;
+  }
+
+  onOperatorImageSelected(event: Event, editingId: number | null): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+    const file = input.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      if (editingId) {
+        this.editingOperatorImageData = result;
+      } else {
+        this.newOperatorImageData = result;
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  saveOperator(): void {
+    if (this.editingOperatorId) {
+      // update
+      const payload: Operator = { label: this.editingOperatorName, operatorImage: this.editingOperatorImageData || undefined };
+      this.operatorService.updateOperator(this.editingOperatorId, payload).subscribe({
+        next: (op) => {
+          this.loadOperators();
+          this.cancelEdit();
+        },
+        error: () => {
+          this.errorMessage = 'Unable to update operator.';
+        }
+      });
+      return;
+    }
+
+    // create
+    if (!this.newOperatorName) {
+      this.errorMessage = 'Operator name required.';
+      return;
+    }
+    const payload: Operator = { label: this.newOperatorName, operatorImage: this.newOperatorImageData || undefined };
+    this.operatorService.createOperator(payload).subscribe({
+      next: (op) => {
+        this.loadOperators();
+        this.newOperatorName = '';
+        this.newOperatorImageData = null;
+      },
+      error: () => {
+        this.errorMessage = 'Unable to create operator.';
+      }
+    });
   }
 
   get selectedBusNameLabel(): string {

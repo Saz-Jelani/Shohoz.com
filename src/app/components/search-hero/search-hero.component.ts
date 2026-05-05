@@ -152,6 +152,39 @@ export class SearchHeroComponent implements OnInit {
     input.click();
   }
 
+  /**
+   * Maps operator image paths to PNG equivalents if available, and handles data URIs.
+   * @param operatorImage The original operator image path or data URI
+   * @returns The preferred PNG path, or the original if not mappable
+   */
+  getOperatorImage(operatorImage?: string): string {
+    // default to existing greenline PNG asset when none provided
+    if (!operatorImage) {
+      return 'assets/operators/greenline.png';
+    }
+    // If it's a data URI, return as is
+    if (operatorImage.startsWith('data:')) {
+      return operatorImage;
+    }
+    // Map .svg to .png where possible, with a couple of name fixes for existing png files
+    if (operatorImage.endsWith('.svg')) {
+      // normalize name then map to known png equivalents when names differ
+      let base = operatorImage.replace('.svg', '');
+      // canonical mappings for misspelled/different filenames in assets
+      base = base.replace('assets/operators/green-line', 'assets/operators/greenline');
+      base = base.replace('assets/operators/shohagh', 'assets/operators/shohag');
+      base = base.replace('assets/operators/soudia', 'assets/operators/saudia');
+      return `${base}.png`;
+    }
+
+    // If operatorImage already points to a PNG but filename is misspelled in db, normalize common cases
+    let normalized = operatorImage;
+    normalized = normalized.replace('assets/operators/green-line.png', 'assets/operators/greenline.png');
+    normalized = normalized.replace('assets/operators/soudia.png', 'assets/operators/saudia.png');
+    normalized = normalized.replace('assets/operators/shohagh.png', 'assets/operators/shohag.png');
+    return normalized;
+  }
+
   onSearch(): void {
     // clear previous errors
     this.errorMessage = '';

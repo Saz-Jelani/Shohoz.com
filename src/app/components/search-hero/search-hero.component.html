@@ -174,7 +174,7 @@
       <article class="bus-card" *ngFor="let bus of sortedFilteredSearchResults">
         <div class="bus-head-row">
           <div class="operator-block">
-            <img [src]="bus.operatorImage || 'assets/operators/green-line.svg'" [alt]="bus.operatorName" class="operator-logo" />
+            <img [src]="getOperatorImage(bus.operatorImage)" [alt]="bus.operatorName" class="operator-logo" />
             <div>
               <h3>{{ bus.operatorName }}</h3>
               <p>{{ bus.busName }} | {{ bus.serviceType }}</p>

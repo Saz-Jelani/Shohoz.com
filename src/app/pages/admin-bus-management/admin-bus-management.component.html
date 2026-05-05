@@ -22,6 +22,31 @@
         <option *ngFor="let operator of operators" [ngValue]="operator.id">{{ operator.label }}</option>
       </select>
       <img *ngIf="selectedOperatorLogo" [src]="selectedOperatorLogo" alt="Operator" class="operator-preview" />
+      <div class="manage-operators">
+        <button type="button" class="mini-btn" (click)="managingOperators = !managingOperators">{{ managingOperators ? 'Close' : 'Manage Operators' }}</button>
+        <div *ngIf="managingOperators" class="manage-panel">
+          <h4>Existing Operators</h4>
+          <ul>
+            <li *ngFor="let op of operators">
+              <img *ngIf="operatorLogos[op.id]" [src]="operatorLogos[op.id]" alt="{{ op.label }}" class="operator-thumb" />
+              {{ op.label }}
+              <button type="button" class="mini-btn" (click)="startEditOperator(op.id)">Edit</button>
+            </li>
+          </ul>
+
+          <div class="add-operator">
+            <h4>{{ editingOperatorId ? 'Edit Operator' : 'Add Operator' }}</h4>
+            <label>Operator Name</label>
+            <input type="text" [(ngModel)]="editingOperatorId ? editingOperatorName : newOperatorName" />
+            <label>Image (PNG/JPG)</label>
+            <input type="file" (change)="onOperatorImageSelected($event, editingOperatorId)" accept="image/*" />
+            <div class="manage-actions">
+              <button type="button" class="ok-btn" (click)="saveOperator()">Save</button>
+              <button type="button" class="reset-btn" (click)="cancelEdit()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="field-group" [class.locked]="!canPickBusName">

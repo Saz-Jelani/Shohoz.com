@@ -13,6 +13,33 @@
       "id": 2
     }
   ],
+  "operators": [
+    {
+      "label": "Green Line",
+      "operatorImage": "assets/operators/greenline.png",
+      "id": 1
+    },
+    {
+      "id": 2,
+      "label": "Hanif",
+      "operatorImage": "assets/operators/hanif.png"
+    },
+    {
+      "id": 3,
+      "label": "Soudia",
+      "operatorImage": "assets/operators/saudia.png"
+    },
+    {
+      "id": 4,
+      "label": "Shohagh",
+      "operatorImage": "assets/operators/shohag.png"
+    },
+    {
+      "id": 5,
+      "label": "Ena",
+      "operatorImage": "assets/operators/ena.png"
+    }
+  ],
   "busSchedules": [
     {
       "from": "Chattogram",
@@ -66,7 +93,7 @@
     {
       "from": "Chattogram",
       "operatorName": "Soudia",
-      "operatorImage": "assets/operators/soudia.svg",
+      "operatorImage": "assets/operators/soudia.png",
       "busName": "AC Sleeper",
       "busNumber": "0552",
       "to": "Dhaka",
@@ -92,7 +119,7 @@
     {
       "from": "Chattogram",
       "operatorName": "Shohagh",
-      "operatorImage": "assets/operators/shohagh.svg",
+      "operatorImage": "assets/operators/shohag.png",
       "busName": "Volvo B11R",
       "busNumber": "0321",
       "to": "Dhaka",
@@ -163,6 +190,30 @@
       "unavailableSeats": [],
       "createdByUserId": 1,
       "id": 6
+    },
+    {
+      "from": "Dhaka",
+      "operatorName": "Green Line",
+      "operatorImage": "assets/operators/greenline.png",
+      "busName": "Volvo B11R",
+      "busNumber": "0121",
+      "to": "Chattogram",
+      "serviceType": "AC",
+      "price": 1000,
+      "discountPrice": 9,
+      "departureDate": "2026-05-07",
+      "departureTime": "04:30 AM",
+      "arrivalTime": "07:30 AM",
+      "boardingPoints": [
+        "Gabtoli",
+        "Kallyanpur",
+        "Asad Gate",
+        "Farmgate",
+        "Sayedabad"
+      ],
+      "unavailableSeats": [],
+      "createdByUserId": 1,
+      "id": 7
     }
   ]
 }

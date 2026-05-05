@@ -89,6 +89,13 @@ input[type='file'] {
   border: 1px solid #c8d7ce;
   object-fit: cover;
 }
+.manage-operators { margin-top: 8px; }
+.manage-panel { margin-top: 8px; background: #fff; border: 1px solid #e6e6e6; padding: 12px; border-radius: 8px; }
+.manage-panel ul { list-style: none; margin: 0; padding: 0; }
+.manage-panel li { display: flex; align-items: center; gap: 8px; padding: 6px 0; }
+.operator-thumb { width: 36px; height: 36px; object-fit: contain; border-radius: 6px; border: 1px solid #eee; }
+.add-operator { margin-top: 10px; }
+.manage-actions { margin-top: 8px; display: flex; gap: 8px; }
 
 .hint {
   margin: 6px 0 0;
