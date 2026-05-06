@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { BusScheduleEntry } from '../../models/bus-management.models';
 import { AuthService } from '../../services/auth.service';
 import { BusManagementService } from '../../services/bus-management.service';
+import { LaunchManagementService } from '../../services/launch-management.service';
 import { OperatorService } from '../../services/operator.service';
 import { Operator } from '../../models/operator.model';
 
@@ -24,6 +25,7 @@ interface BusTripConfig {
   boardingPoints: string[];
   boardingPointTimes: string[];
   unavailableSeats: string[];
+  cabinUnavailableSeats: string[];
   isReady: boolean;
 }
 
@@ -33,6 +35,8 @@ interface BusTripConfig {
   styleUrls: ['./admin-bus-management.component.css']
 })
 export class AdminBusManagementComponent implements OnInit {
+  isLaunchMode = false;
+  modeLabel = 'Bus';
   readonly locations: string[] = ['Dhaka', 'Chattogram', "Cox's Bazar", 'Sylhet', 'Rajshahi', 'Khulna', 'Barishal', 'Rangpur'];
   operators: OptionWithId[] = [];
   operatorLogos: Record<number, string> = {};
@@ -50,10 +54,18 @@ export class AdminBusManagementComponent implements OnInit {
     { id: 4, label: 'Hyundai Universe' },
     { id: 5, label: 'AC Sleeper' }
   ];
+  readonly launchNames: OptionWithId[] = [
+    { id: 1, label: 'MV Green Pearl' },
+    { id: 2, label: 'MV Sunrise' },
+    { id: 3, label: 'MV Blue Sky' },
+    { id: 4, label: 'MV Bay Queen' },
+    { id: 5, label: 'MV Royal Star' }
+  ];
   readonly acPriceOptions = [600, 700, 800, 900, 1000];
   readonly nonAcPriceOptions = [500, 600, 700, 800, 900];
   readonly timeOptions = Array.from({ length: 48 }, (_, i) => this.to12HourLabel(i * 30));
   readonly seatLabels = Array.from({ length: 10 }, (_, i) => String.fromCharCode(65 + i)).flatMap((letter) => [`${letter}1`, `${letter}2`, `${letter}3`, `${letter}4`]);
+  readonly cabinSeatLabels = Array.from({ length: 2 }, (_, i) => String.fromCharCode(65 + i)).flatMap((letter) => [`${letter}1`, `${letter}2`, `${letter}3`, `${letter}4`]);
   readonly today = new Date().toISOString().split('T')[0];
   readonly locationBoardingPoints: Record<string, string[]> = {
     Dhaka: ['Gabtoli', 'Kallyanpur', 'Asad Gate', 'Farmgate', 'Sayedabad'],
@@ -83,11 +95,15 @@ export class AdminBusManagementComponent implements OnInit {
   constructor(
     private readonly authService: AuthService,
     private readonly busManagementService: BusManagementService,
+    private readonly launchManagementService: LaunchManagementService,
     private readonly router: Router,
+    private readonly route: ActivatedRoute,
     private readonly operatorService: OperatorService
   ) {}
 
   ngOnInit(): void {
+    this.isLaunchMode = this.route.snapshot.routeConfig?.path?.includes('launch-management') ?? this.router.url.includes('/admin/launch-management');
+    this.modeLabel = this.isLaunchMode ? 'Launch' : 'Bus';
     if (!this.authService.isAdmin()) {
       this.router.navigate(['/']);
     }
@@ -203,7 +219,11 @@ export class AdminBusManagementComponent implements OnInit {
   }
 
   get selectedBusNameLabel(): string {
-    return this.busNames.find((item) => item.id === this.selectedBusNameId)?.label ?? '';
+    return this.nameOptions.find((item) => item.id === this.selectedBusNameId)?.label ?? '';
+  }
+
+  get nameOptions(): OptionWithId[] {
+    return this.isLaunchMode ? this.launchNames : this.busNames;
   }
 
   get generatedBusNumbers(): string[] {
@@ -397,18 +417,49 @@ export class AdminBusManagementComponent implements OnInit {
     });
   }
 
+  toggleCabinSeat(busNumber: string, seat: string): void {
+    this.busTripConfigs = this.busTripConfigs.map((trip) => {
+      if (trip.busNumber !== busNumber) {
+        return trip;
+      }
+      const set = new Set(trip.cabinUnavailableSeats);
+      if (set.has(seat)) {
+        set.delete(seat);
+      } else {
+        set.add(seat);
+      }
+      return { ...trip, cabinUnavailableSeats: [...set], isReady: false };
+    });
+  }
+
   isSeatUnavailable(trip: BusTripConfig, seat: string): boolean {
     return trip.unavailableSeats.includes(seat);
+  }
+
+  isCabinSeatUnavailable(trip: BusTripConfig, seat: string): boolean {
+    return trip.cabinUnavailableSeats.includes(seat);
   }
 
   getAvailableSeatCount(trip: BusTripConfig): number {
     return this.seatLabels.length - trip.unavailableSeats.length;
   }
 
+  getAvailableCabinSeatCount(trip: BusTripConfig): number {
+    return this.cabinSeatLabels.length - trip.cabinUnavailableSeats.length;
+  }
+
   getSeatRows(): { leftA: string; leftB: string; rightA: string; rightB: string }[] {
     const rows: { leftA: string; leftB: string; rightA: string; rightB: string }[] = [];
     for (let i = 0; i < this.seatLabels.length; i += 4) {
       rows.push({ leftA: this.seatLabels[i], leftB: this.seatLabels[i + 1], rightA: this.seatLabels[i + 2], rightB: this.seatLabels[i + 3] });
+    }
+    return rows;
+  }
+
+  getCabinSeatRows(): { leftA: string; leftB: string; rightA: string; rightB: string }[] {
+    const rows: { leftA: string; leftB: string; rightA: string; rightB: string }[] = [];
+    for (let i = 0; i < this.cabinSeatLabels.length; i += 4) {
+      rows.push({ leftA: this.cabinSeatLabels[i], leftB: this.cabinSeatLabels[i + 1], rightA: this.cabinSeatLabels[i + 2], rightB: this.cabinSeatLabels[i + 3] });
     }
     return rows;
   }
@@ -466,6 +517,7 @@ export class AdminBusManagementComponent implements OnInit {
       boardingPoints: points,
       boardingPointTimes: this.getDefaultBoardingTimes('', points.length),
       unavailableSeats: [],
+      cabinUnavailableSeats: [],
       isReady: false
     });
   }
@@ -487,16 +539,16 @@ export class AdminBusManagementComponent implements OnInit {
     this.errorMessage = '';
     this.successMessage = '';
     if (!this.selectedFrom || !this.selectedOperatorLabel || !this.selectedBusNameLabel) {
-      this.errorMessage = 'Please select From, Operator and Bus Name.';
+      this.errorMessage = `Please select From, Operator and ${this.modeLabel} Name.`;
       return;
     }
     const blocked = this.selectedBusNumbers.find((busNo) => !this.isBusSelectableFrom(busNo));
     if (blocked) {
-      this.errorMessage = `Bus ${blocked} can start only from ${this.busRequiredFrom[blocked]}.`;
+      this.errorMessage = `${this.modeLabel} ${blocked} can start only from ${this.busRequiredFrom[blocked]}.`;
       return;
     }
     if (!this.isReadyToConfirm) {
-      this.errorMessage = 'Complete all selected bus sections before confirm.';
+      this.errorMessage = `Complete all selected ${this.modeLabel.toLowerCase()} sections before confirm.`;
       return;
     }
     const currentUser = this.authService.getCurrentUser();
@@ -505,7 +557,7 @@ export class AdminBusManagementComponent implements OnInit {
       return;
     }
 
-    const requests = this.busTripConfigs.map((trip) => this.busManagementService.createSchedule({
+    const requests = this.busTripConfigs.map((trip) => this.getScheduleService().createSchedule({
       from: this.selectedFrom,
       operatorName: this.selectedOperatorLabel,
       operatorImage: this.selectedOperatorLogo || undefined,
@@ -521,6 +573,7 @@ export class AdminBusManagementComponent implements OnInit {
       boardingPoints: trip.boardingPoints,
       boardingPointTimes: trip.boardingPointTimes,
       unavailableSeats: trip.unavailableSeats,
+      cabinUnavailableSeats: this.isLaunchMode ? trip.cabinUnavailableSeats : [],
       createdByUserId: currentUser.id as number
     }));
 
@@ -528,7 +581,7 @@ export class AdminBusManagementComponent implements OnInit {
     forkJoin(requests).subscribe({
       next: () => {
         this.isSubmitting = false;
-        this.successMessage = 'All selected bus schedules saved successfully.';
+        this.successMessage = `All selected ${this.modeLabel.toLowerCase()} schedules saved successfully.`;
         setTimeout(() => {
           window.location.reload();
         }, 500);
@@ -568,6 +621,7 @@ export class AdminBusManagementComponent implements OnInit {
         boardingPoints: points,
         boardingPointTimes: this.getDefaultBoardingTimes('', points.length),
         unavailableSeats: [],
+        cabinUnavailableSeats: [],
         isReady: false
       };
     });
@@ -580,7 +634,7 @@ export class AdminBusManagementComponent implements OnInit {
       this.busMinDepartureAt = {};
       return;
     }
-    const calls = candidates.map((busNo) => this.busManagementService.getSchedulesByBusNumber(busNo));
+    const calls = candidates.map((busNo) => this.getScheduleService().getSchedulesByBusNumber(busNo));
     forkJoin(calls).subscribe({
       next: (allRows) => {
         const nextFrom: Record<string, string> = {};
@@ -662,6 +716,10 @@ export class AdminBusManagementComponent implements OnInit {
     this.busTripConfigs = [];
     this.busRequiredFrom = {};
     this.busMinDepartureAt = {};
+  }
+
+  private getScheduleService(): BusManagementService | LaunchManagementService {
+    return this.isLaunchMode ? this.launchManagementService : this.busManagementService;
   }
 
   private to12HourLabel(totalMinutes: number): string {

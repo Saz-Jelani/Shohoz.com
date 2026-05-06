@@ -28,7 +28,8 @@ const routes: Routes = [
       { path: 'launch-tickets', component: LaunchHomeComponent },
       { path: 'my-profile', component: MyProfileComponent },
       { path: 'change-password', component: ChangePasswordComponent },
-      { path: 'admin/bus-management', component: AdminBusManagementComponent }
+      { path: 'admin/bus-management', component: AdminBusManagementComponent },
+      { path: 'admin/launch-management', component: AdminBusManagementComponent }
     ]
   },
   { path: '**', redirectTo: '' }

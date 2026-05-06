@@ -21,5 +21,6 @@ export interface BusScheduleEntry {
   boardingPoints: string[];
   boardingPointTimes?: string[];
   unavailableSeats: string[];
+  cabinUnavailableSeats?: string[];
   createdByUserId: number;
 }

@@ -23,14 +23,23 @@
               </div>
               <div class="input-container">
                 <p class="label-text">From</p>
-                <input type="text" id="dest_from" placeholder="From" autocomplete="off" name="dest_from" />
+                <input
+                  type="text"
+                  id="dest_from"
+                  placeholder="From"
+                  autocomplete="off"
+                  name="dest_from"
+                  [(ngModel)]="fromCity"
+                  (input)="onCityInput('from')"
+                  (focus)="onCityFocus('from')"
+                  (blur)="hideDropdown('from')"
+                />
               </div>
             </div>
 
-            <div class="station-filter-dropdown">
+            <div class="station-filter-dropdown" [class.open]="showFromDropdown && fromSuggestions.length > 0">
               <div class="recent-search-list">
-                <span class="recent-search-head">Recent Searches</span>
-                <button *ngFor="let item of recentFromStations" type="button" tabindex="-1" class="single-station" [attr.data-value]="item">
+                <button *ngFor="let item of fromSuggestions" type="button" tabindex="-1" class="single-station" [attr.data-value]="item" (mousedown)="selectSuggestion('from', item)">
                   <svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="mr-3" aria-hidden="true">
                     <path d="M6.08031 0C9.2346 0 11.8403 2.65584 11.8403 5.97565C11.8403 9.24802 8.73174 13.4215 6.08031 15.034C3.38317 13.3741 0.320312 9.29545 0.320312 5.97565C0.320312 2.65584 2.88031 0 6.08031 0ZM6.08031 0.948515C3.38317 0.948515 1.2346 3.17753 1.2346 5.97565C1.2346 8.72634 3.93174 12.473 6.08031 13.8957C8.22888 12.5204 10.926 8.67891 10.926 5.97565C10.926 3.17753 8.73174 0.948515 6.08031 0.948515Z" fill="#B7B7B7"></path>
                     <path d="M6.08049 2.56104C7.86335 2.56104 9.32621 4.07866 9.32621 5.97569C9.32621 7.82529 7.86335 9.34292 6.08049 9.34292C4.25192 9.34292 2.78906 7.82529 2.78906 5.97569C2.78906 4.07866 4.25192 2.56104 6.08049 2.56104ZM6.08049 3.50955C4.75478 3.50955 3.70335 4.60034 3.70335 5.97569C3.70335 7.30361 4.75478 8.3944 6.08049 8.3944C7.36049 8.3944 8.41192 7.30361 8.41192 5.97569C8.41192 4.60034 7.36049 3.50955 6.08049 3.50955Z" fill="#B7B7B7"></path>
@@ -38,7 +47,6 @@
                   <span>{{ item }}</span>
                 </button>
               </div>
-              <div class="filtered-station-list"></div>
             </div>
           </label>
 
@@ -59,14 +67,23 @@
               </div>
               <div class="input-container">
                 <p class="label-text">To</p>
-                <input type="text" id="dest_to" placeholder="To" autocomplete="off" name="dest_to" />
+                <input
+                  type="text"
+                  id="dest_to"
+                  placeholder="To"
+                  autocomplete="off"
+                  name="dest_to"
+                  [(ngModel)]="toCity"
+                  (input)="onCityInput('to')"
+                  (focus)="onCityFocus('to')"
+                  (blur)="hideDropdown('to')"
+                />
               </div>
             </div>
 
-            <div class="station-filter-dropdown">
+            <div class="station-filter-dropdown" [class.open]="showToDropdown && toSuggestions.length > 0">
               <div class="recent-search-list">
-                <span class="recent-search-head">Recent Searches</span>
-                <button *ngFor="let item of recentToStations" type="button" tabindex="-1" class="single-station" [attr.data-value]="item">
+                <button *ngFor="let item of toSuggestions" type="button" tabindex="-1" class="single-station" [attr.data-value]="item" (mousedown)="selectSuggestion('to', item)">
                   <svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="mr-3" aria-hidden="true">
                     <path d="M6.08031 0C9.2346 0 11.8403 2.65584 11.8403 5.97565C11.8403 9.24802 8.73174 13.4215 6.08031 15.034C3.38317 13.3741 0.320312 9.29545 0.320312 5.97565C0.320312 2.65584 2.88031 0 6.08031 0ZM6.08031 0.948515C3.38317 0.948515 1.2346 3.17753 1.2346 5.97565C1.2346 8.72634 3.93174 12.473 6.08031 13.8957C8.22888 12.5204 10.926 8.67891 10.926 5.97565C10.926 3.17753 8.73174 0.948515 6.08031 0.948515Z" fill="#B7B7B7"></path>
                     <path d="M6.08049 2.56104C7.86335 2.56104 9.32621 4.07866 9.32621 5.97569C9.32621 7.82529 7.86335 9.34292 6.08049 9.34292C4.25192 9.34292 2.78906 7.82529 2.78906 5.97569C2.78906 4.07866 4.25192 2.56104 6.08049 2.56104ZM6.08049 3.50955C4.75478 3.50955 3.70335 4.60034 3.70335 5.97569C3.70335 7.30361 4.75478 8.3944 6.08049 8.3944C7.36049 8.3944 8.41192 7.30361 8.41192 5.97569C8.41192 4.60034 7.36049 3.50955 6.08049 3.50955Z" fill="#B7B7B7"></path>
@@ -74,7 +91,6 @@
                   <span>{{ item }}</span>
                 </button>
               </div>
-              <div class="filtered-station-list"></div>
             </div>
           </label>
 
@@ -91,9 +107,9 @@
           <div class="trip-search-btn">
             <button type="submit">Search</button>
           </div>
-        </form>
-      </div>
+      </form>
     </div>
+  </div>
   </div>
 
   <div class="container purchase-step-section">

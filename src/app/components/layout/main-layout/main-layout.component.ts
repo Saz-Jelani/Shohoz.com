@@ -33,6 +33,10 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
 
   onServiceClick(payload: { mode: string; target: 'user' | 'admin' }): void {
     if (payload.target === 'admin') {
+      if (payload.mode === 'Launch') {
+        this.router.navigate(['/admin/launch-management']);
+        return;
+      }
       this.router.navigate(['/admin/bus-management']);
       return;
     }
@@ -46,7 +50,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   }
 
   private syncSelectedMode(url: string): void {
-    if (url.startsWith('/launch-tickets')) {
+    if (url.startsWith('/launch-tickets') || url.startsWith('/admin/launch-management')) {
       this.selectedMode = 'Launch';
       return;
     }

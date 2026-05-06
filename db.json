@@ -484,6 +484,44 @@
       "id": 15
     }
   ],
+  "launchSchedules": [
+    {
+      "from": "Dhaka",
+      "operatorName": "Shohagh",
+      "operatorImage": "assets/operators/shohag.png",
+      "busName": "MV Blue Sky",
+      "busNumber": "0433",
+      "to": "Khulna",
+      "serviceType": "AC",
+      "price": 800,
+      "discountPrice": 50,
+      "departureDate": "2026-05-06",
+      "departureTime": "05:00 AM",
+      "arrivalTime": "08:00 AM",
+      "boardingPoints": [
+        "Gabtoli",
+        "Kallyanpur",
+        "Asad Gate",
+        "Farmgate",
+        "Sayedabad"
+      ],
+      "boardingPointTimes": [
+        "05:00 AM",
+        "05:30 AM",
+        "06:00 AM",
+        "06:30 AM",
+        "07:00 AM"
+      ],
+      "unavailableSeats": [
+        "J3"
+      ],
+      "cabinUnavailableSeats": [
+        "A2"
+      ],
+      "createdByUserId": 1,
+      "id": 1
+    }
+  ],
   "bookings": [
     {
       "userId": 2,

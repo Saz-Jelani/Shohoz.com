@@ -1,6 +1,6 @@
 <section class="admin-wrap container">
   <div class="title-row">
-    <h1>Bus Management Console</h1>
+    <h1>{{ modeLabel }} Management Console</h1>
     <p>Select route details with controlled step-by-step flow.</p>
   </div>
 
@@ -50,16 +50,16 @@
     </div>
 
     <div class="field-group" [class.locked]="!canPickBusName">
-      <label>Bus Name</label>
+      <label>{{ modeLabel }} Name</label>
       <select [disabled]="!canPickBusName" [ngModel]="selectedBusNameId" (ngModelChange)="onBusNameChange($event)">
-        <option [ngValue]="null">Select bus name</option>
-        <option *ngFor="let bus of busNames" [ngValue]="bus.id">{{ bus.label }}</option>
+        <option [ngValue]="null">Select {{ modeLabel.toLowerCase() }} name</option>
+        <option *ngFor="let bus of nameOptions" [ngValue]="bus.id">{{ bus.label }}</option>
       </select>
     </div>
   </div>
 
   <div class="field-group bus-no-group" [class.locked]="!canPickBusNumber">
-    <label>Bus Number (Max 3)</label>
+    <label>{{ modeLabel }} Number (Max 3)</label>
     <p class="hint">Format: 0 + operatorId + busNameId + serial (example: 0111, 0112, 0113)</p>
     <div class="bus-no-list">
       <label *ngFor="let busNo of generatedBusNumbers">
@@ -86,7 +86,7 @@
 
   <div class="trip-list" *ngIf="busTripConfigs.length > 0">
     <article class="trip-card" *ngFor="let trip of busTripConfigs; let i = index; trackBy: trackByBusNumber">
-      <h3>Bus {{ i + 1 }}: {{ trip.busNumber }}</h3>
+      <h3>{{ modeLabel }} {{ i + 1 }}: {{ trip.busNumber }}</h3>
 
       <div class="trip-grid">
         <div>
@@ -200,7 +200,7 @@
       </div>
 
       <div class="seat-section" *ngIf="trip.arrivalTime">
-        <h4>Seat View (40)</h4>
+        <h4>{{ modeLabel }} Seat View (40)</h4>
         <div class="bus-shell">
           <div class="bus-head">
             <span class="door-mark">Door</span>
@@ -254,20 +254,74 @@
         <p class="hint" *ngIf="trip.unavailableSeats.length > 0">
           Unavailable: {{ trip.unavailableSeats.join(', ') }}
         </p>
-
-        <div class="trip-actions">
-          <button
-            type="button"
-            class="ok-btn"
-            [disabled]="!trip.to || !trip.serviceType || !trip.price || !trip.departureTime || !trip.arrivalTime"
-            (click)="markBusReady(trip.busNumber)"
-          >
-            OK
-          </button>
-          <button type="button" class="reset-btn" (click)="resetBus(trip.busNumber)">Reset Bus</button>
-        </div>
-        <p class="ok" *ngIf="trip.isReady">Bus is ready. It will save only after Confirm.</p>
       </div>
+
+      <div class="seat-section cabin-section" *ngIf="isLaunchMode && trip.arrivalTime">
+        <h4>Cabin Seat View (8)</h4>
+        <div class="bus-shell cabin-shell">
+          <div class="bus-head">
+            <span class="door-mark">Cabin Door</span>
+            <div class="right-cockpit">
+              <span class="driver-mark">Cabin Seats</span>
+            </div>
+          </div>
+          <div class="seat-map cabin-seat-map">
+            <div class="seat-row cabin-seat-row" *ngFor="let row of getCabinSeatRows()">
+              <button
+                type="button"
+                class="seat-btn"
+                [class.unavailable]="isCabinSeatUnavailable(trip, row.leftA)"
+                (click)="toggleCabinSeat(trip.busNumber, row.leftA)"
+              >
+                {{ row.leftA }}
+              </button>
+              <button
+                type="button"
+                class="seat-btn"
+                [class.unavailable]="isCabinSeatUnavailable(trip, row.leftB)"
+                (click)="toggleCabinSeat(trip.busNumber, row.leftB)"
+              >
+                {{ row.leftB }}
+              </button>
+              <div class="aisle"></div>
+              <button
+                type="button"
+                class="seat-btn"
+                [class.unavailable]="isCabinSeatUnavailable(trip, row.rightA)"
+                (click)="toggleCabinSeat(trip.busNumber, row.rightA)"
+              >
+                {{ row.rightA }}
+              </button>
+              <button
+                type="button"
+                class="seat-btn"
+                [class.unavailable]="isCabinSeatUnavailable(trip, row.rightB)"
+                (click)="toggleCabinSeat(trip.busNumber, row.rightB)"
+              >
+                {{ row.rightB }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <p class="hint">Available cabin seats: {{ getAvailableCabinSeatCount(trip) }}</p>
+        <p class="hint" *ngIf="trip.cabinUnavailableSeats.length === 0">Unavailable cabin seats: None</p>
+        <p class="hint" *ngIf="trip.cabinUnavailableSeats.length > 0">
+          Unavailable cabin seats: {{ trip.cabinUnavailableSeats.join(', ') }}
+        </p>
+      </div>
+
+      <div class="trip-actions">
+        <button
+          type="button"
+          class="ok-btn"
+          [disabled]="!trip.to || !trip.serviceType || !trip.price || !trip.departureTime || !trip.arrivalTime"
+          (click)="markBusReady(trip.busNumber)"
+        >
+          OK
+        </button>
+        <button type="button" class="reset-btn" (click)="resetBus(trip.busNumber)">Reset {{ modeLabel }}</button>
+      </div>
+      <p class="ok" *ngIf="trip.isReady">{{ modeLabel }} is ready. It will save only after Confirm.</p>
     </article>
   </div>
 
