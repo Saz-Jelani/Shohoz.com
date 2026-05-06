@@ -5,6 +5,6 @@
 }
 
 .layout-content {
-  flex: 1;
+  flex: 0 0 auto;
   padding-top: 67px;
 }

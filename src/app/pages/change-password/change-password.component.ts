@@ -13,6 +13,9 @@ export class ChangePasswordComponent implements OnInit {
   currentPassword = '';
   newPassword = '';
   confirmPassword = '';
+  showCurrentPassword = false;
+  showNewPassword = false;
+  showConfirmPassword = false;
   message = '';
   errorMessage = '';
   saving = false;
@@ -59,6 +62,9 @@ export class ChangePasswordComponent implements OnInit {
         this.currentPassword = '';
         this.newPassword = '';
         this.confirmPassword = '';
+        this.showCurrentPassword = false;
+        this.showNewPassword = false;
+        this.showConfirmPassword = false;
         this.saving = false;
       },
       error: () => {
@@ -66,5 +72,10 @@ export class ChangePasswordComponent implements OnInit {
         this.saving = false;
       }
     });
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

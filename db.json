@@ -15,7 +15,7 @@
     {
       "name": "Sazzad zelany",
       "email": "zelanysazzad@gmail.com",
-      "password": "Sazzad",
+      "password": "sazzad",
       "id": 3
     }
   ],
@@ -220,6 +220,268 @@
       "unavailableSeats": [],
       "createdByUserId": 1,
       "id": 7
+    },
+    {
+      "from": "Dhaka",
+      "operatorName": "Green Line",
+      "operatorImage": "assets/operators/greenline.png",
+      "busName": "Scania Coach",
+      "busNumber": "0111",
+      "to": "Chattogram",
+      "serviceType": "AC",
+      "price": 1000,
+      "discountPrice": 50,
+      "departureDate": "2026-05-06",
+      "departureTime": "11:30 PM",
+      "arrivalTime": "08:00 AM",
+      "boardingPoints": [
+        "Gabtoli",
+        "Kallyanpur",
+        "Asad Gate",
+        "Farmgate",
+        "Sayedabad"
+      ],
+      "boardingPointTimes": [
+        "11:30 PM",
+        "12:00 AM",
+        "12:30 AM",
+        "01:00 AM",
+        "01:30 AM"
+      ],
+      "unavailableSeats": [
+        "A1",
+        "A2"
+      ],
+      "createdByUserId": 1,
+      "id": 8
+    },
+    {
+      "from": "Dhaka",
+      "operatorName": "Hanif",
+      "operatorImage": "assets/operators/hanif.png",
+      "busName": "AC Sleeper",
+      "busNumber": "0251",
+      "to": "Chattogram",
+      "serviceType": "Non AC",
+      "price": 700,
+      "discountPrice": 80,
+      "departureDate": "2026-05-06",
+      "departureTime": "05:30 AM",
+      "arrivalTime": "07:30 AM",
+      "boardingPoints": [
+        "Gabtoli",
+        "Kallyanpur",
+        "Asad Gate",
+        "Farmgate",
+        "Sayedabad"
+      ],
+      "boardingPointTimes": [
+        "05:30 AM",
+        "06:00 AM",
+        "06:30 AM",
+        "07:00 AM",
+        "07:30 AM"
+      ],
+      "unavailableSeats": [],
+      "createdByUserId": 1,
+      "id": 9
+    },
+    {
+      "from": "Dhaka",
+      "operatorName": "Ena",
+      "operatorImage": "assets/operators/ena.png",
+      "busName": "Volvo B11R",
+      "busNumber": "0521",
+      "to": "Chattogram",
+      "serviceType": "AC",
+      "price": 700,
+      "discountPrice": 90,
+      "departureDate": "2026-05-06",
+      "departureTime": "06:00 AM",
+      "arrivalTime": "08:00 AM",
+      "boardingPoints": [
+        "Gabtoli",
+        "Kallyanpur",
+        "Asad Gate",
+        "Farmgate",
+        "Sayedabad"
+      ],
+      "boardingPointTimes": [
+        "06:00 AM",
+        "06:30 AM",
+        "07:00 AM",
+        "07:30 AM",
+        "08:00 AM"
+      ],
+      "unavailableSeats": [
+        "J2",
+        "F2"
+      ],
+      "createdByUserId": 1,
+      "id": 10
+    },
+    {
+      "from": "Dhaka",
+      "operatorName": "Ena",
+      "operatorImage": "assets/operators/ena.png",
+      "busName": "Volvo B11R",
+      "busNumber": "0522",
+      "to": "Chattogram",
+      "serviceType": "Non AC",
+      "price": 600,
+      "discountPrice": 110,
+      "departureDate": "2026-05-06",
+      "departureTime": "06:00 AM",
+      "arrivalTime": "02:00 AM",
+      "boardingPoints": [
+        "Gabtoli",
+        "Kallyanpur",
+        "Asad Gate",
+        "Farmgate",
+        "Sayedabad"
+      ],
+      "boardingPointTimes": [
+        "06:00 AM",
+        "06:30 AM",
+        "07:00 AM",
+        "07:30 AM",
+        "08:00 AM"
+      ],
+      "unavailableSeats": [
+        "G3",
+        "G2"
+      ],
+      "createdByUserId": 1,
+      "id": 11
+    },
+    {
+      "from": "Dhaka",
+      "operatorName": "Ena",
+      "operatorImage": "assets/operators/ena.png",
+      "busName": "Volvo B11R",
+      "busNumber": "0523",
+      "to": "Chattogram",
+      "serviceType": "Non AC",
+      "price": 600,
+      "discountPrice": 90,
+      "departureDate": "2026-05-06",
+      "departureTime": "07:00 AM",
+      "arrivalTime": "01:30 AM",
+      "boardingPoints": [
+        "Gabtoli",
+        "Kallyanpur",
+        "Asad Gate",
+        "Farmgate",
+        "Sayedabad"
+      ],
+      "boardingPointTimes": [
+        "07:00 AM",
+        "07:30 AM",
+        "08:00 AM",
+        "08:30 AM",
+        "09:00 AM"
+      ],
+      "unavailableSeats": [
+        "J1"
+      ],
+      "createdByUserId": 1,
+      "id": 12
+    },
+    {
+      "from": "Dhaka",
+      "operatorName": "Shohagh",
+      "operatorImage": "assets/operators/shohag.png",
+      "busName": "Hyundai Universe",
+      "busNumber": "0441",
+      "to": "Chattogram",
+      "serviceType": "Non AC",
+      "price": 500,
+      "discountPrice": 10,
+      "departureDate": "2026-05-06",
+      "departureTime": "05:30 AM",
+      "arrivalTime": "08:30 AM",
+      "boardingPoints": [
+        "Gabtoli",
+        "Kallyanpur",
+        "Asad Gate",
+        "Farmgate",
+        "Sayedabad"
+      ],
+      "boardingPointTimes": [
+        "05:30 AM",
+        "06:00 AM",
+        "06:30 AM",
+        "07:00 AM",
+        "07:30 AM"
+      ],
+      "unavailableSeats": [],
+      "createdByUserId": 1,
+      "id": 13
+    },
+    {
+      "from": "Dhaka",
+      "operatorName": "Shohagh",
+      "operatorImage": "assets/operators/shohag.png",
+      "busName": "Hyundai Universe",
+      "busNumber": "0443",
+      "to": "Chattogram",
+      "serviceType": "AC",
+      "price": 600,
+      "discountPrice": 47,
+      "departureDate": "2026-05-06",
+      "departureTime": "06:00 AM",
+      "arrivalTime": "12:30 AM",
+      "boardingPoints": [
+        "Gabtoli",
+        "Kallyanpur",
+        "Asad Gate",
+        "Farmgate",
+        "Sayedabad"
+      ],
+      "boardingPointTimes": [
+        "06:00 AM",
+        "06:30 AM",
+        "07:00 AM",
+        "07:30 AM",
+        "08:00 AM"
+      ],
+      "unavailableSeats": [
+        "I2",
+        "B2"
+      ],
+      "createdByUserId": 1,
+      "id": 14
+    },
+    {
+      "from": "Dhaka",
+      "operatorName": "Shohagh",
+      "operatorImage": "assets/operators/shohag.png",
+      "busName": "Hyundai Universe",
+      "busNumber": "0442",
+      "to": "Chattogram",
+      "serviceType": "AC",
+      "price": 1000,
+      "discountPrice": 30,
+      "departureDate": "2026-05-06",
+      "departureTime": "05:30 AM",
+      "arrivalTime": "08:00 AM",
+      "boardingPoints": [
+        "Gabtoli",
+        "Kallyanpur",
+        "Asad Gate",
+        "Farmgate",
+        "Sayedabad"
+      ],
+      "boardingPointTimes": [
+        "05:30 AM",
+        "06:00 AM",
+        "06:30 AM",
+        "07:00 AM",
+        "07:30 AM"
+      ],
+      "unavailableSeats": [],
+      "createdByUserId": 1,
+      "id": 15
     }
   ],
   "bookings": [
@@ -275,6 +537,134 @@
       "status": "booked",
       "createdAt": "2026-05-05T13:15:29.055Z",
       "id": 1
+    },
+    {
+      "userId": 2,
+      "userName": "sazzad jelani",
+      "email": "sazzad05101003@student.ndub.edu.bd",
+      "mobileNo": "",
+      "passengers": [
+        {
+          "firstName": "sazzad",
+          "lastName": "jelani",
+          "gender": "Male"
+        }
+      ],
+      "bus": {
+        "from": "Dhaka",
+        "operatorName": "Green Line",
+        "operatorImage": "assets/operators/greenline.png",
+        "busName": "Scania Coach",
+        "busNumber": "0111",
+        "to": "Chattogram",
+        "serviceType": "AC",
+        "price": 1000,
+        "discountPrice": 50,
+        "departureDate": "2026-05-06",
+        "departureTime": "11:30 PM",
+        "arrivalTime": "08:00 AM",
+        "boardingPoints": [
+          "Gabtoli",
+          "Kallyanpur",
+          "Asad Gate",
+          "Farmgate",
+          "Sayedabad"
+        ],
+        "boardingPointTimes": [
+          "11:30 PM",
+          "12:00 AM",
+          "12:30 AM",
+          "01:00 AM",
+          "01:30 AM"
+        ],
+        "unavailableSeats": [],
+        "createdByUserId": 1,
+        "id": 8
+      },
+      "seats": [
+        "E2"
+      ],
+      "boardingPoint": "Sayedabad",
+      "boardingTime": "01:30 AM",
+      "paymentMethod": "bKash",
+      "insuranceSelected": true,
+      "couponCode": "",
+      "ticketPrice": 1000,
+      "processingFee": 30,
+      "discountAmount": 50,
+      "insuranceAmount": 10,
+      "totalPayable": 990,
+      "status": "booked",
+      "createdAt": "2026-05-06T08:47:46.109Z",
+      "id": 2
+    },
+    {
+      "userId": 2,
+      "userName": "sazzad jelani",
+      "email": "sazzad05101003@student.ndub.edu.bd",
+      "mobileNo": "",
+      "passengers": [
+        {
+          "firstName": "sazzad",
+          "lastName": "jelani",
+          "gender": "Male"
+        },
+        {
+          "firstName": "hryh",
+          "lastName": "ryry",
+          "gender": "Male"
+        }
+      ],
+      "bus": {
+        "from": "Dhaka",
+        "operatorName": "Green Line",
+        "operatorImage": "assets/operators/greenline.png",
+        "busName": "Scania Coach",
+        "busNumber": "0111",
+        "to": "Chattogram",
+        "serviceType": "AC",
+        "price": 1000,
+        "discountPrice": 50,
+        "departureDate": "2026-05-06",
+        "departureTime": "11:30 PM",
+        "arrivalTime": "08:00 AM",
+        "boardingPoints": [
+          "Gabtoli",
+          "Kallyanpur",
+          "Asad Gate",
+          "Farmgate",
+          "Sayedabad"
+        ],
+        "boardingPointTimes": [
+          "11:30 PM",
+          "12:00 AM",
+          "12:30 AM",
+          "01:00 AM",
+          "01:30 AM"
+        ],
+        "unavailableSeats": [
+          "E2"
+        ],
+        "createdByUserId": 1,
+        "id": 8
+      },
+      "seats": [
+        "A1",
+        "A2"
+      ],
+      "boardingPoint": "Farmgate",
+      "boardingTime": "01:00 AM",
+      "paymentMethod": "bKash",
+      "insuranceSelected": true,
+      "couponCode": "",
+      "ticketPrice": 2000,
+      "processingFee": 60,
+      "discountAmount": 100,
+      "insuranceAmount": 20,
+      "totalPayable": 1980,
+      "status": "booked",
+      "createdAt": "2026-05-06T08:53:45.244Z",
+      "id": 3
     }
   ]
 }

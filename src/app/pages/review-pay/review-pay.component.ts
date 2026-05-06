@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { BusManagementService } from '../../services/bus-management.service';
 import { BusScheduleEntry } from '../../models/bus-management.models';
 
 interface BookingDraft {
@@ -50,7 +51,8 @@ export class ReviewPayComponent implements OnInit, OnDestroy {
   constructor(
     private readonly http: HttpClient,
     private readonly authService: AuthService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly busManagementService: BusManagementService
   ) {}
 
   ngOnInit(): void {
@@ -234,6 +236,7 @@ export class ReviewPayComponent implements OnInit, OnDestroy {
 
     this.http.post(this.bookingsApiUrl, payload).subscribe({
       next: () => {
+        this.lockBookedSeats();
         sessionStorage.removeItem(this.expiryStorageKey);
         sessionStorage.removeItem('shohoz_booking_draft');
         sessionStorage.removeItem('shohoz_passenger_draft');
@@ -244,6 +247,49 @@ export class ReviewPayComponent implements OnInit, OnDestroy {
         this.submitError = 'Could not save booking right now. Please try again.';
         this.isSubmitting = false;
       }
+    });
+  }
+
+  private lockBookedSeats(): void {
+    if (!this.booking?.bus || this.booking.seats.length === 0) {
+      return;
+    }
+
+    const bookedSeats = [...new Set(this.booking.seats)];
+    const bus = this.booking.bus;
+
+    const applySeatLock = (schedule: BusScheduleEntry | null): void => {
+      if (!schedule || schedule.id == null) {
+        return;
+      }
+
+      const updatedSeats = [...new Set([...(schedule.unavailableSeats || []), ...bookedSeats])];
+      this.busManagementService.updateSchedule(schedule.id, { unavailableSeats: updatedSeats }).subscribe({
+        error: () => {
+          // Seat locks are also derived from bookings on search pages, so this can fail safely.
+        }
+      });
+    };
+
+    if (bus.id != null) {
+      this.busManagementService.getScheduleById(bus.id).subscribe({
+        next: (schedule) => applySeatLock(schedule),
+        error: () => applySeatLock(bus)
+      });
+      return;
+    }
+
+    this.busManagementService.getSchedulesByBusNumber(bus.busNumber).subscribe({
+      next: (rows) => {
+        const schedule = rows.find((item) =>
+          item.from === bus.from
+          && item.to === bus.to
+          && item.departureDate === bus.departureDate
+          && item.departureTime === bus.departureTime
+        ) || rows[0] || null;
+        applySeatLock(schedule);
+      },
+      error: () => applySeatLock(null)
     });
   }
 

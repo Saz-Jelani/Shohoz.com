@@ -1,28 +1,56 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { Subscription, filter } from 'rxjs';
 
 @Component({
   selector: 'app-main-layout',
   templateUrl: './main-layout.component.html',
   styleUrls: ['./main-layout.component.css']
 })
-export class MainLayoutComponent {
+export class MainLayoutComponent implements OnInit, OnDestroy {
   travelModes = ['Bus', 'Train'];
   selectedMode = 'Bus';
   showFooter = true;
+  private readonly routeSubscription: Subscription;
 
-  constructor(private readonly authService: AuthService, private readonly router: Router) {}
+  constructor(private readonly router: Router) {
+    this.routeSubscription = this.router.events
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe((event) => this.syncSelectedMode(event.urlAfterRedirects || event.url));
+  }
+
+  ngOnInit(): void {
+    this.syncSelectedMode(this.router.url);
+  }
+
+  ngOnDestroy(): void {
+    this.routeSubscription.unsubscribe();
+  }
 
   onModeChange(mode: string): void {
     this.selectedMode = mode;
   }
 
-  onServiceClick(mode: string): void {
-    if (mode === 'Bus' && this.authService.isAdmin()) {
+  onServiceClick(payload: { mode: string; target: 'user' | 'admin' }): void {
+    if (payload.target === 'admin') {
       this.router.navigate(['/admin/bus-management']);
       return;
     }
+
+    if (payload.mode === 'Launch') {
+      this.router.navigate(['/launch-tickets']);
+      return;
+    }
+
     this.router.navigate(['/']);
+  }
+
+  private syncSelectedMode(url: string): void {
+    if (url.startsWith('/launch-tickets')) {
+      this.selectedMode = 'Launch';
+      return;
+    }
+
+    this.selectedMode = 'Bus';
   }
 }

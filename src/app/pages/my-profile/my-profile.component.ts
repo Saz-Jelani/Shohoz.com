@@ -11,7 +11,23 @@ import { AuthUser } from '../../models/auth.models';
 export class MyProfileComponent implements OnInit {
   user: AuthUser | null = null;
   fullName = '';
+  firstName = '';
+  lastName = '';
   email = '';
+  title = 'Mr';
+  phone = '';
+  gender = 'Male';
+  addressLine1 = '';
+  addressLine2 = '';
+  city = '';
+  postalCode = '';
+  nid = '';
+  dob = '';
+  passport = '';
+  passportExpireDate = '';
+  visa = '';
+  visaExpireDate = '';
+  isEditing = false;
   message = '';
   errorMessage = '';
   saving = false;
@@ -28,6 +44,7 @@ export class MyProfileComponent implements OnInit {
     this.user = currentUser;
     this.fullName = currentUser.name;
     this.email = currentUser.email;
+    this.syncNameParts(currentUser.name);
   }
 
   get initials(): string {
@@ -41,6 +58,31 @@ export class MyProfileComponent implements OnInit {
       .toUpperCase() || 'U';
   }
 
+  get addressSummary(): string {
+    return [this.addressLine1, this.addressLine2, this.city, this.postalCode].filter(Boolean).join(', ');
+  }
+
+  toggleEdit(): void {
+    this.errorMessage = '';
+    this.message = '';
+    this.isEditing = !this.isEditing;
+    if (this.isEditing) {
+      this.syncNameParts(this.user?.name ?? '');
+      this.email = this.user?.email ?? this.email;
+    }
+  }
+
+  cancelEdit(): void {
+    this.isEditing = false;
+    this.message = '';
+    this.errorMessage = '';
+    if (this.user) {
+      this.fullName = this.user.name;
+      this.email = this.user.email;
+      this.syncNameParts(this.user.name);
+    }
+  }
+
   saveProfile(): void {
     if (!this.user?.id) {
       return;
@@ -49,6 +91,7 @@ export class MyProfileComponent implements OnInit {
     this.message = '';
     this.errorMessage = '';
     this.saving = true;
+    this.fullName = [this.firstName, this.lastName].filter(Boolean).join(' ').trim();
 
     this.authService.updateUser(this.user.id, {
       name: this.fullName.trim(),
@@ -56,6 +99,9 @@ export class MyProfileComponent implements OnInit {
     }).subscribe({
       next: (updatedUser) => {
         this.user = updatedUser;
+        this.fullName = updatedUser.name;
+        this.syncNameParts(updatedUser.name);
+        this.isEditing = false;
         this.message = 'Profile updated successfully.';
         this.saving = false;
       },
@@ -64,5 +110,16 @@ export class MyProfileComponent implements OnInit {
         this.saving = false;
       }
     });
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
+
+  private syncNameParts(name: string): void {
+    const parts = (name || '').trim().split(/\s+/).filter(Boolean);
+    this.firstName = parts[0] ?? '';
+    this.lastName = parts.slice(1).join(' ');
   }
 }

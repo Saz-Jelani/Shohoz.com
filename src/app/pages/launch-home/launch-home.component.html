@@ -1,0 +1,432 @@
+<section class="launch-home">
+  <div class="home-top-banner">
+    <div class="banner-wrap">
+      <img
+        src="https://www.shohoz.com/launch-tickets/img/Shohoz-Launch-Banner.webp"
+        alt="Shohoz Banner"
+        loading="eager"
+        fetchpriority="high"
+        width="1350"
+        height="291"
+      />
+    </div>
+
+  <div class="home-search-widget">
+    <div class="trip-search-wrapper">
+      <form class="trip-search-form">
+          <label for="dest_from" class="form-item station-input">
+            <div class="item-icon-input-wrap">
+              <div class="svg-container">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M13.9275 1.42945C14.2541 0.580255 13.4197 -0.254121 12.5705 0.0724892L0.673149 4.64842C-0.278128 5.01429 -0.202793 6.3845 0.782861 6.64385L5.69051 7.93537C5.87356 7.98353 6.01643 8.12647 6.06459 8.30945L7.35611 13.2171C7.61546 14.2028 8.98573 14.2782 9.35155 13.3268L13.9275 1.42945Z" fill="#079D49"></path>
+                </svg>
+              </div>
+              <div class="input-container">
+                <p class="label-text">From</p>
+                <input type="text" id="dest_from" placeholder="From" autocomplete="off" name="dest_from" />
+              </div>
+            </div>
+
+            <div class="station-filter-dropdown">
+              <div class="recent-search-list">
+                <span class="recent-search-head">Recent Searches</span>
+                <button *ngFor="let item of recentFromStations" type="button" tabindex="-1" class="single-station" [attr.data-value]="item">
+                  <svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="mr-3" aria-hidden="true">
+                    <path d="M6.08031 0C9.2346 0 11.8403 2.65584 11.8403 5.97565C11.8403 9.24802 8.73174 13.4215 6.08031 15.034C3.38317 13.3741 0.320312 9.29545 0.320312 5.97565C0.320312 2.65584 2.88031 0 6.08031 0ZM6.08031 0.948515C3.38317 0.948515 1.2346 3.17753 1.2346 5.97565C1.2346 8.72634 3.93174 12.473 6.08031 13.8957C8.22888 12.5204 10.926 8.67891 10.926 5.97565C10.926 3.17753 8.73174 0.948515 6.08031 0.948515Z" fill="#B7B7B7"></path>
+                    <path d="M6.08049 2.56104C7.86335 2.56104 9.32621 4.07866 9.32621 5.97569C9.32621 7.82529 7.86335 9.34292 6.08049 9.34292C4.25192 9.34292 2.78906 7.82529 2.78906 5.97569C2.78906 4.07866 4.25192 2.56104 6.08049 2.56104ZM6.08049 3.50955C4.75478 3.50955 3.70335 4.60034 3.70335 5.97569C3.70335 7.30361 4.75478 8.3944 6.08049 8.3944C7.36049 8.3944 8.41192 7.30361 8.41192 5.97569C8.41192 4.60034 7.36049 3.50955 6.08049 3.50955Z" fill="#B7B7B7"></path>
+                  </svg>
+                  <span>{{ item }}</span>
+                </button>
+              </div>
+              <div class="filtered-station-list"></div>
+            </div>
+          </label>
+
+          <div class="swap-station-button-wrap">
+            <button type="button" class="swap-station-btn" tabindex="-1" aria-label="Swap Stations">
+              <svg class="hover:scale-110 transition-transform" xmlns="http://www.w3.org/2000/svg" width="18" height="23" viewBox="0 0 18 23" fill="none" aria-hidden="true">
+                <path d="M18 18.4L13.2 13.8L13.2 17.25L4.8 17.25C3.48 17.25 2.4 16.215 2.4 14.95C2.4 13.685 3.48 12.65 4.8 12.65L13.2 12.65C15.852 12.65 18 10.5915 18 8.05C18 5.5085 15.852 3.45 13.2 3.45L4.8 3.45L4.8 -5.7699e-07L1.70628e-06 4.6L4.8 9.2L4.8 5.75L13.2 5.75C14.52 5.75 15.6 6.785 15.6 8.05C15.6 9.315 14.52 10.35 13.2 10.35L4.8 10.35C2.148 10.35 1.36496e-06 12.4085 1.25386e-06 14.95C1.14277e-06 17.4915 2.148 19.55 4.8 19.55L13.2 19.55L13.2 23L18 18.4Z" fill="#0F2444"></path>
+              </svg>
+            </button>
+          </div>
+
+          <label for="dest_to" class="form-item station-input">
+            <div class="item-icon-input-wrap">
+              <div class="svg-container">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="14" viewBox="0 0 12 14" fill="none" aria-hidden="true">
+                  <path d="M10.2426 10.414L9.42472 11.2364C8.82184 11.8379 8.03967 12.6114 7.07779 13.5569C6.47678 14.1478 5.52323 14.1477 4.92229 13.5567L2.51663 11.1776C2.21429 10.8757 1.96121 10.6212 1.75736 10.414C-0.585785 8.03165 -0.585785 4.16909 1.75736 1.78675C4.1005 -0.595584 7.89951 -0.595584 10.2426 1.78675C12.5858 4.16909 12.5858 8.03165 10.2426 10.414ZM7.72284 6.29282C7.72284 5.3254 6.95148 4.54115 6.00001 4.54115C5.04853 4.54115 4.27716 5.3254 4.27716 6.29282C4.27716 7.26021 5.04853 8.04447 6.00001 8.04447C6.95148 8.04447 7.72284 7.26021 7.72284 6.29282Z" fill="#079D49"></path>
+                </svg>
+              </div>
+              <div class="input-container">
+                <p class="label-text">To</p>
+                <input type="text" id="dest_to" placeholder="To" autocomplete="off" name="dest_to" />
+              </div>
+            </div>
+
+            <div class="station-filter-dropdown">
+              <div class="recent-search-list">
+                <span class="recent-search-head">Recent Searches</span>
+                <button *ngFor="let item of recentToStations" type="button" tabindex="-1" class="single-station" [attr.data-value]="item">
+                  <svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="mr-3" aria-hidden="true">
+                    <path d="M6.08031 0C9.2346 0 11.8403 2.65584 11.8403 5.97565C11.8403 9.24802 8.73174 13.4215 6.08031 15.034C3.38317 13.3741 0.320312 9.29545 0.320312 5.97565C0.320312 2.65584 2.88031 0 6.08031 0ZM6.08031 0.948515C3.38317 0.948515 1.2346 3.17753 1.2346 5.97565C1.2346 8.72634 3.93174 12.473 6.08031 13.8957C8.22888 12.5204 10.926 8.67891 10.926 5.97565C10.926 3.17753 8.73174 0.948515 6.08031 0.948515Z" fill="#B7B7B7"></path>
+                    <path d="M6.08049 2.56104C7.86335 2.56104 9.32621 4.07866 9.32621 5.97569C9.32621 7.82529 7.86335 9.34292 6.08049 9.34292C4.25192 9.34292 2.78906 7.82529 2.78906 5.97569C2.78906 4.07866 4.25192 2.56104 6.08049 2.56104ZM6.08049 3.50955C4.75478 3.50955 3.70335 4.60034 3.70335 5.97569C3.70335 7.30361 4.75478 8.3944 6.08049 8.3944C7.36049 8.3944 8.41192 7.30361 8.41192 5.97569C8.41192 4.60034 7.36049 3.50955 6.08049 3.50955Z" fill="#B7B7B7"></path>
+                  </svg>
+                  <span>{{ item }}</span>
+                </button>
+              </div>
+              <div class="filtered-station-list"></div>
+            </div>
+          </label>
+
+          <div class="form-item journey-doj-dor-input">
+            <label for="doj" class="input-container">
+              <p class="label-text">Journey Date</p>
+              <div>
+                <input type="text" id="doj" name="doj" class="datepicker" placeholder="Pick a date" autocomplete="off" readonly />
+              </div>
+              <span id="doj-day-name"></span>
+            </label>
+          </div>
+
+          <div class="trip-search-btn">
+            <button type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="container purchase-step-section">
+    <div class="row">
+      <div class="col-md-12 purchase-step">
+        <div class="col-md-12">
+          <h3 class="section-heading">
+            Buy launch tickets
+            <span>in 3 easy steps</span>
+          </h3>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="row">
+            <div class="col-xs-3 col-md-3">
+              <svg xmlns="http://www.w3.org/2000/svg" width="62" height="79" viewBox="0 0 62 79" fill="none">
+                <rect x="19" y="15" width="43" height="64" rx="12" fill="#079D49" fill-opacity="0.05"></rect>
+                <path d="M24.65 3.85742C36.25 3.85742 45.65 13.2574 45.65 24.8574C45.65 36.4574 36.25 45.8574 24.65 45.8574C13.05 45.8574 3.65002 36.4574 3.65002 24.8574C3.65002 13.2574 13.15 3.85742 24.65 3.85742ZM24.65 0.857422C11.45 0.857422 0.650024 11.5574 0.650024 24.8574C0.650024 38.1574 11.35 48.8574 24.65 48.8574C37.95 48.8574 48.65 38.1574 48.65 24.8574C48.65 11.5574 37.95 0.857422 24.65 0.857422Z" fill="#079D49"></path>
+                <path d="M52.75 61.4572C51.35 61.4572 49.95 60.9572 48.95 59.8572L35.85 46.7572C35.25 46.1572 35.25 45.2572 35.85 44.6572C36.45 44.0572 37.35 44.0572 37.95 44.6572L50.95 57.7572C51.85 58.6572 53.35 58.6572 54.25 57.8572C54.75 57.4572 55.05 56.7572 55.05 56.1572C55.05 55.4572 54.85 54.8572 54.35 54.4572L41.85 41.9572C41.25 41.3572 41.25 40.4572 41.85 39.8572C42.45 39.2572 43.35 39.2572 43.95 39.8572L56.55 52.2572C57.65 53.2572 58.15 54.6572 58.15 56.1572C58.15 57.6572 57.55 59.0572 56.45 60.0572C55.35 60.9572 54.05 61.4572 52.75 61.4572Z" fill="#079D49"></path>
+              </svg>
+            </div>
+            <div class="col-xs-9 col-md-9">
+              <p class="step-title">Search</p>
+              <p class="step-description">Choose your origin, destination, journey dates and search for launches</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="row">
+            <div class="col-xs-3 col-md-3">
+              <svg xmlns="http://www.w3.org/2000/svg" width="63" height="87" viewBox="0 0 63 87" fill="none">
+                <path d="M8.1499 24.2578H2.1499C1.3499 24.2578 0.649902 23.5578 0.649902 22.7578C0.649902 21.9578 1.3499 21.2578 2.1499 21.2578H8.1499C8.9499 21.2578 9.6499 21.9578 9.6499 22.7578C9.6499 23.5578 8.9499 24.2578 8.1499 24.2578Z" fill="#079D49"></path>
+                <path d="M12.3499 14.1578C11.9499 14.1578 11.5499 14.0578 11.2499 13.7578L7.04985 9.55781C6.44985 8.95781 6.44985 8.05781 7.04985 7.45781C7.64985 6.85781 8.54985 6.85781 9.14985 7.45781L13.3499 11.6578C13.9499 12.2578 13.9499 13.1578 13.3499 13.7578C13.1499 14.0578 12.7499 14.1578 12.3499 14.1578Z" fill="#079D49"></path>
+                <path d="M22.45 9.95742C21.65 9.95742 20.95 9.25742 20.95 8.45742V2.35742C20.95 1.55742 21.65 0.857422 22.45 0.857422C23.25 0.857422 23.95 1.55742 23.95 2.35742V8.45742C23.95 9.25742 23.25 9.95742 22.45 9.95742Z" fill="#079D49"></path>
+                <path d="M32.8498 13.8572C32.4498 13.8572 32.0498 13.6572 31.7498 13.3572C31.1498 12.7572 31.1498 11.8572 31.7498 11.2572L35.8498 7.35723C36.4498 6.75723 37.3498 6.75723 37.9498 7.35723C38.5498 7.95723 38.5498 8.85723 37.9498 9.45723L33.8498 13.3572C33.5498 13.7572 33.2498 13.8572 32.8498 13.8572Z" fill="#079D49"></path>
+                <path d="M42.7499 24.2578H36.45C35.65 24.2578 34.95 23.5578 34.95 22.7578C34.95 21.9578 35.65 21.2578 36.45 21.2578H42.7499C43.5499 21.2578 44.2499 21.9578 44.2499 22.7578C44.2499 23.5578 43.5499 24.2578 42.7499 24.2578Z" fill="#079D49"></path>
+                <path d="M41.0498 68.5578H18.1498C17.0498 68.5578 15.9498 68.0578 15.2498 67.2578C14.4498 66.3578 11.9498 62.7578 8.94983 58.5578C6.24983 54.6578 3.04983 50.3578 2.24983 49.2578C1.54983 48.3578 1.14983 47.2578 1.24983 46.0578C1.34983 44.9578 1.94983 43.8578 2.84983 43.1578C6.04983 40.5578 10.4498 40.3578 13.8498 42.6578L15.5498 43.8578V22.1578C15.5498 18.3578 18.6498 15.2578 22.4498 15.2578C26.2498 15.2578 29.3498 18.3578 29.3498 22.1578V34.3578L39.9498 38.3578C45.7498 40.5578 49.1498 46.4578 48.0498 52.5578C47.1498 57.7578 45.4498 64.0578 44.4498 66.2578C43.9498 67.6578 42.5498 68.5578 41.0498 68.5578ZM8.64983 44.1578C7.24983 44.1578 5.84983 44.6578 4.64983 45.5578C4.34983 45.7578 4.24983 46.0578 4.14983 46.4578C4.04983 46.8578 4.24983 47.1578 4.44983 47.3578C5.44983 48.4578 8.24983 52.5578 11.3498 56.8578C14.0498 60.6578 16.8498 64.5578 17.4498 65.3578C17.6498 65.5578 17.8498 65.6578 18.0498 65.6578H41.0498C41.3498 65.6578 41.6498 65.4578 41.8498 65.1578C42.6498 63.3578 44.2498 57.6578 45.1498 52.1578C45.9498 47.5578 43.3498 42.9578 38.9498 41.3578L27.3498 36.9578C26.7498 36.7578 26.3498 36.1578 26.3498 35.5578V22.2578C26.3498 20.0578 24.5498 18.3578 22.4498 18.3578C20.2498 18.3578 18.5498 20.1578 18.5498 22.2578V46.6578C18.5498 47.2578 18.2498 47.7578 17.7498 47.9578C17.2498 48.2578 16.6498 48.1578 16.2498 47.8578L12.1498 45.2578C11.0498 44.4578 9.84983 44.1578 8.64983 44.1578Z" fill="#079D49"></path>
+                <rect x="20" y="23" width="43" height="64" rx="12" fill="#079D49" fill-opacity="0.05"></rect>
+                <path d="M27.9497 43.158C27.1497 43.158 26.4497 42.458 26.4497 41.658V35.458C26.4497 34.658 27.1497 33.958 27.9497 33.958C28.7497 33.958 29.4497 34.658 29.4497 35.458V41.658C29.4497 42.458 28.7497 43.158 27.9497 43.158Z" fill="#079D49"></path>
+              </svg>
+            </div>
+            <div class="col-xs-9 col-md-9">
+              <p class="step-title">Select</p>
+              <p class="step-description">Select your desired trip and choose your seats</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="row">
+            <div class="col-xs-3 col-md-3">
+              <svg xmlns="http://www.w3.org/2000/svg" width="62" height="77" viewBox="0 0 62 77" fill="none">
+                <path d="M27.5499 0.257812H22.6499H13.8499H8.9499C4.3499 0.257812 0.649902 3.95781 0.649902 8.55781V50.4578C0.649902 55.0578 4.3499 58.7578 8.9499 58.7578H27.4499C32.0499 58.7578 35.7499 55.0578 35.7499 50.4578V8.55781C35.9499 3.95781 32.1499 0.257812 27.5499 0.257812ZM32.9499 50.4578C32.9499 53.3578 30.5499 55.7578 27.6499 55.7578H9.0499C6.1499 55.7578 3.7499 53.3578 3.7499 50.4578V8.55781C3.7499 5.65781 6.1499 3.25781 9.0499 3.25781H12.4499V4.75781C12.4499 5.55781 13.1499 6.25781 13.9499 6.25781H22.7499C23.5499 6.25781 24.2499 5.55781 24.2499 4.75781V3.25781H27.6499C30.5499 3.25781 32.9499 5.65781 32.9499 8.55781V50.4578Z" fill="#079D49"></path>
+                <rect x="19" y="13" width="43" height="64" rx="12" fill="#079D49" fill-opacity="0.05"></rect>
+                <path d="M24.1498 32.5582C23.4498 32.0582 22.5498 32.1582 22.0498 32.8582C21.5498 33.5582 21.6498 34.4582 22.3498 34.9582C23.5498 35.8582 23.9498 36.5582 23.9498 37.6582C23.9498 39.0582 22.5498 40.1582 20.8498 40.1582C19.1498 40.1582 17.8498 38.9582 17.8498 37.5582V29.8582H23.1498C23.9498 29.8582 24.6498 29.1582 24.6498 28.3582C24.6498 27.5582 23.9498 26.8582 23.1498 26.8582H17.8498V23.4582C17.8498 22.2582 17.2498 21.1582 16.2498 20.4582C15.1498 19.6582 13.6498 19.4582 12.3498 19.8582L11.0498 20.2582C10.2498 20.5582 9.84981 21.3582 10.1498 22.1582C10.4498 22.9582 11.2498 23.3582 12.0498 23.0582L13.3498 22.6582C13.8498 22.4582 14.2498 22.6582 14.5498 22.8582C14.6498 22.9582 14.8498 23.1582 14.8498 23.3582V26.7582H11.0498C10.2498 26.7582 9.5498 27.4582 9.5498 28.2582C9.5498 29.0582 10.2498 29.7582 11.0498 29.7582H14.8498V37.4582C14.8498 40.4582 17.5498 42.9582 20.9498 42.9582C24.3498 42.9582 27.0498 40.4582 27.0498 37.4582C26.9498 34.9582 25.3498 33.4582 24.1498 32.5582Z" fill="#079D49"></path>
+              </svg>
+            </div>
+            <div class="col-xs-9 col-md-9">
+              <p class="step-title">Pay</p>
+              <p class="step-description">Pay by bank cards or mobile banking</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="one-stop-solution">
+    <p class="oss-head-1">A ONE-STOP SOLUTION FOR YOUR TRAVEL NEEDS</p>
+    <p class="oss-head-2">Introducing you to the Shohoz way of life</p>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6 col-md-4">
+          <div class="service-item-card">
+            <div class="service-item-icon-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none">
+                <rect width="80" height="80" rx="20" fill="white"></rect>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M24.8438 31H26.1562C26.625 31 27 31.4242 27 31.9545V37.0455C27 37.5758 26.625 38 26.1562 38H24.8438C24.375 38 24 37.5758 24 37.0455V31.9545C24 31.4242 24.375 31 24.8438 31Z" fill="#079D49"></path>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M56.1562 31H54.8438C54.375 31 54 31.4242 54 31.9545V37.0455C54 37.5758 54.375 38 54.8438 38H56.1562C56.625 38 57 37.5758 57 37.0455V31.9545C57 31.4242 56.625 31 56.1562 31Z" fill="#079D49"></path>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M31.8864 26H49.2186C51.3195 26 53.0001 27.8031 53.0001 29.9242V48.0606C53.0001 49.0151 52.685 49.8637 52.1598 50.5V52.5153C52.1598 53.3637 51.5296 54 50.6893 54H47.643C46.8027 54 46.1725 53.3637 46.1725 52.5153V51.985H34.8278V52.5153C34.8278 53.3637 34.1975 54 33.3573 54H30.311C29.5757 54 28.8404 53.3637 28.8404 52.5153V50.5C28.3153 49.8637 28.0001 49.0153 28.0001 48.0606V29.9242C28.0001 27.8029 29.6808 26 31.8867 26H31.8864ZM36.2981 27.1666H44.7018C45.9623 27.1666 45.9623 29.1818 44.7018 29.1818H36.2981C35.0377 29.1818 35.0377 27.1666 36.2981 27.1666ZM37.1385 49.439C36.6133 49.439 36.6133 48.5905 37.1385 48.5905H43.8614C44.3866 48.5905 44.3866 49.439 43.8614 49.439H37.1385ZM35.4578 47.7421C34.9327 47.7421 34.9327 46.8936 35.4578 46.8936H45.5422C46.0674 46.8936 46.0674 47.7421 45.5422 47.7421H35.4578ZM34.9327 49.3329C30.2058 49.4389 28.9451 48.6965 29.1551 44.1359C30.4155 46.3632 32.4115 48.1661 34.9327 49.3329ZM46.0674 49.3329C50.8993 49.4389 52.0549 48.6965 51.845 44.1359C50.5845 46.3632 48.5886 48.1661 46.0674 49.3329ZM32.937 30.03H48.0631C50.164 30.03 51.9496 31.8331 51.9496 33.9542V39.8936C51.9496 42.0149 50.1638 43.7118 48.0631 43.7118H32.937C30.836 43.7118 29.1554 42.0149 29.1554 39.8936V33.9542C29.1554 31.8329 30.8361 30.03 32.937 30.03Z" fill="#079D49"></path>
+              </svg>
+            </div>
+            <p class="solution-title">Bus <span class="text-primary-black">Ticket</span></p>
+            <p class="solution-info">No more queuing at counters. Tickets of 100+ bus operators available online.</p>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4">
+          <div class="service-item-card">
+            <div class="service-item-icon-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" width="81" height="80" viewBox="0 0 81 80" fill="none">
+                <rect x="0.0727539" width="80" height="80" rx="20" fill="white"></rect>
+                <path d="M46.7201 34.3953L53.6391 31.2057C55.5236 30.337 57.598 30.8025 58.2624 32.2438C58.9268 33.6851 57.9335 35.5647 56.049 36.4335L48.4466 39.9381L41.959 48.8652L37.6662 50.8441L40.3701 43.6612L32.7658 47.1667L30.3025 48.9559L26.6358 50.6462L27.7657 46.2742L20.0997 41.5351L23.7827 39.8373L30.4636 41.8889L37.1244 38.8184L26.5243 33.2415L31.6633 30.8725L46.7201 34.3953Z" fill="#079D49"></path>
+              </svg>
+            </div>
+            <p class="solution-title">Air <span class="text-primary-black">Ticket</span></p>
+            <p class="solution-info">Now book your air tickets for domestic travel in Bangladesh.</p>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4">
+          <div class="service-item-card">
+            <div class="service-item-icon-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" width="81" height="80" viewBox="0 0 81 80" fill="none">
+                <rect x="0.036377" width="80" height="80" rx="20" fill="white"></rect>
+                <g transform="translate(22, 25)">
+                  <path d="M34.9 27.7998C34.5 27.7998 34.2 27.7998 33.8 27.8998C32.8 27.9998 31.9 28.5998 31.3 29.0998C30.6 29.5998 29.8 29.8998 28.9 29.7998C28.3 29.6998 27.9 29.5998 27.5 29.2998C27.4 29.1998 26.9 28.7998 26.2 28.3998C25.4 27.9998 24.6 27.7998 23.7 27.7998C22.5 27.7998 21.4 28.0998 20.5 28.6998C19.6 29.2998 18.7 29.8998 17.5 29.6998C16.9 29.5998 16.4 29.2998 15.9 28.9998C15.8 28.8998 15.7 28.8998 15.6 28.7998C15.2 28.4998 14.7 28.1998 14.2 28.0998C14 27.9998 13.9 27.9998 13.7 27.9998C12.5 27.7998 11.3 27.8998 10.2 28.2998C9.49997 28.5998 8.89998 29.0998 8.79998 29.0998C7.89998 29.9998 6.19998 29.9998 5.09998 29.2998C4.89998 29.1998 4.79998 29.0998 4.59998 28.9998C4.49998 28.8998 4.29997 28.7998 4.19997 28.6998C3.39997 28.0998 2.39997 27.7998 1.39997 27.7998C0.699975 27.7998 0.199976 28.1998 0.0999756 28.7998C0.0999756 29.3998 0.499976 29.8998 1.09998 29.9998C1.19998 29.9998 1.39998 29.9998 1.49998 29.9998C1.69998 29.9998 1.79997 29.9998 1.89997 30.0998C2.39997 30.1998 2.89997 30.4998 3.39997 30.8998C3.49997 30.9998 3.59997 30.9998 3.69997 31.0998C4.79997 31.8998 6.19997 32.1998 7.69997 31.9998C8.89997 31.7998 9.79998 31.1998 10.5 30.5998C11.3 29.9998 12.2 29.8998 13.1 30.1998C13.7 30.3998 14.2 30.6998 14.8 31.0998L14.9 31.1998C16.1 31.9998 17.4 32.1998 18.9 31.9998C20 31.8998 20.8 31.2998 21.6 30.7998H21.7C22.1 30.4998 22.4 30.3998 22.7 30.2998C23.8 29.9998 24.8 30.1998 25.9 30.9998C26.9 31.7998 28.1 32.0998 29.2 32.0998C30.4 32.0998 31.6 31.6998 32.5 30.9998C33.3 30.3998 34 30.0998 34.9 30.0998C35.5 30.0998 35.9 29.5998 35.9 28.9998C36 28.2998 35.5 27.7998 34.9 27.7998Z" fill="#079D49"></path>
+                  <path d="M32.6 16.9998C32.5 20.5998 30.6 24.9998 28.4 26.7998C28.1 26.5998 27.8 26.3998 27.4 26.1998C26.3 25.5998 25.1 25.2998 23.8 25.2998H23.6C21.9 25.2998 20.4 25.7998 19.1 26.6998C18.6 27.0998 18.2 27.2998 18 27.2998C17.8 27.2998 17.5 27.0998 17.2 26.8998C17.1 26.7998 17 26.7998 16.9 26.6998C16.4 26.3998 15.7 25.9998 14.9 25.6998C14.7 25.5998 14.4 25.4998 14.1 25.4998C13.6 25.2998 13 25.2998 12.4 25.2998C11.3 25.2998 10.2 25.4998 9.19997 25.8998C8.69997 26.0998 8.29997 26.3998 7.89997 26.5998C4.79997 23.6998 3.89997 18.8998 3.79997 16.8998C3.69997 16.0998 4.19997 15.4998 4.89997 15.1998C5.79997 14.7998 15.1 11.5998 16.8 10.8998C17.6 10.5998 18.3 10.5998 19.1 10.8998C20.9 11.5998 30.6 14.8998 31.3 15.1998C32.4 15.5998 32.7 16.0998 32.6 16.9998Z" fill="#079D49"></path>
+                  <path d="M24.8 5.40039H11.3C10.4 5.40039 9.59998 6.10039 9.59998 7.10039V10.8004C9.59998 10.9004 9.69997 11.0004 9.89997 11.0004L17.2 8.20039C17.7 8.00039 18.3 8.00039 18.9 8.20039L26.2 11.0004C26.3 11.0004 26.5 11.0004 26.5 10.8004V7.10039C26.5 6.20039 25.7 5.40039 24.8 5.40039Z" fill="#079D49"></path>
+                  <path d="M19.8 0H16.3C15.3 0 14.6 0.800001 14.6 1.7V2.9C14.6 3 14.7 3.1 14.8 3.1H21.4C21.5 3.1 21.6 3 21.6 2.9V1.7C21.5 0.800001 20.7 0 19.8 0Z" fill="#079D49"></path>
+                </g>
+              </svg>
+            </div>
+            <p class="solution-title">Launch <span class="text-primary-black">Ticket</span></p>
+            <p class="solution-info">Searching for launch/ship tickets? Grab them online from our exclusive inventory.</p>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4">
+          <div class="service-item-card">
+            <div class="service-item-icon-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" width="81" height="80" viewBox="0 0 81 80" fill="none">
+                <rect x="0.036377" width="80" height="80" rx="20" fill="white"></rect>
+                <g transform="translate(28, 28)">
+                  <path d="M26.0001 25.4004V2.60039C26.0001 1.70039 25.2001 0.900391 24.3001 0.900391H1.8001C0.800098 0.900391 0.100098 1.70039 0.100098 2.60039V25.4004C0.100098 26.3004 0.900098 27.1004 1.8001 27.1004H8.1001V17.1004C8.1001 16.3004 7.4001 15.6004 6.5001 15.6004H5.7001V7.20039C5.7001 6.70039 6.1001 6.40039 6.5001 6.40039H19.5001C20.0001 6.40039 20.3001 6.80039 20.3001 7.20039V15.5004H19.4001C18.6001 15.5004 17.9001 16.2004 17.9001 17.0004V27.1004H24.2001C25.2001 27.1004 26.0001 26.3004 26.0001 25.4004ZM25.0001 15.5004H21.0001L21.2001 15.4004L25.1001 11.7004V15.5004H25.0001ZM21.3001 13.7004V7.10039L21.4001 7.20039L24.7001 10.4004L24.6001 10.5004L21.3001 13.7004ZM25.0001 2.60039V9.20039L21.6001 5.90039L21.7001 5.80039L25.0001 2.60039ZM1.1001 2.60039L1.2001 2.70039L4.5001 5.90039L4.4001 6.00039L1.1001 9.20039V2.60039ZM4.7001 7.10039V13.7004L4.6001 13.6004L1.4001 10.5004L1.5001 10.4004L4.7001 7.10039ZM1.1001 15.5004V11.6004L1.2001 11.7004L5.0001 15.4004H1.1001V15.5004ZM4.2001 25.3004C3.7001 25.3004 3.3001 25.1004 3.0001 24.8004C2.7001 24.5004 2.5001 24.1004 2.5001 23.6004C2.5001 22.7004 3.3001 22.0004 4.2001 22.0004C5.1001 22.0004 5.9001 22.7004 5.9001 23.6004C5.9001 24.5004 5.1001 25.2004 4.2001 25.3004ZM5.8001 19.1004C5.8001 20.0004 5.1001 20.7004 4.2001 20.7004C3.8001 20.7004 3.4001 20.5004 3.0001 20.2004C2.7001 19.9004 2.5001 19.5004 2.5001 19.0004C2.5001 18.1004 3.3001 17.4004 4.2001 17.4004C5.1001 17.4004 5.8001 18.3004 5.8001 19.1004ZM5.2001 5.20039L1.8001 1.90039H8.1001L5.2001 5.20039ZM6.2001 5.40039L9.1001 2.10039L12.0001 5.40039H6.2001ZM10.2001 1.90039H15.9001L13.0001 5.20039L10.2001 1.90039ZM14.1001 5.40039L17.0001 2.10039V2.20039L19.9001 5.40039H14.1001ZM18.0001 1.90039H24.2001L24.0001 2.00039L20.8001 5.20039L18.0001 1.90039ZM23.7001 23.6004C23.7001 24.5004 23.0001 25.2004 22.1001 25.2004C21.7001 25.2004 21.3001 25.0004 20.9001 24.7004C20.6001 24.4004 20.4001 24.0004 20.4001 23.5004C20.4001 22.6004 21.2001 21.9004 22.1001 21.9004C22.9001 22.0004 23.7001 22.8004 23.7001 23.6004ZM23.7001 19.1004C23.7001 20.0004 23.0001 20.7004 22.1001 20.7004C21.7001 20.7004 21.3001 20.5004 20.9001 20.2004C20.6001 19.9004 20.4001 19.5004 20.4001 19.0004C20.4001 18.1004 21.2001 17.4004 22.1001 17.4004C22.9001 17.5004 23.7001 18.3004 23.7001 19.1004Z" fill="#079D49"></path>
+                  <path d="M12.1001 13.4002C11.9001 13.5002 11.7001 13.6002 11.5001 13.7002C11.3001 13.8002 11.1001 13.9002 11.0001 14.0002C10.7001 14.1002 10.6001 14.5002 10.7001 14.7002C10.8001 15.0002 11.1001 15.1002 11.4001 14.9002C11.4001 14.9002 11.7001 14.8002 11.8001 14.7002C12.0001 14.6002 12.1001 14.5002 12.2001 14.5002L12.5001 14.4002V20.8002H10.6001V27.1002H15.4001V20.8002H13.6001V13.8002L13.7001 13.7002C13.9001 13.6002 14.0001 13.5002 14.2001 13.4002C14.3001 13.3002 14.5001 13.2002 14.7001 13.2002C15.0001 13.0002 15.1001 12.8002 15.0001 12.5002C14.9001 12.4002 14.8001 12.3002 14.7001 12.2002C14.6001 12.2002 14.4001 12.2002 14.2001 12.3002C13.7001 12.6002 12.9001 13.0002 12.1001 13.4002Z" fill="#079D49"></path>
+                </g>
+              </svg>
+            </div>
+            <p class="solution-title">Event <span class="text-primary-black">Ticket</span></p>
+            <p class="solution-info">From concerts to sports, skill development to mental development, book your event tickets online hassle-free.</p>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4">
+          <div class="service-item-card">
+            <div class="service-item-icon-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" width="81" height="80" viewBox="0 0 81 80" fill="#079D49">
+                <rect x="0.036377" width="80" height="80" rx="20" fill="white"></rect>
+                <g transform="translate(25, 25) scale(1.3)">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M18.1516 1.5C18.4957 1.5 18.7956 1.73414 18.8792 2.06793L19.1382 3.10293C19.2535 3.56457 19.4923 3.98639 19.8288 4.32286C20.1652 4.65933 20.5868 4.89801 21.0485 5.01338L22.0837 5.27243C22.4175 5.35596 22.6516 5.65591 22.6516 6C22.6516 6.34409 22.4175 6.64404 22.0837 6.72757L21.0487 6.98657C20.587 7.10194 20.1652 7.34067 19.8288 7.67714C19.4923 8.01361 19.2536 8.4352 19.1382 8.89684L18.8792 9.93207C18.7956 10.2659 18.4957 10.5 18.1516 10.5C17.8075 10.5 17.5076 10.2659 17.424 9.93207L17.165 8.89707C17.0497 8.43552 16.8111 8.01371 16.4748 7.67725C16.1385 7.34084 15.7171 7.10212 15.2557 6.98661C15.2557 6.98659 15.2558 6.98662 15.2557 6.98661L14.2197 6.72761C13.8858 6.64414 13.6516 6.34415 13.6516 6C13.6516 5.65585 13.8858 5.35586 14.2197 5.27239L15.2555 5.01344C15.2555 5.01345 15.2556 5.01342 15.2555 5.01344C15.717 4.89793 16.1385 4.65916 16.4748 4.32275C16.8111 3.98629 17.0497 3.56476 17.165 3.10322L17.424 2.06793C17.5076 1.73414 17.8075 1.5 18.1516 1.5ZM16.7474 6C17.0329 6.17207 17.2978 6.37889 17.5357 6.61681C17.7733 6.8545 17.9798 7.11921 18.1517 7.4045C18.3236 7.11907 18.5303 6.85425 18.7681 6.61648C19.0059 6.37869 19.2707 6.17198 19.5562 6C19.2707 5.82802 19.0059 5.62131 18.7681 5.38352C18.5303 5.14575 18.3236 4.88093 18.1517 4.5955C17.9798 4.88079 17.7733 5.1455 17.5357 5.38319C17.2978 5.62111 17.0329 5.82793 16.7474 6ZM9.1517 4.5C9.48654 4.50004 9.78079 4.72203 9.87276 5.04399L10.6857 7.88988C10.6857 7.88984 10.6857 7.88992 10.6857 7.88988C10.8608 8.50245 11.1892 9.06042 11.6397 9.51093C12.0902 9.96146 12.6481 10.2898 13.2607 10.4649L16.1078 11.2789C16.4297 11.3709 16.6517 11.6652 16.6516 12.0001C16.6516 12.3349 16.4296 12.6292 16.1076 12.7212L13.2617 13.5341C13.2617 13.5341 13.2618 13.5341 13.2617 13.5341C12.6492 13.7092 12.0912 14.0376 11.6407 14.4881C11.1901 14.9386 10.8618 15.4965 10.6867 16.1091C10.6838 16.1194 10.6806 16.1296 10.6773 16.1397L9.87276 18.956C9.78078 19.278 9.48648 19.5 9.15161 19.5C8.81674 19.5 8.52244 19.278 8.43046 18.956L7.61749 16.1101C7.44239 15.4975 7.11407 14.9396 6.66354 14.4891C6.21301 14.0385 5.65511 13.7102 5.04249 13.5351L2.19544 12.7211C1.8735 12.6291 1.65157 12.3348 1.65161 11.9999C1.65165 11.6651 1.87364 11.3708 2.1956 11.2788L5.04149 10.4659C5.04145 10.4659 5.04153 10.4659 5.04149 10.4659C5.65406 10.2908 6.21203 9.96243 6.66254 9.51193C7.11307 9.06139 7.44138 8.5035 7.61649 7.89088L8.43051 5.04383C8.52255 4.72188 8.81686 4.49996 9.1517 4.5ZM9.15129 7.97938L9.05873 8.30312C8.81358 9.16078 8.35395 9.94184 7.7232 10.5726C7.09245 11.2033 6.3114 11.663 5.45373 11.9081L5.13099 12.0003L5.45473 12.0929C5.45471 12.0929 5.45475 12.0929 5.45473 12.0929C6.31237 12.338 7.09347 12.7977 7.7242 13.4284C8.35495 14.0592 8.81458 14.8402 9.05973 15.6979L9.15161 16.0195L9.24346 15.698C9.24663 15.6869 9.25005 15.6759 9.25372 15.665C9.50108 14.8198 9.95711 14.0503 10.58 13.4274C11.2108 12.7967 11.9918 12.337 12.8495 12.0919L13.1722 11.9997L12.8485 11.9071C12.8485 11.9071 12.8485 11.9071 12.8485 11.9071C11.9908 11.662 11.2098 11.2023 10.579 10.5716C9.94827 9.94084 9.48864 9.15978 9.24349 8.30212L9.15129 7.97938ZM16.6516 15C16.9745 15 17.2612 15.2067 17.3632 15.513L17.7571 16.6958C17.8308 16.9167 17.9548 17.1175 18.1195 17.2821C18.2841 17.4468 18.4849 17.5709 18.7058 17.6445L19.8886 18.0384C20.195 18.1405 20.4016 18.4271 20.4016 18.75C20.4016 19.0729 20.195 19.3595 19.8886 19.4616L18.7058 19.8555C18.7057 19.8555 18.7059 19.8555 18.7058 19.8555C18.4849 19.9292 18.2841 20.0533 18.1195 20.2179C17.9548 20.3825 17.8308 20.5833 17.7571 20.8042L17.3632 21.987C17.2612 22.2933 16.9745 22.5 16.6516 22.5C16.3287 22.5 16.0421 22.2933 15.94 21.987L15.5461 20.8042C15.4725 20.5833 15.3484 20.3825 15.1837 20.2179C15.0191 20.0533 14.8185 19.9292 14.5976 19.8556C14.5976 19.8556 14.5977 19.8556 14.5976 19.8556L13.4146 19.4616C13.1083 19.3595 12.9016 19.0729 12.9016 18.75C12.9016 18.4271 13.1083 18.1405 13.4146 18.0384L14.5974 17.6445C14.8183 17.5709 15.0191 17.4468 15.1837 17.2821C15.3484 17.1175 15.4725 16.9167 15.5461 16.6958L15.94 15.513C16.0421 15.2067 16.3287 15 16.6516 15ZM16.6516 17.8359C16.535 18.0185 16.3986 18.1886 16.2444 18.3428C16.0902 18.497 15.9201 18.6334 15.7376 18.75C15.9201 18.8666 16.0902 19.003 16.2444 19.1572C16.3986 19.3114 16.535 19.4815 16.6516 19.6641C16.7682 19.4815 16.9046 19.3114 17.0588 19.1572C17.213 19.003 17.3831 18.8666 17.5657 18.75C17.3831 18.6334 17.213 18.497 17.0588 18.3428C16.9046 18.1886 16.7682 18.0185 16.6516 17.8359Z"></path>
+                </g>
+              </svg>
+            </div>
+            <p class="solution-title">Park <span class="text-primary-black">Ticket</span></p>
+            <p class="solution-info">Skip the lines and dive into fun! Purchase park tickets from our online inventory.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mobile-app">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12 col-md-6">
+          <img alt="Mobile app illustration" width="508" height="420" loading="lazy" src="https://www.shohoz.com/launch-tickets/img/mobile-app-illustration.png" class="mobile-app-illustration">
+        </div>
+
+        <div class="col-sm-12 col-md-6">
+          <div class="mobile-app-benefits-container">
+            <p class="mobile-app-benefit-title">Get More Out of Shohoz with our <span class="text-primary-green">mobile app</span></p>
+
+            <div class="mobile-app-benefits">
+              <div class="single-benefit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
+                  <rect x="0.5" y="0.5" width="21" height="21" rx="10.5" fill="white" stroke="#EEEEEE"></rect>
+                  <path d="M13.5001 11.0003L9.96422 14.5361L8.78589 13.357L11.1434 11.0003L8.78589 8.64363L9.96422 7.46447L13.5001 11.0003Z" fill="#16D378"></path>
+                </svg>
+                <p class="benefit-text">Faster and easier booking</p>
+              </div>
+
+              <div class="single-benefit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
+                  <rect x="0.5" y="0.5" width="21" height="21" rx="10.5" fill="white" stroke="#EEEEEE"></rect>
+                  <path d="M13.5001 11.0003L9.96422 14.5361L8.78589 13.357L11.1434 11.0003L8.78589 8.64363L9.96422 7.46447L13.5001 11.0003Z" fill="#16D378"></path>
+                </svg>
+                <p class="benefit-text">Get alerts before every departure</p>
+              </div>
+
+              <div class="single-benefit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
+                  <rect x="0.5" y="0.5" width="21" height="21" rx="10.5" fill="white" stroke="#EEEEEE"></rect>
+                  <path d="M13.5001 11.0003L9.96422 14.5361L8.78589 13.357L11.1434 11.0003L8.78589 8.64363L9.96422 7.46447L13.5001 11.0003Z" fill="#16D378"></path>
+                </svg>
+                <p class="benefit-text">Easy access to your tickets</p>
+              </div>
+
+              <div class="single-benefit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
+                  <rect x="0.5" y="0.5" width="21" height="21" rx="10.5" fill="white" stroke="#EEEEEE"></rect>
+                  <path d="M13.5001 11.0003L9.96422 14.5361L8.78589 13.357L11.1434 11.0003L8.78589 8.64363L9.96422 7.46447L13.5001 11.0003Z" fill="#16D378"></path>
+                </svg>
+                <p class="benefit-text">Onboard with digital tickets</p>
+              </div>
+            </div>
+
+            <div class="app-store-links">
+              <a href="https://play.google.com/store/apps/details?id=com.shohoz.rides" target="_blank" rel="noopener noreferrer">
+                <img alt="google-play-store" width="191" height="63" class="play-store-logo" src="https://www.shohoz.com/launch-tickets/img/google-play-store.png">
+              </a>
+              <a href="https://apps.apple.com/us/app/shohoz-app/id1354321445?ls=1" target="_blank" rel="noopener noreferrer">
+                <img alt="apple-app-store" width="216" height="63" class="app-store-logo" src="https://www.shohoz.com/launch-tickets/img/apple-app-store.png">
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="travel-options">
+    <div class="container">
+      <div class="row travel-option-row">
+        <div class="col-sm-12 col-md-6">
+          <p class="travel-option-title">All your <span class="text-primary-green">travel options</span> in one place</p>
+          <p class="travel-option-description">More than 1,000 trusted travel partners across trains, buses, flights, and launch so that you can focus on the journey.</p>
+          <div class="travel-option-counter">
+            <div class="travel-counter-item">
+              <p class="travel-option-amount">250 Million+</p>
+              <p class="travel-option-label">Tickets Sold</p>
+            </div>
+            <div class="travel-counter-item">
+              <p class="travel-option-amount">3000+</p>
+              <p class="travel-option-label">Routes</p>
+            </div>
+            <div class="travel-counter-item">
+              <p class="travel-option-amount">10 Million+</p>
+              <p class="travel-option-label">Happy Users</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6 travel-option-illustration-col">
+          <img alt="travel option" class="travel-option-illustration" width="393" height="310" src="https://www.shohoz.com/launch-tickets/img/travel-option.png">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq-wrapper" *ngIf="true">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12 col-md-4">
+          <div class="faq-left-section">
+            <p class="faq-title">Got Questions ?</p>
+            <p class="faq-subtitle">We've Got Answers</p>
+            <p class="faq-info">We are always happy to hear from you. If you have any questions, suggestions or opinions, please do not hesitate to reach out to us.</p>
+            <a class="faq-contact-link" href="/contact-us">Contact Us</a>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-8">
+          <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-default">
+              <div class="panel-heading" role="tab" id="headingOne">
+                <h4 class="panel-title">
+                  <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    <i class="more-less fa fa-plus"></i>
+                    How can I purchase a ticket from Shohoz Platform?
+                  </a>
+                </h4>
+              </div>
+              <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                <div class="panel-body">
+                  <p>Please visit our website <a href="https://www.shohoz.com" class="font-bold">www.shohoz.com</a> or download our mobile App. <br><a href="https://play.google.com/store/search?q=shohoz&amp;c=apps" target="_blank" class="font-bold">Download App For Android</a><br><a href="https://apps.apple.com/us/app/shohoz-app/id1354321445" target="_blank" class="font-bold">Download App For IOS</a><br>Or call our helpline number at <a href="tel:16374" class="font-bold">16374</a> for ticket purchase and for more information.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel panel-default">
+              <div class="panel-heading" role="tab" id="headingTwo">
+                <h4 class="panel-title">
+                  <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    <i class="more-less fa fa-plus"></i>
+                    Is there any time frame to buy a ticket?
+                  </a>
+                </h4>
+              </div>
+              <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                <div class="panel-body">
+                  <p>There is no time limit to buy tickets from our website or app. But if a customer wants to purchase a ticket through our helpline number, then the customer should call our helpline number <a href="tel:16374" class="font-bold">16374</a> <b>(Operation Time- 7:00 AM to 11:59 PM)</b>.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel panel-default">
+              <div class="panel-heading" role="tab" id="headingThree">
+                <h4 class="panel-title">
+                  <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    <i class="more-less fa fa-plus"></i>
+                    What is the process of Migrate or Cancelling a ticket?
+                  </a>
+                </h4>
+              </div>
+              <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                <div class="panel-body">
+                  <p>For cancellation and migration, customers must have 12/24 hours before trip departure time depending on the operator. For migration, customers must call our helpline number <a href="tel:16374" class="font-bold">16374</a>. Also, the customer must call from his ticket booking number. Also, a customer can cancel a ticket from our website if he has enough time from the trip departure time (12/24 hours excluding 12 AM to 7 AM).</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel panel-default">
+              <div class="panel-heading" role="tab" id="headingFour">
+                <h4 class="panel-title">
+                  <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                    <i class="more-less fa fa-plus"></i>
+                    How can I check Shohoz's offers?
+                  </a>
+                </h4>
+              </div>
+              <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+                <div class="panel-body">
+                  <p>Customers can check our offers on our website. Firstly, go to our website then Click 'BUS' option, and then go to the '<a href="/deals-and-offers" target="_blank" class="font-bold">Deals and offers</a>' option. Customers also can call our helpline number <a href="tel:16374" class="font-bold">16374</a> for more queries and offers.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel panel-default">
+              <div class="panel-heading" role="tab" id="headingFive">
+                <h4 class="panel-title">
+                  <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                    <i class="more-less fa fa-plus"></i>
+                    After purchasing a ticket from Shohoz, I cancelled that ticket due to a personal issue or the operator cancelled their trip. But I have not received my refund yet. What should I do now?
+                  </a>
+                </h4>
+              </div>
+              <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+                <div class="panel-body">
+                  <p>As per our <a href="/cancellation-and-refunds" target="_blank" class="font-bold">refund policy</a>, it takes maximum of 5-7 working days for Bkash and Nagad both. For Internet banking, Debit cards and Credit cards it takes maximum of 7-10 working days. If the customer did not get the refund in mentioned timeline, please call <a href="tel:16374" class="font-bold">16374</a> or mail us at <a href="mailto:info@shohoz.com" class="font-bold">info@shohoz.com</a>.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
+import { HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BusScheduleEntry } from '../../models/bus-management.models';
 import { BusManagementService } from '../../services/bus-management.service';
@@ -50,6 +51,39 @@ export class SearchHeroComponent implements OnInit {
   arrivalWindow = '';
   fareSort: '' | 'asc' | 'desc' = '';
   isRadioAnimating = false;
+  isMobileLayout = false;
+  trendingDestinations = [
+    {
+      title: 'Chittagong',
+      href: '/bus-tickets/destinations/chittagong',
+      image: 'assets/home_img/Chittagong.png',
+      sizeClass: 'half'
+    },
+    {
+      title: 'Dhaka',
+      href: '/bus-tickets/destinations/dhaka',
+      image: 'assets/home_img/Dhaka.png',
+      sizeClass: 'half'
+    },
+    {
+      title: 'Rajshahi',
+      href: '/bus-tickets/destinations/rajshahi',
+      image: 'assets/home_img/Rajshahi.png',
+      sizeClass: 'third'
+    },
+    {
+      title: 'Rangpur',
+      href: '/bus-tickets/destinations/rangpur',
+      image: 'assets/home_img/Rangpur.png',
+      sizeClass: 'third'
+    },
+    {
+      title: 'Sylhet',
+      href: '/bus-tickets/destinations/sylhet',
+      image: 'assets/home_img/Sylhet.png',
+      sizeClass: 'third'
+    }
+  ];
 
   recentSearches: { from: string; to: string; date: string; returnDate?: string; tripType: 'One Way' | 'Round Trip'; createdAt: string }[] = [];
 
@@ -61,6 +95,7 @@ export class SearchHeroComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.syncMobileLayout();
     if (this.showInlineResults) {
       this.fromCity = this.route.snapshot.queryParamMap.get('from') ?? '';
       this.toCity = this.route.snapshot.queryParamMap.get('to') ?? '';
@@ -72,6 +107,11 @@ export class SearchHeroComponent implements OnInit {
     }
     this.loadSchedules();
     this.loadRecentSearches();
+  }
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    this.syncMobileLayout();
   }
 
   setTripType(type: 'One Way' | 'Round Trip'): void {
@@ -368,20 +408,67 @@ export class SearchHeroComponent implements OnInit {
   private loadSchedules(): void {
     this.busManagementService.getAllSchedules().subscribe({
       next: (rows) => {
-        this.allSchedules = rows;
-        // include master locations so dropdown shows every location even if no schedules exist for them
-        this.availableFromLocations = [...new Set([...this.masterLocations, ...rows.map((item) => item.from)])].sort((a, b) => a.localeCompare(b));
-        this.allLocations = [...new Set([...this.masterLocations, ...rows.flatMap((item) => [item.from, item.to])])].sort((a, b) => a.localeCompare(b));
-        this.recomputeToLocations();
-        this.updateSuggestions('from');
-        if (this.showInlineResults && this.fromCity && this.toCity && this.journeyDate) {
-          this.onSearch();
-        }
+        this.busManagementService.getAllBookings().subscribe({
+          next: (bookings) => {
+            this.allSchedules = this.mergeBookedSeats(rows, bookings);
+            // include master locations so dropdown shows every location even if no schedules exist for them
+            this.availableFromLocations = [...new Set([...this.masterLocations, ...rows.map((item) => item.from)])].sort((a, b) => a.localeCompare(b));
+            this.allLocations = [...new Set([...this.masterLocations, ...rows.flatMap((item) => [item.from, item.to])])].sort((a, b) => a.localeCompare(b));
+            this.recomputeToLocations();
+            this.updateSuggestions('from');
+            if (this.showInlineResults && this.fromCity && this.toCity && this.journeyDate) {
+              this.onSearch();
+            }
+          },
+          error: () => {
+            this.allSchedules = rows;
+            this.availableFromLocations = [...new Set([...this.masterLocations, ...rows.map((item) => item.from)])].sort((a, b) => a.localeCompare(b));
+            this.allLocations = [...new Set([...this.masterLocations, ...rows.flatMap((item) => [item.from, item.to])])].sort((a, b) => a.localeCompare(b));
+            this.recomputeToLocations();
+            this.updateSuggestions('from');
+            if (this.showInlineResults && this.fromCity && this.toCity && this.journeyDate) {
+              this.onSearch();
+            }
+          }
+        });
       },
       error: () => {
         this.errorMessage = 'Bus data load korte problem hocche.';
       }
     });
+  }
+
+  private mergeBookedSeats(rows: BusScheduleEntry[], bookings: any[]): BusScheduleEntry[] {
+    return rows.map((row) => {
+      const seats = new Set<string>(row.unavailableSeats || []);
+      bookings
+        .filter((booking) => this.bookingMatchesSchedule(row, booking))
+        .forEach((booking) => {
+          (booking?.seats || []).forEach((seat: string) => seats.add(seat));
+        });
+
+      return {
+        ...row,
+        unavailableSeats: [...seats]
+      };
+    });
+  }
+
+  private bookingMatchesSchedule(row: BusScheduleEntry, booking: any): boolean {
+    if (!booking || booking.status === 'cancelled' || !booking.bus) {
+      return false;
+    }
+
+    const bookedBus = booking.bus as BusScheduleEntry;
+    if (row.id != null && bookedBus.id != null) {
+      return row.id === bookedBus.id;
+    }
+
+    return row.busNumber === bookedBus.busNumber
+      && row.from === bookedBus.from
+      && row.to === bookedBus.to
+      && row.departureDate === bookedBus.departureDate
+      && row.departureTime === bookedBus.departureTime;
   }
 
   private recomputeToLocations(): void {
@@ -453,10 +540,34 @@ export class SearchHeroComponent implements OnInit {
     try {
       const raw = localStorage.getItem(this.recentKey());
       const arr = raw ? JSON.parse(raw) : [];
-      this.recentSearches = Array.isArray(arr) ? arr.slice(0, 3) : [];
+      const today = this.today;
+      const filtered = Array.isArray(arr)
+        ? arr
+            .filter((entry) => this.isRecentSearchCurrent(entry, today))
+            .slice(0, 3)
+        : [];
+      this.recentSearches = filtered;
+      if (Array.isArray(arr) && filtered.length !== arr.length) {
+        localStorage.setItem(this.recentKey(), JSON.stringify(filtered));
+      }
     } catch {
       this.recentSearches = [];
     }
+  }
+
+  private syncMobileLayout(): void {
+    this.isMobileLayout = typeof window !== 'undefined' ? window.innerWidth <= 991.98 : false;
+  }
+
+  private isRecentSearchCurrent(entry: any, today: string): boolean {
+    if (!entry?.date) {
+      return false;
+    }
+    const tripDate = new Date(`${entry.date}T00:00:00`);
+    if (Number.isNaN(tripDate.getTime())) {
+      return false;
+    }
+    return entry.date >= today;
   }
 
   private saveRecentSearch(): void {

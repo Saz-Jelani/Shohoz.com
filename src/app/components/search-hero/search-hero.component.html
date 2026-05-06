@@ -3,7 +3,7 @@
     <img src="assets/Picture2.png" alt="Shohoz hero banner" class="hero-banner-img" />
   </div>
 
-  <div class="search-floating">
+  <div class="search-floating" [class.mobile-stack]="isMobileLayout">
     <div class="trip-toggle" *ngIf="!showInlineResults">
       <button type="button" class="btn trip-btn" [class.active]="tripType === 'One Way'" (click)="setTripType('One Way')">
         <span class="radio-dot"></span> One Way
@@ -80,16 +80,26 @@
 
         </div>
         <div class="date-col return-col">
-          <label *ngIf="returnDate && !showInlineResults" class="return-date-label">Return Date</label>
+          <label *ngIf="tripType === 'Round Trip' || returnDate" class="return-date-label">Return Date</label>
           <label
-            *ngIf="!returnDate"
+            *ngIf="tripType === 'Round Trip' && !returnDate"
             class="add-return-trigger"
             role="button"
             tabindex="0"
             (click)="openReturnPicker(returnDateInput)"
             (keydown.enter)="openReturnPicker(returnDateInput)"
           >
-            {{ showInlineResults ? '+ ADD RETURN' : '+ ADD RETURN TRIP' }}
+            Pick a date
+          </label>
+          <label
+            *ngIf="tripType === 'One Way' && !returnDate"
+            class="add-return-trip-trigger"
+            role="button"
+            tabindex="0"
+            (click)="openReturnPicker(returnDateInput)"
+            (keydown.enter)="openReturnPicker(returnDateInput)"
+          >
+            + ADD RETURN TRIP
           </label>
           <div *ngIf="returnDate" class="date-display" role="button" tabindex="0" (click)="openReturnPicker(returnDateInput)" (keydown.enter)="openReturnPicker(returnDateInput)">
             <div class="date-value">{{ formatDateLabel(returnDate) }}</div>
@@ -135,6 +145,308 @@
       </button>
     </div>
   </div>
+
+  <section class="trending-destinations bg-gray-50 py-12 md:px-4" *ngIf="!showInlineResults">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl font-semibold text-gray-900 text-center mb-8">Discover Trending Destinations</h2>
+      <div class="trending-grid w-full flex flex-wrap">
+        <div class="trend-card-wrap h-48 mb-4 md:h-[270px] px-2 w-full" *ngFor="let item of trendingDestinations" [ngClass]="item.sizeClass === 'half' ? 'trend-half' : 'trend-third'">
+          <div class="overflow-hidden rounded-xl h-full">
+            <a class="trend-link h-full relative flex justify-center items-center hover:opacity-80 transition-opacity duration-300" [href]="item.href">
+              <img loading="lazy" class="w-full h-full object-cover" [alt]="item.title" fetchpriority="auto" [src]="item.image" />
+              <h3 class="absolute bottom-2 left-2 text-lg font-semibold text-white">{{ item.title }}</h3>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Operator logo slider (converted from Tailwind to plain HTML/CSS) -->
+  <section class="operator-slider" *ngIf="!showInlineResults">
+    <div class="operator-slider__container">
+      <div class="operator-slider__header">
+        <h2 class="operator-slider__title">More Than <span class="operator-slider__highlight">100+</span> Trusted Bus Operators</h2>
+        <button class="operator-slider__cta" type="button">Book Your Ticket Now <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+
+      <div class="operator-slider__rows">
+        <!-- Row 1 (continuous right-to-left) -->
+        <div class="operator-slider__row" aria-hidden="false">
+          <div class="operator-slider__inner">
+            <!-- Slides (first copy) -->
+            <div class="operator-slide" role="listitem">
+              <div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/emad.webp?v=1.0.4" alt="Emad" loading="lazy"/></div><span class="operator-name">Emad</span></div>
+            </div>
+            <div class="operator-slide"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/pabna-express.webp?v=1.0.4" alt="Pabna Express" loading="lazy"/></div><span class="operator-name">Pabna Express</span></div></div>
+            <div class="operator-slide"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/arafat-paribahan.webp?v=1.0.4" alt="Arafat Paribahan" loading="lazy"/></div><span class="operator-name">Arafat Paribahan</span></div></div>
+            <div class="operator-slide"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/akota.webp?v=1.0.4" alt="Akota" loading="lazy"/></div><span class="operator-name">Akota</span></div></div>
+            <div class="operator-slide"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/shyamoli.webp?v=1.0.4" alt="Shyamoli" loading="lazy"/></div><span class="operator-name">Shyamoli</span></div></div>
+            <div class="operator-slide"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/nabil.webp?v=1.0.4" alt="Nabil" loading="lazy"/></div><span class="operator-name">Nabil</span></div></div>
+            <div class="operator-slide"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/sr.webp?v=1.0.4" alt="SR" loading="lazy"/></div><span class="operator-name">SR</span></div></div>
+            <div class="operator-slide"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/shohagh.webp?v=1.0.4" alt="Shohagh" loading="lazy"/></div><span class="operator-name">Shohagh</span></div></div>
+            <div class="operator-slide"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/royalcoach.webp?v=1.0.4" alt="Royal Coach" loading="lazy"/></div><span class="operator-name">Royal Coach</span></div></div>
+            <div class="operator-slide"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/evergreen.webp?v=1.0.4" alt="Evergreen" loading="lazy"/></div><span class="operator-name">Evergreen</span></div></div>
+            <!-- Slides (duplicate copy for seamless loop) -->
+            <div class="operator-slide" aria-hidden="true"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/emad.webp?v=1.0.4" alt="Emad" loading="lazy"/></div><span class="operator-name">Emad</span></div></div>
+            <div class="operator-slide" aria-hidden="true"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/pabna-express.webp?v=1.0.4" alt="Pabna Express" loading="lazy"/></div><span class="operator-name">Pabna Express</span></div></div>
+            <div class="operator-slide" aria-hidden="true"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/arafat-paribahan.webp?v=1.0.4" alt="Arafat Paribahan" loading="lazy"/></div><span class="operator-name">Arafat Paribahan</span></div></div>
+            <div class="operator-slide" aria-hidden="true"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/akota.webp?v=1.0.4" alt="Akota" loading="lazy"/></div><span class="operator-name">Akota</span></div></div>
+            <div class="operator-slide" aria-hidden="true"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/shyamoli.webp?v=1.0.4" alt="Shyamoli" loading="lazy"/></div><span class="operator-name">Shyamoli</span></div></div>
+            <div class="operator-slide" aria-hidden="true"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/nabil.webp?v=1.0.4" alt="Nabil" loading="lazy"/></div><span class="operator-name">Nabil</span></div></div>
+            <div class="operator-slide" aria-hidden="true"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/sr.webp?v=1.0.4" alt="SR" loading="lazy"/></div><span class="operator-name">SR</span></div></div>
+            <div class="operator-slide" aria-hidden="true"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/shohagh.webp?v=1.0.4" alt="Shohagh" loading="lazy"/></div><span class="operator-name">Shohagh</span></div></div>
+            <div class="operator-slide" aria-hidden="true"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/royalcoach.webp?v=1.0.4" alt="Royal Coach" loading="lazy"/></div><span class="operator-name">Royal Coach</span></div></div>
+            <div class="operator-slide" aria-hidden="true"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/evergreen.webp?v=1.0.4" alt="Evergreen" loading="lazy"/></div><span class="operator-name">Evergreen</span></div></div>
+          </div>
+        </div>
+
+        <!-- Row 2 (slower, also right-to-left) -->
+        <div class="operator-slider__row operator-slider__row--slow" aria-hidden="false">
+          <div class="operator-slider__inner">
+            <!-- duplicate same slides (first copy) -->
+            <div class="operator-slide"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/tungipara.webp?v=1.0.4" alt="Tungipara" loading="lazy"/></div><span class="operator-name">Tungipara</span></div></div>
+            <div class="operator-slide"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/alhamra.webp?v=1.0.4" alt="Alhamra" loading="lazy"/></div><span class="operator-name">Alhamra</span></div></div>
+            <div class="operator-slide"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/bilash-paribahan.webp?v=1.0.4" alt="Bilash" loading="lazy"/></div><span class="operator-name">Bilash</span></div></div>
+            <div class="operator-slide"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/manik.webp?v=1.0.4" alt="Manik Express" loading="lazy"/></div><span class="operator-name">Manik Express</span></div></div>
+            <div class="operator-slide"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/hanif.webp?v=1.0.4" alt="Hanif" loading="lazy"/></div><span class="operator-name">Hanif</span></div></div>
+            <div class="operator-slide"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/soudianac.webp?v=1.0.4" alt="Soudia" loading="lazy"/></div><span class="operator-name">Soudia</span></div></div>
+            <div class="operator-slide"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/robi-express.webp?v=1.0.4" alt="Robi Express" loading="lazy"/></div><span class="operator-name">Robi Express</span></div></div>
+            <div class="operator-slide"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/greenline.webp?v=1.0.4" alt="Green Line" loading="lazy"/></div><span class="operator-name">Green Line</span></div></div>
+            <div class="operator-slide"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/royal-express.webp?v=1.0.4" alt="Royal Express" loading="lazy"/></div><span class="operator-name">Royal Express</span></div></div>
+            <div class="operator-slide"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/orintravels.webp?v=1.0.4" alt="Orin Travels" loading="lazy"/></div><span class="operator-name">Orin Travels</span></div></div>
+            <!-- duplicate copy for seamless loop -->
+            <div class="operator-slide" aria-hidden="true"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/tungipara.webp?v=1.0.4" alt="Tungipara" loading="lazy"/></div><span class="operator-name">Tungipara</span></div></div>
+            <div class="operator-slide" aria-hidden="true"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/alhamra.webp?v=1.0.4" alt="Alhamra" loading="lazy"/></div><span class="operator-name">Alhamra</span></div></div>
+            <div class="operator-slide" aria-hidden="true"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/bilash-paribahan.webp?v=1.0.4" alt="Bilash" loading="lazy"/></div><span class="operator-name">Bilash</span></div></div>
+            <div class="operator-slide" aria-hidden="true"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/manik.webp?v=1.0.4" alt="Manik Express" loading="lazy"/></div><span class="operator-name">Manik Express</span></div></div>
+            <div class="operator-slide" aria-hidden="true"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/hanif.webp?v=1.0.4" alt="Hanif" loading="lazy"/></div><span class="operator-name">Hanif</span></div></div>
+            <div class="operator-slide" aria-hidden="true"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/soudianac.webp?v=1.0.4" alt="Soudia" loading="lazy"/></div><span class="operator-name">Soudia</span></div></div>
+            <div class="operator-slide" aria-hidden="true"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/robi-express.webp?v=1.0.4" alt="Robi Express" loading="lazy"/></div><span class="operator-name">Robi Express</span></div></div>
+            <div class="operator-slide" aria-hidden="true"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/greenline.webp?v=1.0.4" alt="Green Line" loading="lazy"/></div><span class="operator-name">Green Line</span></div></div>
+            <div class="operator-slide" aria-hidden="true"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/royal-express.webp?v=1.0.4" alt="Royal Express" loading="lazy"/></div><span class="operator-name">Royal Express</span></div></div>
+            <div class="operator-slide" aria-hidden="true"><div class="slide-body"><div class="logo-wrap"><img src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/operator-logos/orintravels.webp?v=1.0.4" alt="Orin Travels" loading="lazy"/></div><span class="operator-name">Orin Travels</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trusted section (converted from Tailwind to plain HTML/CSS) -->
+  <section class="trusted-section bg-gray-50 py-12 md:py-24 px-6" *ngIf="!showInlineResults">
+    <div class="trusted-container">
+      <div class="trusted-heading">
+        <h2 class="trusted-title"><span class="trusted-highlight">10+ Million</span> Travellers Trusted Shohoz</h2>
+      </div>
+
+      <div class="trusted-grid">
+        <div class="trusted-card">
+          <div class="trusted-icon" aria-hidden="true">
+            <!-- wallet/bookings icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 25 24" fill="currentColor" class="trusted-svg"><path d="M2.723 8.133v1.828c0 .537.436.97.971.97h.402V7.159h-.402c-.538 0-.971.436-.971.974zM19.911 7.162h-.405v3.772h.405c.538 0 .972-.436.972-.971V8.136c0-.538-.436-.971-.972-.974zM17.773 4.084c-1.094-.384-2.968-.796-5.973-.796-3.004 0-4.881.427-5.987.817-.783.277-1.302 1.023-1.302 1.852v10.441c0 .906.611 1.668 1.447 1.899v.956c0 .726.592 1.319 1.318 1.319h.51c.725 0 1.318-.593 1.318-1.319v-.885h5.4v.885c0 .725.593 1.319 1.318 1.319h.51c.725 0 1.318-.593 1.318-1.319v-.956c.832-.23 1.446-1 1.446-1.906V5.943c0-.839-.528-1.582-1.318-1.859zM9.97 4.622h3.665c.35 0 .636.286.636.636 0 .35-.286.636-.636.636H9.97c-.35 0-.636-.286-.636-.636 0-.35.286-.636.636-.636zM7.092 17.386c-.522 0-.949-.425-.949-.95 0-.525.424-.95.949-.95.526 0 .95.425.95.95 0 .525-.424.95-.95.95zM16.51 17.386c-.522 0-.949-.425-.949-.95 0-.525.424-.95.949-.95.526 0 .95.425.95.95 0 .525-.424.95-.95.95zM17.877 13.07c0 .62-.504 1.124-1.124 1.124H6.849c-.62 0-1.124-.504-1.124-1.124V8.176c0-.62.504-1.124 1.124-1.124h8.78c.62 0 1.124.504 1.124 1.124v4.893z"></path></svg>
+          </div>
+          <h3 class="trusted-card-title">Largest Ticketing Platform</h3>
+          <div class="trusted-stats">
+            <div class="stat"><div class="stat-num">250M+</div><div class="stat-label">tickets</div></div>
+            <div class="stat"><div class="stat-num">10M+</div><div class="stat-label">happy users</div></div>
+            <div class="stat"><div class="stat-num">3000+</div><div class="stat-label">routes</div></div>
+            <div class="stat"><div class="stat-num">1000+</div><div class="stat-label">trusted partners</div></div>
+          </div>
+        </div>
+
+        <div class="trusted-card">
+          <div class="trusted-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </div>
+          <h3 class="trusted-card-title">Quick &amp; Easy Booking</h3>
+          <p class="trusted-text">Skip the queues with Shohoz! Book bus tickets online with access to 100+ operators nationwide. Easily browse routes.</p>
+        </div>
+
+        <div class="trusted-card">
+          <div class="trusted-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364"></path></svg>
+          </div>
+          <h3 class="trusted-card-title">Fast Customer Support</h3>
+          <p class="trusted-text">Quick and responsive assistance to resolve your issues without delay—because your time matters to us.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="app-promo-section" *ngIf="!showInlineResults">
+    <div class="app-promo-container container">
+      <div class="app-promo-panel">
+        <div class="app-promo-media">
+          <img
+            src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/app-illustration-v2.webp?v=1.0.4"
+            alt="app-illustrator"
+            width="508"
+            height="420"
+            loading="lazy"
+            fetchpriority="auto"
+          />
+        </div>
+
+        <div class="app-promo-content">
+          <p class="app-promo-title">
+            Get More Out of Shohoz with<br class="app-title-break" /> our <span>mobile app</span>
+          </p>
+
+          <div class="app-promo-benefits">
+            <div class="app-benefit">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+                <rect x="0.5" y="0.5" width="21" height="21" rx="10.5" fill="white" stroke="#EEEEEE"></rect>
+                <path d="M13.5001 11.0003L9.96422 14.5361L8.78589 13.357L11.1434 11.0003L8.78589 8.64363L9.96422 7.46447L13.5001 11.0003Z" fill="#16D378"></path>
+              </svg>
+              <p>Faster and easier booking</p>
+            </div>
+
+            <div class="app-benefit">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+                <rect x="0.5" y="0.5" width="21" height="21" rx="10.5" fill="white" stroke="#EEEEEE"></rect>
+                <path d="M13.5001 11.0003L9.96422 14.5361L8.78589 13.357L11.1434 11.0003L8.78589 8.64363L9.96422 7.46447L13.5001 11.0003Z" fill="#16D378"></path>
+              </svg>
+              <p>Get alerts before every departure</p>
+            </div>
+
+            <div class="app-benefit">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+                <rect x="0.5" y="0.5" width="21" height="21" rx="10.5" fill="white" stroke="#EEEEEE"></rect>
+                <path d="M13.5001 11.0003L9.96422 14.5361L8.78589 13.357L11.1434 11.0003L8.78589 8.64363L9.96422 7.46447L13.5001 11.0003Z" fill="#16D378"></path>
+              </svg>
+              <p>Easy access to your tickets</p>
+            </div>
+
+            <div class="app-benefit">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+                <rect x="0.5" y="0.5" width="21" height="21" rx="10.5" fill="white" stroke="#EEEEEE"></rect>
+                <path d="M13.5001 11.0003L9.96422 14.5361L8.78589 13.357L11.1434 11.0003L8.78589 8.64363L9.96422 7.46447L13.5001 11.0003Z" fill="#16D378"></path>
+              </svg>
+              <p>Onboard with digital tickets</p>
+            </div>
+          </div>
+
+          <div class="app-promo-stores">
+            <a href="https://play.google.com/store/apps/details?id=com.shohoz.rides" target="_blank" rel="noopener noreferrer">
+              <img
+                src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/google-play-store.png?v=1.0.4"
+                alt="google-play-store"
+                width="191"
+                height="63"
+                loading="lazy"
+                fetchpriority="auto"
+              />
+            </a>
+            <a href="https://apps.apple.com/us/app/shohoz-app/id1354321445?ls=1" target="_blank" rel="noopener noreferrer">
+              <img
+                src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/apple-app-store.png?v=1.0.4"
+                alt="apple-app-store"
+                width="216"
+                height="63"
+                loading="lazy"
+                fetchpriority="auto"
+              />
+            </a>
+            <a href="https://api.whatsapp.com/send?phone=8801999916374&text=hi&utm_source=website&utm_medium=app_link&utm_campaign=whatsapp_booking" target="_blank" rel="noopener noreferrer">
+              <img
+                src="https://s3-ap-south-1.amazonaws.com/shohoz-bus/prod/book-on-whatsapp.webp?v=1.0.4"
+                alt="book-on-whatsapp"
+                width="216"
+                height="63"
+                loading="lazy"
+                fetchpriority="auto"
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq-section" *ngIf="!showInlineResults">
+    <div class="faq-container container">
+      <div class="faq-layout">
+        <div class="faq-intro">
+          <p class="faq-kicker">Got Questions ?</p>
+          <p class="faq-title">We've Got Answers</p>
+          <p class="faq-text">
+            We are always happy to hear from you. If you have any questions, suggestions or opinions, please do not hesitate to reach out to us.
+          </p>
+          <a class="faq-contact-btn" href="https://www.shohoz.com/contact-us" target="_blank" rel="noopener noreferrer">Contact Us</a>
+        </div>
+
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary class="faq-summary">
+              <h2>How can I purchase a ticket from Shohoz Platform?</h2>
+              <span class="faq-toggle" aria-hidden="true"></span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                Please visit our website <a href="https://www.shohoz.com" target="_blank" rel="noopener noreferrer">www.shohoz.com</a> or download our mobile App.
+                <br />
+                <a href="https://play.google.com/store/search?q=shohoz&c=apps" target="_blank" rel="noopener noreferrer">Download App For Android</a>
+                <br />
+                <a href="https://apps.apple.com/us/app/shohoz-app/id1354321445" target="_blank" rel="noopener noreferrer">Download App For IOS</a>
+                <br />
+                Or call our helpline number at <a href="tel:16374">16374</a> for ticket purchase and for more information.
+              </p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-summary">
+              <h2>Is there any time frame to buy a ticket?</h2>
+              <span class="faq-toggle" aria-hidden="true"></span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                There is no time limit to buy tickets from our website or app. But if a customer wants to purchase a ticket through our helpline number, then the customer should call our helpline number <a href="tel:16374">16374</a> <b>( Operation Time- 7:00 AM to 11:00 PM )</b>.
+              </p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-summary">
+              <h2>What is the process of Migrate or Cancelling a ticket?</h2>
+              <span class="faq-toggle" aria-hidden="true"></span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                For cancellation and migration, customers must have 12/24 hours before trip departure time depending on the operator. For migration, customers must call our helpline number <a href="tel:16374">16374</a>. Also, the customer must call from his ticket booking number. Also, a customer can cancel a ticket from our website if he has enough time from the trip departure time (12/24 hours excluding 11 PM to 7 AM).
+              </p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-summary">
+              <h2>How can I check Shohoz's offers?</h2>
+              <span class="faq-toggle" aria-hidden="true"></span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                Customers can check our offers on our website. Firstly, go to our website then Click 'BUS' option, and then go to the
+                <a href="/deals-and-offers" target="_blank" rel="noopener noreferrer">Deals and offers</a> option. Customers also can call our helpline number <a href="tel:16374">16374</a> for more queries and offers.
+              </p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-summary">
+              <h2>After purchasing a ticket from Shohoz, I cancelled that ticket due to a personal issue or the operator cancelled their trip. But I have not received my refund yet. What should I do now?</h2>
+              <span class="faq-toggle" aria-hidden="true"></span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                As per our
+                <a href="/cancellation-and-refunds" target="_blank" rel="noopener noreferrer">refund policy</a>, it takes maximum of 5-7 working days for Bkash and Nagad both. For Internet banking, Debit cards and Credit cards it takes maximum of 7-10 working days. If the customer did not get the refund in mentioned timeline, please call <a href="tel:16374">16374</a> or mail us at <a href="mailto:info@shohoz.com">info@shohoz.com</a>.
+              </p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <div class="progress-strip" *ngIf="showInlineResults">
     <div class="container progress-inner">

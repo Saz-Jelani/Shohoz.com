@@ -27,6 +27,7 @@ import { PassengerDetailsComponent } from './pages/passenger-details/passenger-d
 import { ReviewPayComponent } from './pages/review-pay/review-pay.component';
 import { MyProfileComponent } from './pages/my-profile/my-profile.component';
 import { ChangePasswordComponent } from './pages/change-password/change-password.component';
+import { LaunchHomeComponent } from './pages/launch-home/launch-home.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { ChangePasswordComponent } from './pages/change-password/change-password
     PassengerDetailsComponent,
     ReviewPayComponent,
     MyProfileComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
+    LaunchHomeComponent
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
   providers: [],

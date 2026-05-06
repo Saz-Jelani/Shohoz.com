@@ -67,3 +67,98 @@ body {
     padding: 0 15px;
   }
 }
+
+.trending-destinations {
+  background: #f9fafb;
+  padding: 3rem 0;
+}
+
+.trending-destinations .max-w-6xl {
+  max-width: 1152px;
+}
+
+.trending-destinations h2 {
+  margin: 0 0 2rem;
+  text-align: center;
+  font-size: 2rem;
+  line-height: 1.2;
+  font-weight: 600;
+  color: #111827;
+}
+
+.trending-grid {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -0.5rem;
+}
+
+.trend-card-wrap {
+  width: 100%;
+  padding: 0 0.5rem;
+  margin-bottom: 1rem;
+  flex: 0 0 100%;
+}
+
+.trend-link {
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  text-decoration: none;
+}
+
+.trend-link img {
+  display: block;
+  object-fit: cover;
+}
+
+.trend-link h3 {
+  position: absolute;
+  left: 0.5rem;
+  bottom: 0.5rem;
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+
+@media (min-width: 768px) {
+  .trending-destinations {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .trending-destinations h2 {
+    margin-bottom: 2rem;
+  }
+
+.trend-half {
+  flex-basis: 50%;
+  max-width: 50%;
+}
+
+.trend-third {
+  flex-basis: 33.333333%;
+  max-width: 33.333333%;
+}
+
+  .trend-card-wrap {
+    height: 270px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .trending-destinations {
+    padding: 2.25rem 0;
+  }
+
+  .trending-destinations h2 {
+    font-size: 1.5rem;
+    padding: 0 1rem;
+    margin-bottom: 1.5rem;
+  }
+}

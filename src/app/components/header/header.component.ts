@@ -3,6 +3,11 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { AuthUser } from '../../models/auth.models';
 
+type ServiceClickPayload = {
+  mode: string;
+  target: 'user' | 'admin';
+};
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -12,10 +17,11 @@ export class HeaderComponent {
   @Input() travelModes: string[] = [];
   @Input() selectedMode = 'Bus';
   @Output() modeChange = new EventEmitter<string>();
-  @Output() serviceClick = new EventEmitter<string>();
+  @Output() serviceClick = new EventEmitter<ServiceClickPayload>();
 
   isMobileMenuOpen = false;
   isUserMenuOpen = false;
+  openServiceMenu: string | null = null;
   services = [
     { label: 'Bus', icon: 'assets/bus.png', beta: false },
     { label: 'Air', icon: 'assets/air.png', beta: false },
@@ -45,21 +51,48 @@ export class HeaderComponent {
     return (this.currentUser?.name || 'U').trim().charAt(0).toUpperCase();
   }
 
-  selectMode(mode: string): void {
+  get isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
+
+  handleServiceClick(mode: string, event?: MouseEvent): void {
+    event?.stopPropagation();
+    if (this.isAdmin) {
+      if (mode !== 'Bus' && mode !== 'Launch') {
+        this.openServiceMenu = null;
+        return;
+      }
+      this.openServiceMenu = this.openServiceMenu === mode ? null : mode;
+      this.isMobileMenuOpen = false;
+      return;
+    }
+
+    this.selectMode(mode, 'user');
+  }
+
+  selectMode(mode: string, target: 'user' | 'admin' = 'user'): void {
     this.modeChange.emit(mode);
-    this.serviceClick.emit(mode);
+    this.serviceClick.emit({ mode, target });
     this.isMobileMenuOpen = false;
+    this.openServiceMenu = null;
+  }
+
+  selectAdminMode(mode: string, event?: MouseEvent): void {
+    event?.stopPropagation();
+    this.selectMode(mode, 'admin');
   }
 
   toggleMobileMenu(): void {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
     this.isUserMenuOpen = false;
+    this.openServiceMenu = null;
   }
 
   toggleUserMenu(event?: MouseEvent): void {
     event?.stopPropagation();
     this.isUserMenuOpen = !this.isUserMenuOpen;
     this.isMobileMenuOpen = false;
+    this.openServiceMenu = null;
   }
 
   goToProfile(): void {
@@ -81,11 +114,12 @@ export class HeaderComponent {
   @HostListener('document:click', ['$event'])
   closeMenus(event: MouseEvent): void {
     const target = event.target as HTMLElement | null;
-    if (target?.closest('.nav-actions') || target?.closest('.mobile-actions')) {
+    if (target?.closest('.nav-actions') || target?.closest('.mobile-actions') || target?.closest('.service-menu')) {
       return;
     }
 
     this.isUserMenuOpen = false;
     this.isMobileMenuOpen = false;
+    this.openServiceMenu = null;
   }
 }

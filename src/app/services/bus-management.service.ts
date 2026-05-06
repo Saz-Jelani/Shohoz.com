@@ -20,4 +20,16 @@ export class BusManagementService {
   getAllSchedules(): Observable<BusScheduleEntry[]> {
     return this.http.get<BusScheduleEntry[]>(this.apiUrl);
   }
+
+  getScheduleById(id: number): Observable<BusScheduleEntry> {
+    return this.http.get<BusScheduleEntry>(`${this.apiUrl}/${id}`);
+  }
+
+  updateSchedule(id: number, payload: Partial<BusScheduleEntry>): Observable<BusScheduleEntry> {
+    return this.http.patch<BusScheduleEntry>(`${this.apiUrl}/${id}`, payload);
+  }
+
+  getAllBookings(): Observable<any[]> {
+    return this.http.get<any[]>('http://localhost:3000/bookings');
+  }
 }

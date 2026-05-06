@@ -4,23 +4,29 @@
       <a routerLink="/" aria-label="Shohoz home"><img src="assets/logo_icon.png" alt="Shohoz" class="logo" /></a>
 
       <div class="service-menu">
-        <button
-          *ngFor="let item of services"
-          type="button"
-          class="service-btn"
-          [class.active]="item.label === selectedMode"
-          (click)="item.label === 'Bus' || item.label === 'Train' ? selectMode(item.label) : null"
-        >
-          <img *ngIf="item.icon.includes('.png')" [src]="item.icon" alt="{{item.label}}" class="service-icon" />
-          <span *ngIf="!item.icon.includes('.png')" class="service-icon">{{ item.icon }}</span>
-          <span>{{ item.label }}</span>
-          <span *ngIf="item.beta" class="beta">BETA</span>
-        </button>
+        <div *ngFor="let item of services" class="service-item-wrap">
+          <button
+            type="button"
+            class="service-btn"
+            [class.active]="item.label === selectedMode"
+            (click)="handleServiceClick(item.label, $event)"
+          >
+            <img *ngIf="item.icon.includes('.png')" [src]="item.icon" alt="{{item.label}}" class="service-icon" />
+            <span *ngIf="!item.icon.includes('.png')" class="service-icon">{{ item.icon }}</span>
+            <span>{{ item.label }}</span>
+            <span *ngIf="item.beta" class="beta">BETA</span>
+          </button>
+
+          <div class="service-dropdown" *ngIf="isAdmin && openServiceMenu === item.label" (click)="$event.stopPropagation()">
+            <button type="button" class="service-dropdown-item" (click)="selectAdminMode(item.label, $event)">Admin Mode</button>
+            <button type="button" class="service-dropdown-item" (click)="selectMode(item.label, 'user')">User Mode</button>
+          </div>
+        </div>
       </div>
 
       <div class="nav-actions">
         <button type="button" class="call-btn">
-          <span aria-hidden="true">&#9742;</span>
+          <img src="assets/phone.png" alt="" class="call-icon" aria-hidden="true" />
           <span>16374</span>
         </button>
 

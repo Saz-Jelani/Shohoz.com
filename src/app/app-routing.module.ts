@@ -11,6 +11,7 @@ import { PassengerDetailsComponent } from './pages/passenger-details/passenger-d
 import { ReviewPayComponent } from './pages/review-pay/review-pay.component';
 import { MyProfileComponent } from './pages/my-profile/my-profile.component';
 import { ChangePasswordComponent } from './pages/change-password/change-password.component';
+import { LaunchHomeComponent } from './pages/launch-home/launch-home.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -24,6 +25,7 @@ const routes: Routes = [
       { path: 'bus/search', component: BusSearchResultsComponent },
       { path: 'bus/passenger-details', component: PassengerDetailsComponent },
       { path: 'bus/review-pay', component: ReviewPayComponent },
+      { path: 'launch-tickets', component: LaunchHomeComponent },
       { path: 'my-profile', component: MyProfileComponent },
       { path: 'change-password', component: ChangePasswordComponent },
       { path: 'admin/bus-management', component: AdminBusManagementComponent }
