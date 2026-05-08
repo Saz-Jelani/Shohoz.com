@@ -26,6 +26,8 @@ interface BusTripConfig {
   boardingPointTimes: string[];
   unavailableSeats: string[];
   cabinUnavailableSeats: string[];
+  cabinPriceEconomy: number | null;
+  cabinPricePremium: number | null;
   isReady: boolean;
 }
 
@@ -63,6 +65,8 @@ export class AdminBusManagementComponent implements OnInit {
   ];
   readonly acPriceOptions = [600, 700, 800, 900, 1000];
   readonly nonAcPriceOptions = [500, 600, 700, 800, 900];
+  readonly launchCabinEconomyPriceOptions = [1500, 2000];
+  readonly launchCabinPremiumPriceOptions = [2000, 2500];
   readonly timeOptions = Array.from({ length: 48 }, (_, i) => this.to12HourLabel(i * 30));
   readonly seatLabels = Array.from({ length: 10 }, (_, i) => String.fromCharCode(65 + i)).flatMap((letter) => [`${letter}1`, `${letter}2`, `${letter}3`, `${letter}4`]);
   readonly cabinSeatLabels = Array.from({ length: 2 }, (_, i) => String.fromCharCode(65 + i)).flatMap((letter) => [`${letter}1`, `${letter}2`, `${letter}3`, `${letter}4`]);
@@ -247,7 +251,14 @@ export class AdminBusManagementComponent implements OnInit {
 
   get isReadyToConfirm(): boolean {
     return this.busTripConfigs.length > 0 && this.busTripConfigs.every((trip) => (
-      !!trip.departureDate && !!trip.to && !!trip.serviceType && !!trip.price && !!trip.departureTime && !!trip.arrivalTime && trip.isReady
+      !!trip.departureDate
+      && !!trip.to
+      && !!trip.serviceType
+      && !!trip.price
+      && !!trip.departureTime
+      && !!trip.arrivalTime
+      && (!this.isLaunchMode || (!!trip.cabinPriceEconomy && !!trip.cabinPricePremium))
+      && trip.isReady
     ));
   }
 
@@ -417,6 +428,15 @@ export class AdminBusManagementComponent implements OnInit {
     });
   }
 
+  onTripCabinPriceChange(busNumber: string, field: 'cabinPriceEconomy' | 'cabinPricePremium', price: number): void {
+    this.busTripConfigs = this.busTripConfigs.map((trip) => {
+      if (trip.busNumber !== busNumber) {
+        return trip;
+      }
+      return { ...trip, [field]: price, isReady: false };
+    });
+  }
+
   toggleCabinSeat(busNumber: string, seat: string): void {
     this.busTripConfigs = this.busTripConfigs.map((trip) => {
       if (trip.busNumber !== busNumber) {
@@ -493,7 +513,8 @@ export class AdminBusManagementComponent implements OnInit {
       if (trip.busNumber !== busNumber) {
         return trip;
       }
-      if (!trip.to || !trip.serviceType || !trip.price || !trip.departureDate || !trip.departureTime || !trip.arrivalTime || trip.boardingPoints.length === 0) {
+      const missingLaunchCabinPrice = this.isLaunchMode && (!trip.cabinPriceEconomy || !trip.cabinPricePremium);
+      if (!trip.to || !trip.serviceType || !trip.price || !trip.departureDate || !trip.departureTime || !trip.arrivalTime || trip.boardingPoints.length === 0 || missingLaunchCabinPrice) {
         return trip;
       }
       if (!this.isDepartureAfterHistory(trip.busNumber, trip.departureDate, trip.departureTime)) {
@@ -518,6 +539,8 @@ export class AdminBusManagementComponent implements OnInit {
       boardingPointTimes: this.getDefaultBoardingTimes('', points.length),
       unavailableSeats: [],
       cabinUnavailableSeats: [],
+      cabinPriceEconomy: null,
+      cabinPricePremium: null,
       isReady: false
     });
   }
@@ -574,6 +597,8 @@ export class AdminBusManagementComponent implements OnInit {
       boardingPointTimes: trip.boardingPointTimes,
       unavailableSeats: trip.unavailableSeats,
       cabinUnavailableSeats: this.isLaunchMode ? trip.cabinUnavailableSeats : [],
+      cabinPriceEconomy: this.isLaunchMode ? trip.cabinPriceEconomy ?? undefined : undefined,
+      cabinPricePremium: this.isLaunchMode ? trip.cabinPricePremium ?? undefined : undefined,
       createdByUserId: currentUser.id as number
     }));
 
@@ -622,6 +647,8 @@ export class AdminBusManagementComponent implements OnInit {
         boardingPointTimes: this.getDefaultBoardingTimes('', points.length),
         unavailableSeats: [],
         cabinUnavailableSeats: [],
+        cabinPriceEconomy: null,
+        cabinPricePremium: null,
         isReady: false
       };
     });

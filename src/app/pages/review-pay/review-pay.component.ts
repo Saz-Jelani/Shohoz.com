@@ -3,14 +3,29 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { BusManagementService } from '../../services/bus-management.service';
+import { LaunchManagementService } from '../../services/launch-management.service';
 import { BusScheduleEntry } from '../../models/bus-management.models';
 
 interface BookingDraft {
+  mode?: 'Bus' | 'Launch';
   bus: BusScheduleEntry;
   seats: string[];
+  tickets?: Array<{
+    seat: string;
+    type: 'seat' | 'cabin';
+    cabinClass?: 'Economy' | 'Premium';
+    price: number;
+  }>;
   boardingPoint: string;
   boardingTime: string;
   createdAt: string;
+}
+
+interface TicketSelection {
+  seat: string;
+  type: 'seat' | 'cabin';
+  cabinClass?: 'Economy' | 'Premium';
+  price: number;
 }
 
 interface PassengerDraft {
@@ -33,6 +48,7 @@ export class ReviewPayComponent implements OnInit, OnDestroy {
   private readonly sessionDurationMs = 4 * 60 * 1000;
   private countdownTimer?: number;
   private redirectTimer?: number;
+  private selectedMode: 'Bus' | 'Launch' = 'Bus';
 
   booking: BookingDraft | null = null;
   passenger: PassengerDraft | null = null;
@@ -52,7 +68,8 @@ export class ReviewPayComponent implements OnInit, OnDestroy {
     private readonly http: HttpClient,
     private readonly authService: AuthService,
     private readonly router: Router,
-    private readonly busManagementService: BusManagementService
+    private readonly busManagementService: BusManagementService,
+    private readonly launchManagementService: LaunchManagementService
   ) {}
 
   ngOnInit(): void {
@@ -71,6 +88,9 @@ export class ReviewPayComponent implements OnInit, OnDestroy {
       return 0;
     }
     const bus = this.booking.bus;
+    if (this.booking.tickets?.length) {
+      return this.booking.tickets.reduce((sum, t) => sum + t.price, 0);
+    }
     const base = bus.discountPrice && bus.discountPrice < bus.price ? bus.price - bus.discountPrice : bus.price;
     return base * this.booking.seats.length;
   }
@@ -80,15 +100,20 @@ export class ReviewPayComponent implements OnInit, OnDestroy {
       return 0;
     }
 
+    if (this.booking.tickets?.length) {
+      return this.booking.tickets.reduce((sum, t) => sum + t.price, 0);
+    }
     return this.booking.bus.price * this.booking.seats.length;
   }
 
   get processingFee(): number {
-    return this.booking ? 30 * this.booking.seats.length : 0;
+    const count = this.booking?.tickets?.length ?? this.booking?.seats.length ?? 0;
+    return this.booking ? 30 * count : 0;
   }
 
   get insuranceAmount(): number {
-    return this.booking && this.insuranceSelected ? 10 * this.booking.seats.length : 0;
+    const count = this.booking?.tickets?.length ?? this.booking?.seats.length ?? 0;
+    return this.booking && this.insuranceSelected ? 10 * count : 0;
   }
 
   get discountAmount(): number {
@@ -96,7 +121,10 @@ export class ReviewPayComponent implements OnInit, OnDestroy {
       return 0;
     }
 
-    return this.booking.bus.discountPrice * this.booking.seats.length;
+    const regularSeatCount = this.booking.tickets?.length
+      ? this.booking.tickets.filter((t) => t.type === 'seat').length
+      : this.booking.seats.length;
+    return this.booking.bus.discountPrice * regularSeatCount;
   }
 
   get totalPayable(): number {
@@ -115,7 +143,7 @@ export class ReviewPayComponent implements OnInit, OnDestroy {
   }
 
   get showTimerWarning(): boolean {
-    return this.remainingMs <= 60 * 1000;
+    return this.remainingMs <= 30 * 1000;
   }
 
   formatDateLabel(dateText: string): string {
@@ -127,7 +155,7 @@ export class ReviewPayComponent implements OnInit, OnDestroy {
   }
 
   backToSearch(): void {
-    this.router.navigate(['/bus/search']);
+    this.router.navigate([this.selectedMode === 'Launch' ? '/launch/search' : '/bus/search']);
   }
 
   get passengerNames(): string[] {
@@ -135,19 +163,27 @@ export class ReviewPayComponent implements OnInit, OnDestroy {
   }
 
   private loadDrafts(): void {
-    const bookingRaw = sessionStorage.getItem('shohoz_booking_draft');
-    const passengerRaw = sessionStorage.getItem('shohoz_passenger_draft');
+    const launchBookingRaw = sessionStorage.getItem('shohoz_booking_draft_launch');
+    const busBookingRaw = sessionStorage.getItem('shohoz_booking_draft_bus');
+    const legacyBookingRaw = sessionStorage.getItem('shohoz_booking_draft');
+    const bookingRaw = launchBookingRaw || busBookingRaw || legacyBookingRaw;
+    const passengerRaw = launchBookingRaw
+      ? sessionStorage.getItem('shohoz_passenger_draft_launch') || sessionStorage.getItem('shohoz_passenger_draft')
+      : sessionStorage.getItem('shohoz_passenger_draft_bus') || sessionStorage.getItem('shohoz_passenger_draft');
 
     if (!bookingRaw) {
-      this.router.navigate(['/bus/search']);
+      const fallback = this.router.url.startsWith('/launch/') ? '/launch/search' : '/bus/search';
+      this.router.navigate([fallback]);
       return;
     }
 
     try {
       this.booking = JSON.parse(bookingRaw) as BookingDraft;
+      this.selectedMode = this.booking.mode === 'Launch' ? 'Launch' : (launchBookingRaw ? 'Launch' : 'Bus');
       this.passenger = passengerRaw ? (JSON.parse(passengerRaw) as PassengerDraft) : null;
     } catch {
-      this.router.navigate(['/bus/search']);
+      const fallback = this.router.url.startsWith('/launch/') ? '/launch/search' : '/bus/search';
+      this.router.navigate([fallback]);
     }
   }
 
@@ -183,12 +219,32 @@ export class ReviewPayComponent implements OnInit, OnDestroy {
     sessionStorage.removeItem(this.expiryStorageKey);
     sessionStorage.removeItem('shohoz_booking_draft');
     sessionStorage.removeItem('shohoz_passenger_draft');
+    sessionStorage.removeItem('shohoz_booking_draft_bus');
+    sessionStorage.removeItem('shohoz_booking_draft_launch');
+    sessionStorage.removeItem('shohoz_passenger_draft_bus');
+    sessionStorage.removeItem('shohoz_passenger_draft_launch');
     this.showExpiryPopup = true;
     this.remainingMs = 0;
 
     this.redirectTimer = window.setTimeout(() => {
-      this.router.navigate(['/bus/search']);
+      this.navigateToLastSearch();
     }, 2200);
+  }
+
+  private navigateToLastSearch(): void {
+    const target = this.selectedMode === 'Launch' ? '/launch/search' : '/bus/search';
+    if (!this.booking?.bus) {
+      this.router.navigate([target]);
+      return;
+    }
+    this.router.navigate([target], {
+      queryParams: {
+        from: this.booking.bus.from,
+        to: this.booking.bus.to,
+        date: this.booking.bus.departureDate,
+        mode: this.selectedMode
+      }
+    });
   }
 
   private clearTimers(): void {
@@ -209,14 +265,21 @@ export class ReviewPayComponent implements OnInit, OnDestroy {
     }
 
     const user = this.authService.getCurrentUser();
+    const isLaunch = this.selectedMode === 'Launch';
+    const allTickets = this.getBookingTickets();
+    const regularSeats = allTickets.filter((t: TicketSelection) => t.type === 'seat').map((t: TicketSelection) => t.seat);
+    const cabinSeats = allTickets.filter((t: TicketSelection) => t.type === 'cabin').map((t: TicketSelection) => t.seat);
     const payload = {
+      mode: this.selectedMode,
       userId: user?.id || null,
       userName: user?.name || '',
       email: this.passenger.email,
       mobileNo: this.passenger.mobileNo,
       passengers: this.passenger.passengers,
-      bus: this.booking.bus,
-      seats: this.booking.seats,
+      ...(isLaunch ? { launch: this.booking.bus } : { bus: this.booking.bus }),
+      seats: regularSeats,
+      cabinSeats,
+      tickets: allTickets,
       boardingPoint: this.booking.boardingPoint,
       boardingTime: this.booking.boardingTime,
       paymentMethod: this.selectedPaymentMethod,
@@ -240,6 +303,10 @@ export class ReviewPayComponent implements OnInit, OnDestroy {
         sessionStorage.removeItem(this.expiryStorageKey);
         sessionStorage.removeItem('shohoz_booking_draft');
         sessionStorage.removeItem('shohoz_passenger_draft');
+        sessionStorage.removeItem('shohoz_booking_draft_bus');
+        sessionStorage.removeItem('shohoz_booking_draft_launch');
+        sessionStorage.removeItem('shohoz_passenger_draft_bus');
+        sessionStorage.removeItem('shohoz_passenger_draft_launch');
         this.clearTimers();
         this.router.navigate(['/']);
       },
@@ -251,20 +318,30 @@ export class ReviewPayComponent implements OnInit, OnDestroy {
   }
 
   private lockBookedSeats(): void {
-    if (!this.booking?.bus || this.booking.seats.length === 0) {
+    if (!this.booking?.bus) {
       return;
     }
 
-    const bookedSeats = [...new Set(this.booking.seats)];
+    const tickets = this.getBookingTickets();
+    const bookedSeats: string[] = [...new Set(tickets.filter((t: TicketSelection) => t.type === 'seat').map((t: TicketSelection) => t.seat))];
+    const bookedCabinSeats: string[] = [...new Set(tickets.filter((t: TicketSelection) => t.type === 'cabin').map((t: TicketSelection) => t.seat))];
+    if (bookedSeats.length === 0 && bookedCabinSeats.length === 0) {
+      return;
+    }
     const bus = this.booking.bus;
 
+    const scheduleService = this.selectedMode === 'Launch' ? this.launchManagementService : this.busManagementService;
     const applySeatLock = (schedule: BusScheduleEntry | null): void => {
       if (!schedule || schedule.id == null) {
         return;
       }
 
       const updatedSeats = [...new Set([...(schedule.unavailableSeats || []), ...bookedSeats])];
-      this.busManagementService.updateSchedule(schedule.id, { unavailableSeats: updatedSeats }).subscribe({
+      const updatedCabinSeats = [...new Set([...(schedule.cabinUnavailableSeats || []), ...bookedCabinSeats])];
+      scheduleService.updateSchedule(schedule.id, {
+        unavailableSeats: updatedSeats,
+        ...(this.selectedMode === 'Launch' ? { cabinUnavailableSeats: updatedCabinSeats } : {})
+      }).subscribe({
         error: () => {
           // Seat locks are also derived from bookings on search pages, so this can fail safely.
         }
@@ -272,14 +349,14 @@ export class ReviewPayComponent implements OnInit, OnDestroy {
     };
 
     if (bus.id != null) {
-      this.busManagementService.getScheduleById(bus.id).subscribe({
+      scheduleService.getScheduleById(bus.id).subscribe({
         next: (schedule) => applySeatLock(schedule),
         error: () => applySeatLock(bus)
       });
       return;
     }
 
-    this.busManagementService.getSchedulesByBusNumber(bus.busNumber).subscribe({
+    scheduleService.getSchedulesByBusNumber(bus.busNumber).subscribe({
       next: (rows) => {
         const schedule = rows.find((item) =>
           item.from === bus.from
@@ -315,5 +392,18 @@ export class ReviewPayComponent implements OnInit, OnDestroy {
     normalized = normalized.replace('assets/operators/soudia.png', 'assets/operators/saudia.png');
     normalized = normalized.replace('assets/operators/shohagh.png', 'assets/operators/shohag.png');
     return normalized;
+  }
+
+  private getBookingTickets(): TicketSelection[] {
+    if (!this.booking) {
+      return [];
+    }
+    if (this.booking.tickets?.length) {
+      return this.booking.tickets as TicketSelection[];
+    }
+    const seatPrice = this.booking.bus.discountPrice && this.booking.bus.discountPrice < this.booking.bus.price
+      ? this.booking.bus.price - this.booking.bus.discountPrice
+      : this.booking.bus.price;
+    return this.booking.seats.map((seat) => ({ seat, type: 'seat', price: seatPrice }));
   }
 }

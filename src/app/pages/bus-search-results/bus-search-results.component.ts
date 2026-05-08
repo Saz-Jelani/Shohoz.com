@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { BusScheduleEntry } from '../../models/bus-management.models';
 import { AuthService } from '../../services/auth.service';
+import { BusManagementService } from '../../services/bus-management.service';
+import { LaunchManagementService } from '../../services/launch-management.service';
 
 type DrawerTab = 'seats' | 'boarding' | 'amenities' | 'policies' | 'details';
 type TripDetailsView = 'boarding' | 'dropping';
@@ -21,12 +23,30 @@ interface SeatRow {
   rightB: string;
 }
 
+interface TicketSelection {
+  seat: string;
+  type: 'seat' | 'cabin';
+  cabinClass?: 'Economy' | 'Premium';
+  price: number;
+}
+
 @Component({
   selector: 'app-bus-search-results',
   templateUrl: './bus-search-results.component.html',
   styleUrls: ['./bus-search-results.component.css']
 })
-export class BusSearchResultsComponent {
+export class BusSearchResultsComponent implements OnInit {
+  ngOnInit(): void {
+    this.resetActiveBookingSession();
+    // Set mode from URL/query params so the embedded search-hero shows correct mode
+    try {
+      const modeFromQuery = this.route.snapshot.queryParamMap.get('mode');
+      const onLaunchSearchPath = this.router.url.startsWith('/launch/search');
+      this.selectedMode = modeFromQuery ?? (onLaunchSearchPath ? 'Launch' : 'Bus');
+    } catch {
+      this.selectedMode = 'Bus';
+    }
+  }
   readonly locationBoardingPoints: Record<string, string[]> = {
     Dhaka: ['Gabtoli', 'Kallyanpur', 'Asad Gate', 'Farmgate', 'Sayedabad'],
     Chattogram: ['AK Khan', 'Tigerpass', 'GEC Circle', 'Bahaddarhat', 'Karnaphuli'],
@@ -43,7 +63,7 @@ export class BusSearchResultsComponent {
   isDrawerOpen = false;
   activeTab: DrawerTab = 'seats';
   tripDetailsView: TripDetailsView = 'boarding';
-  selectedSeats: string[] = [];
+  selectedTickets: TicketSelection[] = [];
   selectedBoardingPoint = '';
   selectedBoardingTime = '';
   private drawerCloseTimer?: number;
@@ -57,8 +77,23 @@ export class BusSearchResultsComponent {
       rightB: `${row}4`
     };
   });
+  readonly cabinSeatRows: SeatRow[] = Array.from({ length: 2 }, (_, index) => {
+    const row = String.fromCharCode(65 + index);
+    return {
+      leftA: `${row}1`,
+      leftB: `${row}2`,
+      rightA: `${row}3`,
+      rightB: `${row}4`
+    };
+  });
 
-  constructor(private readonly authService: AuthService, private readonly router: Router) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+    private readonly busManagementService: BusManagementService,
+    private readonly launchManagementService: LaunchManagementService
+  ) {}
 
   openDrawer(bus: BusScheduleEntry): void {
     if (this.drawerCloseTimer) {
@@ -66,7 +101,7 @@ export class BusSearchResultsComponent {
       this.drawerCloseTimer = undefined;
     }
     this.selectedBus = bus;
-    this.selectedSeats = [];
+    this.selectedTickets = [];
     this.activeTab = 'seats';
     this.selectedBoardingPoint = '';
     this.selectedBoardingTime = '';
@@ -142,7 +177,30 @@ export class BusSearchResultsComponent {
   }
 
   isSeatSelected(seat: string): boolean {
-    return this.selectedSeats.includes(seat);
+    return this.selectedTickets.some((item) => item.seat === seat && item.type === 'seat');
+  }
+
+  isCabinSeatSold(seat: string): boolean {
+    return !!this.selectedBus?.cabinUnavailableSeats?.includes(seat);
+  }
+
+  isCabinSeatSelected(seat: string): boolean {
+    return this.selectedTickets.some((item) => item.seat === seat && item.type === 'cabin');
+  }
+
+  getCabinClass(seat: string): 'Economy' | 'Premium' {
+    const letter = seat.charAt(0).toUpperCase();
+    return letter === 'A' ? 'Economy' : 'Premium';
+  }
+
+  getCabinPrice(seat: string): number {
+    if (!this.selectedBus) {
+      return 0;
+    }
+    const cabinClass = this.getCabinClass(seat);
+    return cabinClass === 'Economy'
+      ? (this.selectedBus.cabinPriceEconomy ?? 1500)
+      : (this.selectedBus.cabinPricePremium ?? 2000);
   }
 
   toggleSeat(seat: string): void {
@@ -150,13 +208,29 @@ export class BusSearchResultsComponent {
       return;
     }
     if (this.isSeatSelected(seat)) {
-      this.selectedSeats = this.selectedSeats.filter((item) => item !== seat);
+      this.selectedTickets = this.selectedTickets.filter((item) => !(item.seat === seat && item.type === 'seat'));
       return;
     }
-    if (this.selectedSeats.length >= 4) {
+    if (this.selectedTickets.length >= 4) {
       return;
     }
-    this.selectedSeats = [...this.selectedSeats, seat];
+    const base = this.getDisplayPrice(this.selectedBus);
+    this.selectedTickets = [...this.selectedTickets, { seat, type: 'seat', price: base }];
+  }
+
+  toggleCabinSeat(seat: string): void {
+    if (!this.selectedBus || this.isCabinSeatSold(seat)) {
+      return;
+    }
+    if (this.isCabinSeatSelected(seat)) {
+      this.selectedTickets = this.selectedTickets.filter((item) => !(item.seat === seat && item.type === 'cabin'));
+      return;
+    }
+    if (this.selectedTickets.length >= 4) {
+      return;
+    }
+    const cabinClass = this.getCabinClass(seat);
+    this.selectedTickets = [...this.selectedTickets, { seat, type: 'cabin', cabinClass, price: this.getCabinPrice(seat) }];
   }
 
   get availableSeatCount(): number {
@@ -170,10 +244,7 @@ export class BusSearchResultsComponent {
     if (!this.selectedBus) {
       return 0;
     }
-    const base = this.selectedBus.discountPrice && this.selectedBus.discountPrice < this.selectedBus.price
-      ? this.selectedBus.price - this.selectedBus.discountPrice
-      : this.selectedBus.price;
-    return base * this.selectedSeats.length;
+    return this.selectedTickets.reduce((sum, item) => sum + item.price, 0);
   }
 
   getDisplayPrice(bus: BusScheduleEntry): number {
@@ -242,7 +313,7 @@ export class BusSearchResultsComponent {
   }
 
   continueFromSeats(): void {
-    if (this.selectedSeats.length === 0) {
+    if (this.selectedTickets.length === 0) {
       return;
     }
     this.activeTab = 'boarding';
@@ -259,20 +330,26 @@ export class BusSearchResultsComponent {
     }
 
     const draft = {
+      mode: this.selectedMode,
       bus: this.selectedBus,
-      seats: this.selectedSeats,
+      seats: this.selectedTickets.map((item) => item.seat),
+      tickets: this.selectedTickets,
       boardingPoint: this.selectedBoardingPoint,
       boardingTime: this.selectedBoardingTime,
       createdAt: new Date().toISOString()
     };
+    const draftKey = this.selectedMode === 'Launch' ? 'shohoz_booking_draft_launch' : 'shohoz_booking_draft_bus';
+    sessionStorage.setItem(draftKey, JSON.stringify(draft));
+    // keep legacy key for compatibility with older flows
     sessionStorage.setItem('shohoz_booking_draft', JSON.stringify(draft));
 
     if (!this.authService.isLoggedIn()) {
-      this.router.navigate(['/login'], { queryParams: { returnUrl: '/bus/passenger-details' } });
+      const returnUrl = this.selectedMode === 'Launch' ? '/launch/passenger-details' : '/bus/passenger-details';
+      this.router.navigate(['/login'], { queryParams: { returnUrl } });
       return;
     }
 
-    this.router.navigate(['/bus/passenger-details']);
+    this.router.navigate([this.selectedMode === 'Launch' ? '/launch/passenger-details' : '/bus/passenger-details']);
   }
 
   private getDefaultBoardingTimes(departureTime: string, count: number): string[] {
@@ -322,5 +399,64 @@ export class BusSearchResultsComponent {
     normalized = normalized.replace('assets/operators/soudia.png', 'assets/operators/saudia.png');
     normalized = normalized.replace('assets/operators/shohagh.png', 'assets/operators/shohag.png');
     return normalized;
+  }
+
+  // Helpers to merge bookings into schedules (same logic used by search-hero)
+  private mergeBookedSeats(rows: BusScheduleEntry[], bookings: any[]): BusScheduleEntry[] {
+    return rows.map((row) => {
+      const seats = new Set<string>(row.unavailableSeats || []);
+      const cabinSeats = new Set<string>(row.cabinUnavailableSeats || []);
+      bookings
+        .filter((booking) => this.bookingMatchesSchedule(row, booking))
+        .forEach((booking) => {
+          (booking?.seats || []).forEach((seat: string) => seats.add(seat));
+          (booking?.cabinSeats || []).forEach((seat: string) => cabinSeats.add(seat));
+          (booking?.tickets || [])
+            .filter((t: any) => t?.type === 'cabin')
+            .forEach((t: any) => cabinSeats.add(t.seat));
+        });
+
+      return {
+        ...row,
+        unavailableSeats: [...seats],
+        cabinUnavailableSeats: [...cabinSeats]
+      };
+    });
+  }
+
+  private bookingMatchesSchedule(row: BusScheduleEntry, booking: any): boolean {
+    if (!booking || booking.status === 'cancelled') {
+      return false;
+    }
+
+    const bookingMode = booking.mode ?? (booking.launch ? 'Launch' : 'Bus');
+    if (bookingMode !== this.selectedMode) {
+      return false;
+    }
+
+    const bookedBus = (booking.bus || booking.launch) as BusScheduleEntry;
+    if (!bookedBus) {
+      return false;
+    }
+
+    if (row.id != null && bookedBus.id != null) {
+      return row.id === bookedBus.id;
+    }
+
+    return row.busNumber === bookedBus.busNumber
+      && row.from === bookedBus.from
+      && row.to === bookedBus.to
+      && row.departureDate === bookedBus.departureDate
+      && row.departureTime === bookedBus.departureTime;
+  }
+
+  private resetActiveBookingSession(): void {
+    sessionStorage.removeItem('shohoz_passenger_expiry_at');
+    sessionStorage.removeItem('shohoz_booking_draft');
+    sessionStorage.removeItem('shohoz_passenger_draft');
+    sessionStorage.removeItem('shohoz_booking_draft_bus');
+    sessionStorage.removeItem('shohoz_booking_draft_launch');
+    sessionStorage.removeItem('shohoz_passenger_draft_bus');
+    sessionStorage.removeItem('shohoz_passenger_draft_launch');
   }
 }

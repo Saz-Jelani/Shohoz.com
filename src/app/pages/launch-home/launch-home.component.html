@@ -13,7 +13,7 @@
 
   <div class="home-search-widget">
     <div class="trip-search-wrapper">
-      <form class="trip-search-form">
+      <form class="trip-search-form" (ngSubmit)="onSearch()">
           <label for="dest_from" class="form-item station-input">
             <div class="item-icon-input-wrap">
               <div class="svg-container">
@@ -98,9 +98,9 @@
             <label for="doj" class="input-container">
               <p class="label-text">Journey Date</p>
               <div>
-                <input type="text" id="doj" name="doj" class="datepicker" placeholder="Pick a date" autocomplete="off" readonly />
+                <input type="date" id="doj" name="doj" [(ngModel)]="journeyDate" [min]="today" />
               </div>
-              <span id="doj-day-name"></span>
+
             </label>
           </div>
 

@@ -50,7 +50,14 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   }
 
   private syncSelectedMode(url: string): void {
-    if (url.startsWith('/launch-tickets') || url.startsWith('/admin/launch-management')) {
+    if (
+      url.startsWith('/launch-tickets')
+      || url.startsWith('/admin/launch-management')
+      || url.startsWith('/launch/search')
+      || url.startsWith('/launch/passenger-details')
+      || url.startsWith('/launch/review-pay')
+      || url.includes('mode=Launch')
+    ) {
       this.selectedMode = 'Launch';
       return;
     }

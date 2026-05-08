@@ -23,8 +23,11 @@ const routes: Routes = [
     children: [
       { path: '', component: HomeComponent },
       { path: 'bus/search', component: BusSearchResultsComponent },
+      { path: 'launch/search', component: BusSearchResultsComponent },
       { path: 'bus/passenger-details', component: PassengerDetailsComponent },
+      { path: 'launch/passenger-details', component: PassengerDetailsComponent },
       { path: 'bus/review-pay', component: ReviewPayComponent },
+      { path: 'launch/review-pay', component: ReviewPayComponent },
       { path: 'launch-tickets', component: LaunchHomeComponent },
       { path: 'my-profile', component: MyProfileComponent },
       { path: 'change-password', component: ChangePasswordComponent },

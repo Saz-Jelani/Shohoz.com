@@ -117,7 +117,8 @@
       ],
       "unavailableSeats": [
         "J3",
-        "J4"
+        "J4",
+        "H2"
       ],
       "createdByUserId": 1,
       "id": 3
@@ -520,6 +521,115 @@
       ],
       "createdByUserId": 1,
       "id": 1
+    },
+    {
+      "from": "Chattogram",
+      "operatorName": "Hanif",
+      "operatorImage": "assets/operators/hanif.png",
+      "busName": "MV Green Pearl",
+      "busNumber": "0211",
+      "to": "Dhaka",
+      "serviceType": "Non AC",
+      "price": 500,
+      "discountPrice": 50,
+      "departureDate": "2026-05-06",
+      "departureTime": "05:00 AM",
+      "arrivalTime": "08:00 AM",
+      "boardingPoints": [
+        "AK Khan",
+        "Tigerpass",
+        "GEC Circle",
+        "Bahaddarhat",
+        "Karnaphuli"
+      ],
+      "boardingPointTimes": [
+        "05:00 AM",
+        "05:30 AM",
+        "06:00 AM",
+        "06:30 AM",
+        "07:00 AM"
+      ],
+      "unavailableSeats": [],
+      "cabinUnavailableSeats": [
+        "B2",
+        "A2"
+      ],
+      "createdByUserId": 1,
+      "id": 2
+    },
+    {
+      "from": "Dhaka",
+      "operatorName": "Green Line",
+      "operatorImage": "assets/operators/greenline.png",
+      "busName": "MV Green Pearl",
+      "busNumber": "0111",
+      "to": "Cox's Bazar",
+      "serviceType": "AC",
+      "price": 800,
+      "discountPrice": 10,
+      "departureDate": "2026-05-08",
+      "departureTime": "12:00 AM",
+      "arrivalTime": "06:00 AM",
+      "boardingPoints": [
+        "Gabtoli",
+        "Kallyanpur",
+        "Asad Gate",
+        "Farmgate",
+        "Sayedabad"
+      ],
+      "boardingPointTimes": [
+        "12:00 AM",
+        "12:30 AM",
+        "01:00 AM",
+        "01:30 AM",
+        "02:00 AM"
+      ],
+      "unavailableSeats": [
+        "J1",
+        "G2",
+        "A1"
+      ],
+      "cabinUnavailableSeats": [
+        "A1"
+      ],
+      "createdByUserId": 1,
+      "id": 3
+    },
+    {
+      "from": "Dhaka",
+      "operatorName": "Soudia",
+      "operatorImage": "assets/operators/saudia.png",
+      "busName": "MV Bay Queen",
+      "busNumber": "0341",
+      "to": "Cox's Bazar",
+      "serviceType": "AC",
+      "price": 700,
+      "discountPrice": 23,
+      "departureDate": "2026-05-08",
+      "departureTime": "01:30 AM",
+      "arrivalTime": "06:30 AM",
+      "boardingPoints": [
+        "Gabtoli",
+        "Kallyanpur",
+        "Asad Gate",
+        "Farmgate",
+        "Sayedabad"
+      ],
+      "boardingPointTimes": [
+        "01:30 AM",
+        "02:00 AM",
+        "02:30 AM",
+        "03:00 AM",
+        "03:30 AM"
+      ],
+      "unavailableSeats": [],
+      "cabinUnavailableSeats": [
+        "A1"
+      ],
+      "cabinPriceEconomy": 2000,
+      "cabinPricePremium": 2000,
+      "createdByUserId": 1,
+      "id": 4
     }
   ],
   "bookings": [
@@ -703,6 +813,204 @@
       "status": "booked",
       "createdAt": "2026-05-06T08:53:45.244Z",
       "id": 3
+    },
+    {
+      "userId": 1,
+      "userName": "admin",
+      "email": "admin@gmail.com",
+      "mobileNo": "",
+      "passengers": [
+        {
+          "firstName": "admin",
+          "lastName": "11",
+          "gender": "Male"
+        }
+      ],
+      "bus": {
+        "from": "Dhaka",
+        "operatorName": "Green Line",
+        "operatorImage": "assets/operators/greenline.png",
+        "busName": "MV Green Pearl",
+        "busNumber": "0111",
+        "to": "Cox's Bazar",
+        "serviceType": "AC",
+        "price": 800,
+        "discountPrice": 10,
+        "departureDate": "2026-05-08",
+        "departureTime": "12:00 AM",
+        "arrivalTime": "06:00 AM",
+        "boardingPoints": [
+          "Gabtoli",
+          "Kallyanpur",
+          "Asad Gate",
+          "Farmgate",
+          "Sayedabad"
+        ],
+        "boardingPointTimes": [
+          "12:00 AM",
+          "12:30 AM",
+          "01:00 AM",
+          "01:30 AM",
+          "02:00 AM"
+        ],
+        "unavailableSeats": [
+          "J1"
+        ],
+        "cabinUnavailableSeats": [
+          "A1"
+        ],
+        "createdByUserId": 1,
+        "id": 3
+      },
+      "seats": [
+        "H2"
+      ],
+      "boardingPoint": "Sayedabad",
+      "boardingTime": "02:00 AM",
+      "paymentMethod": "bKash",
+      "insuranceSelected": true,
+      "couponCode": "",
+      "ticketPrice": 800,
+      "processingFee": 30,
+      "discountAmount": 10,
+      "insuranceAmount": 10,
+      "totalPayable": 830,
+      "status": "booked",
+      "createdAt": "2026-05-08T13:57:06.057Z",
+      "id": 4
+    },
+    {
+      "userId": 1,
+      "userName": "admin",
+      "email": "admin@gmail.com",
+      "mobileNo": "",
+      "passengers": [
+        {
+          "firstName": "admin",
+          "lastName": "d",
+          "gender": "Male"
+        }
+      ],
+      "bus": {
+        "from": "Dhaka",
+        "operatorName": "Green Line",
+        "operatorImage": "assets/operators/greenline.png",
+        "busName": "MV Green Pearl",
+        "busNumber": "0111",
+        "to": "Cox's Bazar",
+        "serviceType": "AC",
+        "price": 800,
+        "discountPrice": 10,
+        "departureDate": "2026-05-08",
+        "departureTime": "12:00 AM",
+        "arrivalTime": "06:00 AM",
+        "boardingPoints": [
+          "Gabtoli",
+          "Kallyanpur",
+          "Asad Gate",
+          "Farmgate",
+          "Sayedabad"
+        ],
+        "boardingPointTimes": [
+          "12:00 AM",
+          "12:30 AM",
+          "01:00 AM",
+          "01:30 AM",
+          "02:00 AM"
+        ],
+        "unavailableSeats": [
+          "J1",
+          "H2"
+        ],
+        "cabinUnavailableSeats": [
+          "A1"
+        ],
+        "createdByUserId": 1,
+        "id": 3
+      },
+      "seats": [
+        "G2"
+      ],
+      "boardingPoint": "Sayedabad",
+      "boardingTime": "02:00 AM",
+      "paymentMethod": "bKash",
+      "insuranceSelected": true,
+      "couponCode": "",
+      "ticketPrice": 800,
+      "processingFee": 30,
+      "discountAmount": 10,
+      "insuranceAmount": 10,
+      "totalPayable": 830,
+      "status": "booked",
+      "createdAt": "2026-05-08T14:05:36.049Z",
+      "id": 5
+    },
+    {
+      "mode": "Launch",
+      "userId": 1,
+      "userName": "admin",
+      "email": "admin@gmail.com",
+      "mobileNo": "",
+      "passengers": [
+        {
+          "firstName": "admin",
+          "lastName": "qqqqqq",
+          "gender": "Male"
+        }
+      ],
+      "launch": {
+        "from": "Dhaka",
+        "operatorName": "Green Line",
+        "operatorImage": "assets/operators/greenline.png",
+        "busName": "MV Green Pearl",
+        "busNumber": "0111",
+        "to": "Cox's Bazar",
+        "serviceType": "AC",
+        "price": 800,
+        "discountPrice": 10,
+        "departureDate": "2026-05-08",
+        "departureTime": "12:00 AM",
+        "arrivalTime": "06:00 AM",
+        "boardingPoints": [
+          "Gabtoli",
+          "Kallyanpur",
+          "Asad Gate",
+          "Farmgate",
+          "Sayedabad"
+        ],
+        "boardingPointTimes": [
+          "12:00 AM",
+          "12:30 AM",
+          "01:00 AM",
+          "01:30 AM",
+          "02:00 AM"
+        ],
+        "unavailableSeats": [
+          "J1",
+          "G2"
+        ],
+        "cabinUnavailableSeats": [
+          "A1"
+        ],
+        "createdByUserId": 1,
+        "id": 3
+      },
+      "seats": [
+        "A1"
+      ],
+      "boardingPoint": "Gabtoli",
+      "boardingTime": "12:00 AM",
+      "paymentMethod": "Nagad",
+      "insuranceSelected": true,
+      "couponCode": "",
+      "ticketPrice": 800,
+      "processingFee": 30,
+      "discountAmount": 10,
+      "insuranceAmount": 10,
+      "totalPayable": 830,
+      "status": "booked",
+      "createdAt": "2026-05-08T14:11:11.202Z",
+      "id": 6
     }
   ]
 }

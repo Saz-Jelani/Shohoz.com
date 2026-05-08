@@ -185,6 +185,34 @@
           <p class="hint" *ngIf="trip.price && trip.discountPrice">Final Fare: {{ trip.price - trip.discountPrice }} TK</p>
           <p class="hint" *ngIf="trip.price && !trip.discountPrice">Discount amount must be less than selected price.</p>
           <p class="hint" *ngIf="!trip.serviceType">Select AC or Non AC first.</p>
+          <div *ngIf="isLaunchMode" class="mt8">
+            <label>Cabin Price (Economy)</label>
+            <div class="price-row">
+              <label *ngFor="let fare of launchCabinEconomyPriceOptions">
+                <input
+                  type="radio"
+                  [disabled]="isPriceDisabled(trip)"
+                  [name]="'cabin-economy-' + trip.busNumber"
+                  [checked]="trip.cabinPriceEconomy === fare"
+                  (change)="onTripCabinPriceChange(trip.busNumber, 'cabinPriceEconomy', fare)"
+                />
+                {{ fare }}
+              </label>
+            </div>
+            <label class="mt8">Cabin Price (Premium)</label>
+            <div class="price-row">
+              <label *ngFor="let fare of launchCabinPremiumPriceOptions">
+                <input
+                  type="radio"
+                  [disabled]="isPriceDisabled(trip)"
+                  [name]="'cabin-premium-' + trip.busNumber"
+                  [checked]="trip.cabinPricePremium === fare"
+                  (change)="onTripCabinPriceChange(trip.busNumber, 'cabinPricePremium', fare)"
+                />
+                {{ fare }}
+              </label>
+            </div>
+          </div>
         </div>
 
         <div>
@@ -314,7 +342,7 @@
         <button
           type="button"
           class="ok-btn"
-          [disabled]="!trip.to || !trip.serviceType || !trip.price || !trip.departureTime || !trip.arrivalTime"
+          [disabled]="!trip.to || !trip.serviceType || !trip.price || !trip.departureTime || !trip.arrivalTime || (isLaunchMode && (!trip.cabinPriceEconomy || !trip.cabinPricePremium))"
           (click)="markBusReady(trip.busNumber)"
         >
           OK

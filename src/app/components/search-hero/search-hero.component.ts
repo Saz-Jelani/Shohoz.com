@@ -3,6 +3,7 @@ import { HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BusScheduleEntry } from '../../models/bus-management.models';
 import { BusManagementService } from '../../services/bus-management.service';
+import { LaunchManagementService } from '../../services/launch-management.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -89,6 +90,7 @@ export class SearchHeroComponent implements OnInit {
 
   constructor(
     private readonly busManagementService: BusManagementService,
+    private readonly launchManagementService: LaunchManagementService,
     public readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly authService: AuthService
@@ -261,11 +263,13 @@ export class SearchHeroComponent implements OnInit {
       }
 
       // no errors -> navigate to search page (recent will be added only when results exist on the search page)
-      this.router.navigate(['/bus/search'], {
+      const targetPath = this.selectedMode === 'Launch' ? '/launch/search' : '/bus/search';
+      this.router.navigate([targetPath], {
         queryParams: {
           from: this.fromCity,
           to: this.toCity,
           date: this.journeyDate,
+          mode: this.selectedMode,
           ...(this.returnDate && { returnDate: this.returnDate })
         }
       });
@@ -278,6 +282,19 @@ export class SearchHeroComponent implements OnInit {
       this.searchResults = [];
       return;
     }
+
+    // Keep URL in sync with the latest inline search so browser Back returns to latest query.
+    const targetPath = this.selectedMode === 'Launch' ? '/launch/search' : '/bus/search';
+    this.router.navigate([targetPath], {
+      queryParams: {
+        from: this.fromCity,
+        to: this.toCity,
+        date: this.journeyDate,
+        mode: this.selectedMode,
+        ...(this.returnDate && { returnDate: this.returnDate })
+      },
+      replaceUrl: true
+    });
 
     this.searchResults = this.allSchedules.filter((item) => {
       const routeMatches = item.from.toLowerCase() === this.fromCity.toLowerCase()
@@ -406,7 +423,8 @@ export class SearchHeroComponent implements OnInit {
   }
 
   private loadSchedules(): void {
-    this.busManagementService.getAllSchedules().subscribe({
+    const scheduleService = this.selectedMode === 'Launch' ? this.launchManagementService : this.busManagementService;
+    scheduleService.getAllSchedules().subscribe({
       next: (rows) => {
         this.busManagementService.getAllBookings().subscribe({
           next: (bookings) => {
@@ -441,25 +459,40 @@ export class SearchHeroComponent implements OnInit {
   private mergeBookedSeats(rows: BusScheduleEntry[], bookings: any[]): BusScheduleEntry[] {
     return rows.map((row) => {
       const seats = new Set<string>(row.unavailableSeats || []);
+      const cabinSeats = new Set<string>(row.cabinUnavailableSeats || []);
       bookings
         .filter((booking) => this.bookingMatchesSchedule(row, booking))
         .forEach((booking) => {
           (booking?.seats || []).forEach((seat: string) => seats.add(seat));
+          (booking?.cabinSeats || []).forEach((seat: string) => cabinSeats.add(seat));
+          (booking?.tickets || [])
+            .filter((t: any) => t?.type === 'cabin')
+            .forEach((t: any) => cabinSeats.add(t.seat));
         });
 
       return {
         ...row,
-        unavailableSeats: [...seats]
+        unavailableSeats: [...seats],
+        cabinUnavailableSeats: [...cabinSeats]
       };
     });
   }
 
   private bookingMatchesSchedule(row: BusScheduleEntry, booking: any): boolean {
-    if (!booking || booking.status === 'cancelled' || !booking.bus) {
+    if (!booking || booking.status === 'cancelled') {
       return false;
     }
 
-    const bookedBus = booking.bus as BusScheduleEntry;
+    const bookingMode = booking.mode ?? (booking.launch ? 'Launch' : 'Bus');
+    if (bookingMode !== this.selectedMode) {
+      return false;
+    }
+
+    const bookedBus = (booking.bus || booking.launch) as BusScheduleEntry;
+    if (!bookedBus) {
+      return false;
+    }
+
     if (row.id != null && bookedBus.id != null) {
       return row.id === bookedBus.id;
     }
@@ -587,7 +620,9 @@ export class SearchHeroComponent implements OnInit {
   onRecentSearchClick(rs: any): void {
     const params: any = { from: rs.from, to: rs.to, date: rs.date };
     if (rs.returnDate) params.returnDate = rs.returnDate;
-    this.router.navigate(['/bus/search'], { queryParams: params });
+    params.mode = this.selectedMode;
+    const targetPath = this.selectedMode === 'Launch' ? '/launch/search' : '/bus/search';
+    this.router.navigate([targetPath], { queryParams: params });
   }
 
   clearSearchInputs(): void {

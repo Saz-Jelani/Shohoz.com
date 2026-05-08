@@ -53,7 +53,17 @@
 }
 
 .progress-inner .timer.warning {
-  background: #0f9d49;
+  animation: timer-alert-blink 0.8s infinite;
+}
+
+@keyframes timer-alert-blink {
+  0%,
+  100% {
+    background: #f59e0b;
+  }
+  50% {
+    background: #dc2626;
+  }
 }
 
 .page-grid {

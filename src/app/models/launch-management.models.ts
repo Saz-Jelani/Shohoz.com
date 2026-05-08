@@ -4,12 +4,12 @@ export interface DestinationPricing {
   nonAcFare: number;
 }
 
-export interface BusScheduleEntry {
+export interface LaunchScheduleEntry {
   id?: number;
   from: string;
   operatorName: string;
   operatorImage?: string;
-  busName: string;
+  busName: string; 
   busNumber: string;
   to: string;
   serviceType: 'AC' | 'Non AC';
@@ -22,7 +22,5 @@ export interface BusScheduleEntry {
   boardingPointTimes?: string[];
   unavailableSeats: string[];
   cabinUnavailableSeats?: string[];
-  cabinPriceEconomy?: number;
-  cabinPricePremium?: number;
   createdByUserId: number;
 }

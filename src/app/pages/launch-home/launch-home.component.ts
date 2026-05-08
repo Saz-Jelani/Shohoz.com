@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-launch-home',
@@ -10,10 +11,15 @@ export class LaunchHomeComponent {
 
   fromCity = '';
   toCity = '';
+  journeyDate = '';
+  readonly today = new Date().toISOString().split('T')[0];
+
   fromSuggestions: string[] = [...this.locations];
   toSuggestions: string[] = [...this.locations];
   showFromDropdown = false;
   showToDropdown = false;
+
+  constructor(private readonly router: Router) {}
 
   onCityInput(field: 'from' | 'to'): void {
     this.updateSuggestions(field);
@@ -61,7 +67,18 @@ export class LaunchHomeComponent {
   }
 
   onSearch(): void {
-    // Placeholder for future launch search page navigation.
+    if (!this.fromCity || !this.toCity || !this.journeyDate) {
+      return;
+    }
+    // Navigate to common search results page; pass mode=Launch so results component loads launch schedules
+    this.router.navigate(['/launch/search'], {
+      queryParams: {
+        from: this.fromCity,
+        to: this.toCity,
+        date: this.journeyDate,
+        mode: 'Launch'
+      }
+    });
   }
 
   private recomputeToLocations(): void {

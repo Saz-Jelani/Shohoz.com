@@ -135,6 +135,56 @@
               </div>
             </div>
           </div>
+
+          <div class="bus-shell" *ngIf="selectedMode === 'Launch'">
+            <div class="bus-head">
+              <span class="door-mark">Cabin</span>
+              <div class="right-cockpit">
+                <span class="driver-mark">Row(A) Economy : tk {{ selectedBus.cabinPriceEconomy || 1500 }} | Row(B) Primium: tk {{ selectedBus.cabinPricePremium || 2000 }}</span>
+              </div>
+            </div>
+            <div class="seat-map">
+              <div class="seat-row" *ngFor="let row of cabinSeatRows; trackBy: trackBySeatRow">
+                <button
+                  type="button"
+                  class="seat-btn"
+                  [class.unavailable]="isCabinSeatSold(row.leftA)"
+                  [class.selected]="isCabinSeatSelected(row.leftA)"
+                  (click)="toggleCabinSeat(row.leftA)"
+                >
+                  {{ row.leftA }}
+                </button>
+                <button
+                  type="button"
+                  class="seat-btn"
+                  [class.unavailable]="isCabinSeatSold(row.leftB)"
+                  [class.selected]="isCabinSeatSelected(row.leftB)"
+                  (click)="toggleCabinSeat(row.leftB)"
+                >
+                  {{ row.leftB }}
+                </button>
+                <div class="aisle"></div>
+                <button
+                  type="button"
+                  class="seat-btn"
+                  [class.unavailable]="isCabinSeatSold(row.rightA)"
+                  [class.selected]="isCabinSeatSelected(row.rightA)"
+                  (click)="toggleCabinSeat(row.rightA)"
+                >
+                  {{ row.rightA }}
+                </button>
+                <button
+                  type="button"
+                  class="seat-btn"
+                  [class.unavailable]="isCabinSeatSold(row.rightB)"
+                  [class.selected]="isCabinSeatSelected(row.rightB)"
+                  (click)="toggleCabinSeat(row.rightB)"
+                >
+                  {{ row.rightB }}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div *ngSwitchCase="'boarding'" class="tab-copy boarding-tab">
@@ -215,13 +265,13 @@
     </div>
 
     <footer class="drawer-footer" *ngIf="activeTab === 'seats' || activeTab === 'boarding'">
-      <div class="selected-count">{{ activeTab === 'boarding' ? '1 ticket(s) selected' : (selectedSeats.length + ' ticket(s) selected') }}</div>
+      <div class="selected-count">{{ activeTab === 'boarding' ? '1 ticket(s) selected' : (selectedTickets.length + ' ticket(s) selected') }}</div>
       <div class="fare-total">Tk {{ selectedFare | number:'1.0-0' }}</div>
       <button
         type="button"
         class="continue-btn"
-        [class.active]="activeTab === 'seats' ? selectedSeats.length > 0 : !!selectedBoardingPoint"
-        [disabled]="activeTab === 'seats' ? selectedSeats.length === 0 : !selectedBoardingPoint"
+        [class.active]="activeTab === 'seats' ? selectedTickets.length > 0 : !!selectedBoardingPoint"
+        [disabled]="activeTab === 'seats' ? selectedTickets.length === 0 : !selectedBoardingPoint"
         (click)="activeTab === 'seats' ? continueFromSeats() : continueFromBoarding()"
       >
         CONTINUE
