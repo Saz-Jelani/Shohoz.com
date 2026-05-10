@@ -13,7 +13,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   errorMessage = '';
   private readonly successToastStorageKey = 'shohoz_success_toast';
   private readonly loginReturnUrlKey = 'shohoz_login_return_url';
+  private readonly loginNoticeKey = 'shohoz_login_notice';
   returnUrl = '';
+  warningToastMessage = '';
+  showWarningToast = false;
+  private warningToastTimer?: ReturnType<typeof setTimeout>;
 
   readonly slideImages: string[] = [
     encodeURI('assets/log_reg/download (1).jpg'),
@@ -38,11 +42,24 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.slideTimer = setInterval(() => {
       this.currentSlideIndex = (this.currentSlideIndex + 1) % this.slideImages.length;
     }, 2000);
+
+    const loginNotice = sessionStorage.getItem(this.loginNoticeKey);
+    if (loginNotice) {
+      this.warningToastMessage = loginNotice;
+      this.showWarningToast = true;
+      sessionStorage.removeItem(this.loginNoticeKey);
+      this.warningToastTimer = setTimeout(() => {
+        this.showWarningToast = false;
+      }, 4000);
+    }
   }
 
   ngOnDestroy(): void {
     if (this.slideTimer) {
       clearInterval(this.slideTimer);
+    }
+    if (this.warningToastTimer) {
+      clearTimeout(this.warningToastTimer);
     }
   }
 

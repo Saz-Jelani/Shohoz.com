@@ -38,6 +38,7 @@ interface TicketSelection {
   styleUrls: ['./bus-search-results.component.css']
 })
 export class BusSearchResultsComponent implements OnInit {
+  private readonly loginNoticeKey = 'shohoz_login_notice';
   ngOnInit(): void {
     this.resetActiveBookingSession();
     // Set mode from URL/query params so the embedded search-hero shows correct mode
@@ -347,6 +348,7 @@ export class BusSearchResultsComponent implements OnInit {
 
     if (!this.authService.isLoggedIn()) {
       const returnUrl = this.selectedMode === 'Launch' ? '/launch/passenger-details' : '/bus/passenger-details';
+      sessionStorage.setItem(this.loginNoticeKey, 'To book Seats You have to login First');
       this.router.navigate(['/login'], { queryParams: { returnUrl } });
       return;
     }

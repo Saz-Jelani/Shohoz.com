@@ -6,6 +6,21 @@
   overflow: hidden;
 }
 
+.login-warning-toast {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #f28c1b;
+  color: #fff;
+  border: 1px solid #d97706;
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-weight: 700;
+  z-index: 3000;
+  box-shadow: 0 12px 24px rgb(166 90 12 / 35%);
+}
+
 .login-left {
   position: relative;
   height: 100vh;

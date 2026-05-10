@@ -1,4 +1,5 @@
 <section class="login-page">
+  <div class="login-warning-toast" *ngIf="showWarningToast">{{ warningToastMessage }}</div>
   <div class="login-left">
     <img [src]="slideImages[currentSlideIndex]" alt="Shohoz travel" />
     <div class="left-overlay">
