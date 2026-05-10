@@ -10,6 +10,7 @@
   </main>
   <app-footer *ngIf="showFooter"></app-footer>
 
+  <div class="global-toast-backdrop" *ngIf="showSuccessToast"></div>
   <div class="global-success-toast" *ngIf="showSuccessToast">
     <div class="success-icon" aria-hidden="true">
       <svg viewBox="0 0 52 52">

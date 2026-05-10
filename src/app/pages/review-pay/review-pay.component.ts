@@ -330,6 +330,7 @@ export class ReviewPayComponent implements OnInit, OnDestroy {
 
   private playSuccessToast(): void {
     const now = Date.now();
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     sessionStorage.setItem(this.successToastStorageKey, JSON.stringify({
       message: this.successMessage,
       endAt: now + 5000

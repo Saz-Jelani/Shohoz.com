@@ -12,6 +12,10 @@ body {
   color: #1b1f24;
 }
 
+body.toast-active {
+  overflow: hidden;
+}
+
 /* Responsive Container */
 .container {
   width: 100%;

@@ -32,6 +32,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.routeSubscription.unsubscribe();
     window.removeEventListener('shohoz-success-toast', this.onGlobalToastEvent);
+    this.setToastBodyLock(false);
     if (this.hideToastTimer) {
       window.clearTimeout(this.hideToastTimer);
     }
@@ -91,6 +92,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
       if (remaining <= 0) {
         sessionStorage.removeItem(this.successToastStorageKey);
         this.showSuccessToast = false;
+        this.setToastBodyLock(false);
         return;
       }
 
@@ -100,6 +102,8 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
 
       this.successToastEndAt = endAt;
       this.showSuccessToast = true;
+      this.setToastBodyLock(true);
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
       if (this.hideToastTimer) {
         window.clearTimeout(this.hideToastTimer);
       }
@@ -107,9 +111,15 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
         this.showSuccessToast = false;
         this.successToastEndAt = 0;
         sessionStorage.removeItem(this.successToastStorageKey);
+        this.setToastBodyLock(false);
       }, remaining);
     } catch {
       sessionStorage.removeItem(this.successToastStorageKey);
+      this.setToastBodyLock(false);
     }
+  }
+
+  private setToastBodyLock(locked: boolean): void {
+    document.body.classList.toggle('toast-active', locked);
   }
 }
