@@ -120,10 +120,16 @@
           </button>
         </div>
       </div>
-      <div class="mobile-mode-menu" [class.open]="isMobileMenuOpen">
-        <button *ngFor="let mode of travelModes" type="button" class="mobile-mode-btn" (click)="selectMode(mode)">
-          {{ mode }}
-        </button>
+      <div class="mobile-mode-menu" [class.open]="isMobileMenuOpen" (click)="$event.stopPropagation()">
+        <div *ngFor="let mode of mobileTravelModes" class="mobile-mode-item">
+          <button type="button" class="mobile-mode-btn" (click)="onMobileModeClick(mode, $event)">
+            {{ mode }}
+          </button>
+          <div class="mobile-mode-submenu" *ngIf="isAdmin && openMobileServiceMenu === mode">
+            <button type="button" class="mobile-submenu-btn" (click)="selectMode(mode, 'user')">User Mode</button>
+            <button type="button" class="mobile-submenu-btn" (click)="selectMode(mode, 'admin')">Admin Mode</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -12,6 +12,10 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   selectedMode = 'Bus';
   showFooter = true;
   private readonly routeSubscription: Subscription;
+  private readonly successToastStorageKey = 'shohoz_success_toast';
+  showSuccessToast = false;
+  private successToastEndAt = 0;
+  private hideToastTimer?: number;
 
   constructor(private readonly router: Router) {
     this.routeSubscription = this.router.events
@@ -21,10 +25,16 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.syncSelectedMode(this.router.url);
+    this.restoreGlobalSuccessToast();
+    window.addEventListener('shohoz-success-toast', this.onGlobalToastEvent);
   }
 
   ngOnDestroy(): void {
     this.routeSubscription.unsubscribe();
+    window.removeEventListener('shohoz-success-toast', this.onGlobalToastEvent);
+    if (this.hideToastTimer) {
+      window.clearTimeout(this.hideToastTimer);
+    }
   }
 
   onModeChange(mode: string): void {
@@ -63,5 +73,43 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     }
 
     this.selectedMode = 'Bus';
+  }
+
+  private readonly onGlobalToastEvent = (): void => {
+    this.restoreGlobalSuccessToast();
+  };
+
+  private restoreGlobalSuccessToast(): void {
+    const raw = sessionStorage.getItem(this.successToastStorageKey);
+    if (!raw) {
+      return;
+    }
+    try {
+      const payload = JSON.parse(raw) as { endAt?: number };
+      const endAt = Number(payload.endAt || 0);
+      const remaining = endAt - Date.now();
+      if (remaining <= 0) {
+        sessionStorage.removeItem(this.successToastStorageKey);
+        this.showSuccessToast = false;
+        return;
+      }
+
+      if (this.successToastEndAt === endAt && this.showSuccessToast) {
+        return;
+      }
+
+      this.successToastEndAt = endAt;
+      this.showSuccessToast = true;
+      if (this.hideToastTimer) {
+        window.clearTimeout(this.hideToastTimer);
+      }
+      this.hideToastTimer = window.setTimeout(() => {
+        this.showSuccessToast = false;
+        this.successToastEndAt = 0;
+        sessionStorage.removeItem(this.successToastStorageKey);
+      }, remaining);
+    } catch {
+      sessionStorage.removeItem(this.successToastStorageKey);
+    }
   }
 }

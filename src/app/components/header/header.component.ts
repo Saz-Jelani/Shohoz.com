@@ -22,6 +22,7 @@ export class HeaderComponent {
   isMobileMenuOpen = false;
   isUserMenuOpen = false;
   openServiceMenu: string | null = null;
+  openMobileServiceMenu: string | null = null;
   services = [
     { label: 'Bus', icon: 'assets/bus.png', beta: false },
     { label: 'Air', icon: 'assets/air.png', beta: false },
@@ -30,6 +31,10 @@ export class HeaderComponent {
     { label: 'Event', icon: 'assets/event.png', beta: false },
     { label: 'Park', icon: 'assets/park.png', beta: true }
   ];
+
+  get mobileTravelModes(): string[] {
+    return ['Bus', 'Launch'];
+  }
 
   constructor(private readonly authService: AuthService, private readonly router: Router) {}
 
@@ -75,6 +80,7 @@ export class HeaderComponent {
     this.serviceClick.emit({ mode, target });
     this.isMobileMenuOpen = false;
     this.openServiceMenu = null;
+    this.openMobileServiceMenu = null;
   }
 
   selectAdminMode(mode: string, event?: MouseEvent): void {
@@ -86,6 +92,18 @@ export class HeaderComponent {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
     this.isUserMenuOpen = false;
     this.openServiceMenu = null;
+    if (!this.isMobileMenuOpen) {
+      this.openMobileServiceMenu = null;
+    }
+  }
+
+  onMobileModeClick(mode: string, event?: MouseEvent): void {
+    event?.stopPropagation();
+    if (this.isAdmin) {
+      this.openMobileServiceMenu = this.openMobileServiceMenu === mode ? null : mode;
+      return;
+    }
+    this.selectMode(mode, 'user');
   }
 
   toggleUserMenu(event?: MouseEvent): void {
@@ -93,6 +111,7 @@ export class HeaderComponent {
     this.isUserMenuOpen = !this.isUserMenuOpen;
     this.isMobileMenuOpen = false;
     this.openServiceMenu = null;
+    this.openMobileServiceMenu = null;
   }
 
   goToProfile(): void {
@@ -121,5 +140,6 @@ export class HeaderComponent {
     this.isUserMenuOpen = false;
     this.isMobileMenuOpen = false;
     this.openServiceMenu = null;
+    this.openMobileServiceMenu = null;
   }
 }

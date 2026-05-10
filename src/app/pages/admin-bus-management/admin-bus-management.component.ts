@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { NavigationEnd } from '@angular/router';
+import { Subscription, forkJoin } from 'rxjs';
 import { BusScheduleEntry } from '../../models/bus-management.models';
 import { AuthService } from '../../services/auth.service';
 import { BusManagementService } from '../../services/bus-management.service';
@@ -36,7 +37,7 @@ interface BusTripConfig {
   templateUrl: './admin-bus-management.component.html',
   styleUrls: ['./admin-bus-management.component.css']
 })
-export class AdminBusManagementComponent implements OnInit {
+export class AdminBusManagementComponent implements OnInit, OnDestroy {
   isLaunchMode = false;
   modeLabel = 'Bus';
   readonly locations: string[] = ['Dhaka', 'Chattogram', "Cox's Bazar", 'Sylhet', 'Rajshahi', 'Khulna', 'Barishal', 'Rangpur'];
@@ -95,6 +96,7 @@ export class AdminBusManagementComponent implements OnInit {
   isSubmitting = false;
   noticeMessage = '';
   showNotice = false;
+  private routeModeSub?: Subscription;
 
   constructor(
     private readonly authService: AuthService,
@@ -106,13 +108,39 @@ export class AdminBusManagementComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.isLaunchMode = this.route.snapshot.routeConfig?.path?.includes('launch-management') ?? this.router.url.includes('/admin/launch-management');
-    this.modeLabel = this.isLaunchMode ? 'Launch' : 'Bus';
+    this.syncModeFromRoute();
+    this.routeModeSub = this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.syncModeFromRoute();
+      }
+    });
     if (!this.authService.isAdmin()) {
       this.router.navigate(['/']);
     }
     // load operators from API (json-server)
     this.loadOperators();
+  }
+
+  ngOnDestroy(): void {
+    this.routeModeSub?.unsubscribe();
+  }
+
+  private syncModeFromRoute(): void {
+    const nextIsLaunchMode = this.route.snapshot.routeConfig?.path?.includes('launch-management')
+      ?? this.router.url.includes('/admin/launch-management');
+    if (this.isLaunchMode === nextIsLaunchMode) {
+      return;
+    }
+
+    this.isLaunchMode = nextIsLaunchMode;
+    this.modeLabel = this.isLaunchMode ? 'Launch' : 'Bus';
+    // Prevent cross-mode history bleed between Bus and Launch management screens.
+    this.selectedBusNumbers = [];
+    this.busTripConfigs = [];
+    this.busRequiredFrom = {};
+    this.busMinDepartureAt = {};
+    this.noticeMessage = '';
+    this.showNotice = false;
   }
 
   private loadOperators(): void {
@@ -292,7 +320,8 @@ export class AdminBusManagementComponent implements OnInit {
     if (!required || this.isBusSelectableFrom(busNumber)) {
       return '';
     }
-    return `This bus is booked for ${required}`;
+    const vehicle = this.isLaunchMode ? 'launch' : 'bus';
+    return `This ${vehicle} is booked for ${required}`;
   }
 
   showBusBookedNotice(busNumber: string): void {
@@ -300,7 +329,8 @@ export class AdminBusManagementComponent implements OnInit {
     if (!required || this.isBusSelectableFrom(busNumber)) {
       return;
     }
-    this.noticeMessage = `If you want to select bus (${busNumber}) then select ${required} in From field.`;
+    const vehicle = this.isLaunchMode ? 'launch' : 'bus';
+    this.noticeMessage = `If you want to select ${vehicle} (${busNumber}) then select ${required} in From field.`;
     this.showNotice = true;
   }
 

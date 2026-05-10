@@ -9,4 +9,15 @@
     <router-outlet></router-outlet>
   </main>
   <app-footer *ngIf="showFooter"></app-footer>
+
+  <div class="global-success-toast" *ngIf="showSuccessToast">
+    <div class="success-icon" aria-hidden="true">
+      <svg viewBox="0 0 52 52">
+        <circle cx="26" cy="26" r="24"></circle>
+        <path d="M14 27.5l8 8 16-18"></path>
+      </svg>
+    </div>
+    <p class="success-line-1">Your Ticket is</p>
+    <p class="success-line-2">Successfully Confirmed !</p>
+  </div>
 </div>

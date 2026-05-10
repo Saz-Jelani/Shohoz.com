@@ -390,6 +390,53 @@
     background: #f3f9f6;
   }
 
+  .mobile-mode-item + .mobile-mode-item {
+    margin-top: 2px;
+  }
+
+  .mobile-mode-submenu {
+    position: absolute;
+    top: 0;
+    left: calc(100% + 8px);
+    min-width: 128px;
+    padding: 6px;
+    border-radius: 8px;
+    background: #f7faf8;
+    border: 1px solid #e2ece6;
+    display: grid;
+    gap: 4px;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+  }
+
+  .mobile-mode-item {
+    position: relative;
+  }
+
+  @media (max-width: 480px) {
+    .mobile-mode-submenu {
+      left: auto;
+      right: calc(100% + 8px);
+    }
+  }
+
+  .mobile-submenu-btn {
+    width: 100%;
+    border: 0;
+    background: #fff;
+    color: #2f3e50;
+    text-align: left;
+    padding: 7px 8px;
+    border-radius: 7px;
+    font-size: 0.86rem;
+    font-weight: 600;
+  }
+
+  .mobile-submenu-btn:hover {
+    background: #eef8f2;
+    color: #0a8f59;
+  }
+
   .service-dropdown {
     display: none;
   }

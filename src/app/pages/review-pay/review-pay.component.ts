@@ -48,6 +48,7 @@ interface PassengerDraft {
 })
 export class ReviewPayComponent implements OnInit, OnDestroy {
   private readonly expiryStorageKey = 'shohoz_passenger_expiry_at';
+  private readonly successToastStorageKey = 'shohoz_success_toast';
   private readonly sessionDurationMs = 4 * 60 * 1000;
   private countdownTimer?: number;
   private redirectTimer?: number;
@@ -64,6 +65,8 @@ export class ReviewPayComponent implements OnInit, OnDestroy {
   remainingMs = this.sessionDurationMs;
   showExpiryPopup = false;
   expiryMessage = 'Your Booking Expire is Over, please Book again';
+  private readonly successMessage = 'Your Ticket Is Successfully Confirmed !';
+  private successNavigateTimer?: number;
 
   private readonly bookingsApiUrl = 'http://localhost:3000/bookings';
 
@@ -260,6 +263,10 @@ export class ReviewPayComponent implements OnInit, OnDestroy {
       window.clearTimeout(this.redirectTimer);
       this.redirectTimer = undefined;
     }
+    if (this.successNavigateTimer) {
+      window.clearTimeout(this.successNavigateTimer);
+      this.successNavigateTimer = undefined;
+    }
   }
 
   proceedToPayment(): void {
@@ -311,13 +318,27 @@ export class ReviewPayComponent implements OnInit, OnDestroy {
         sessionStorage.removeItem('shohoz_passenger_draft_bus');
         sessionStorage.removeItem('shohoz_passenger_draft_launch');
         this.clearTimers();
-        this.router.navigate(['/']);
+        this.isSubmitting = false;
+        this.playSuccessToast();
       },
       error: () => {
         this.submitError = 'Could not save booking right now. Please try again.';
         this.isSubmitting = false;
       }
     });
+  }
+
+  private playSuccessToast(): void {
+    const now = Date.now();
+    sessionStorage.setItem(this.successToastStorageKey, JSON.stringify({
+      message: this.successMessage,
+      endAt: now + 5000
+    }));
+    window.dispatchEvent(new CustomEvent('shohoz-success-toast'));
+
+    this.successNavigateTimer = window.setTimeout(() => {
+      this.router.navigate(['/']);
+    }, 2000);
   }
 
   private lockBookedSeats(): void {

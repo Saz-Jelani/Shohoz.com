@@ -426,11 +426,11 @@ input[type='file'] {
   margin: 30px 96px;
   padding: 30px 22px;
   border-radius: 12px;
-  background: #138d4f;
-  border: 1px solid #0c6e3d;
+  background: #f28c1b;
+  border: 1px solid #d87509;
   color: #ffffff;
   font-weight: 600;
-  box-shadow: 0 16px 36px rgb(8 71 39 / 35%);
+  box-shadow: 0 16px 36px rgb(179 96 10 / 35%);
   transform: translateY(8px) scale(0.98);
   transition: transform 220ms ease;
   position: relative;
