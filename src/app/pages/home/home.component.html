@@ -1,7 +1,7 @@
 <div class="app-shell">
   <app-search-hero #hero [selectedMode]="selectedMode"></app-search-hero>
 
-  <section class="notice-band" *ngIf="hero.recentSearches?.length === 0">
+  <section class="notice-band" *ngIf="hero.recentSearches.length === 0">
     <div class="container notice-inner">
       <div>
        <h3> 🎉 Welcome to a Smarter Shohoz Login!</h3>

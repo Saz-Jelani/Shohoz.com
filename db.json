@@ -493,7 +493,7 @@
       "to": "Dhaka",
       "serviceType": "AC",
       "price": 600,
-      "discountPrice": 599.9,
+      "discountPrice": 50,
       "departureDate": "2026-05-10",
       "departureTime": "05:30 AM",
       "arrivalTime": "12:30 AM",
@@ -517,6 +517,40 @@
       "cabinUnavailableSeats": [],
       "createdByUserId": 1,
       "id": 16
+    },
+    {
+      "from": "Dhaka",
+      "operatorName": "Soudia",
+      "busName": "AC Sleeper",
+      "busNumber": "0551",
+      "to": "Chattogram",
+      "serviceType": "AC",
+      "price": 1000,
+      "discountPrice": 50,
+      "departureDate": "2026-05-10",
+      "departureTime": "12:00 AM",
+      "arrivalTime": "08:00 AM",
+      "boardingPoints": [
+        "Gabt",
+        "Kallyanpur",
+        "Asad Gate",
+        "Farmgate",
+        "Sayedabad"
+      ],
+      "boardingPointTimes": [
+        "12:00 AM",
+        "12:30 AM",
+        "01:00 AM",
+        "01:30 AM",
+        "02:00 AM"
+      ],
+      "unavailableSeats": [
+        "J2",
+        "A1"
+      ],
+      "cabinUnavailableSeats": [],
+      "createdByUserId": 1,
+      "id": 17
     }
   ],
   "launchSchedules": [
@@ -1777,6 +1811,77 @@
       "status": "booked",
       "createdAt": "2026-05-10T05:22:45.386Z",
       "id": 15
+    },
+    {
+      "mode": "Bus",
+      "userId": 1,
+      "userName": "admin",
+      "email": "admin@gmail.com",
+      "mobileNo": "",
+      "passengers": [
+        {
+          "firstName": "admin",
+          "lastName": "rrrr",
+          "gender": "Male"
+        }
+      ],
+      "bus": {
+        "from": "Dhaka",
+        "operatorName": "Soudia",
+        "busName": "AC Sleeper",
+        "busNumber": "0551",
+        "to": "Chattogram",
+        "serviceType": "AC",
+        "price": 1000,
+        "discountPrice": 50,
+        "departureDate": "2026-05-10",
+        "departureTime": "12:00 AM",
+        "arrivalTime": "08:00 AM",
+        "boardingPoints": [
+          "Gabt",
+          "Kallyanpur",
+          "Asad Gate",
+          "Farmgate",
+          "Sayedabad"
+        ],
+        "boardingPointTimes": [
+          "12:00 AM",
+          "12:30 AM",
+          "01:00 AM",
+          "01:30 AM",
+          "02:00 AM"
+        ],
+        "unavailableSeats": [
+          "J2"
+        ],
+        "cabinUnavailableSeats": [],
+        "createdByUserId": 1,
+        "id": 17
+      },
+      "seats": [
+        "A1"
+      ],
+      "cabinSeats": [],
+      "tickets": [
+        {
+          "seat": "A1",
+          "type": "seat",
+          "price": 950
+        }
+      ],
+      "boardingPoint": "Kallyanpur",
+      "boardingTime": "12:30 AM",
+      "paymentMethod": "SSLCOMMERZ",
+      "insuranceSelected": true,
+      "couponCode": "",
+      "ticketPrice": 950,
+      "processingFee": 30,
+      "discountAmount": 50,
+      "insuranceAmount": 10,
+      "totalPayable": 940,
+      "status": "booked",
+      "createdAt": "2026-05-10T10:58:38.519Z",
+      "id": 16
     }
   ]
 }

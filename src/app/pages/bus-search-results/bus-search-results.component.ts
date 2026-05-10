@@ -402,7 +402,10 @@ export class BusSearchResultsComponent implements OnInit {
     normalized = normalized.replace('assets/operators/shohagh.png', 'assets/operators/shohag.png');
     return normalized;
   }
+  
 
+    
+     
   // Helpers to merge bookings into schedules (same logic used by search-hero)
   private mergeBookedSeats(rows: ScheduleEntry[], bookings: any[]): ScheduleEntry[] {
     return rows.map((row) => {
