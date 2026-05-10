@@ -37,7 +37,11 @@
           <div class="add-operator">
             <h4>{{ editingOperatorId ? 'Edit Operator' : 'Add Operator' }}</h4>
             <label>Operator Name</label>
-            <input type="text" [(ngModel)]="editingOperatorId ? editingOperatorName : newOperatorName" />
+            <input
+              type="text"
+              [ngModel]="editingOperatorId ? editingOperatorName : newOperatorName"
+              (ngModelChange)="editingOperatorId ? (editingOperatorName = $event) : (newOperatorName = $event)"
+            />
             <label>Image (PNG/JPG)</label>
             <input type="file" (change)="onOperatorImageSelected($event, editingOperatorId)" accept="image/*" />
             <div class="manage-actions">
@@ -390,18 +394,36 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of confirmedSchedulesUntilDate">
-            <td>{{ item.busNumber }}</td>
-            <td>{{ item.operatorName }}</td>
-            <td>{{ item.from }} → {{ item.to }}</td>
-            <td>{{ item.departureDate }}</td>
-            <td>{{ item.departureTime }}</td>
-            <td>{{ item.arrivalTime }}</td>
-            <td>{{ item.serviceType }}</td>
-            <td>{{ item.price }}</td>
-          </tr>
+          <ng-container *ngFor="let item of confirmedSchedulesUntilDate">
+            <tr>
+              <td><button type="button" class="bus-link-btn" (click)="togglePassengers(item)">{{ item.busNumber }}</button></td>
+              <td>{{ item.operatorName }}</td>
+              <td>{{ item.from }} -> {{ item.to }}</td>
+              <td>{{ item.departureDate }}</td>
+              <td>{{ item.departureTime }}</td>
+              <td>{{ item.arrivalTime }}</td>
+              <td>{{ item.serviceType }}</td>
+              <td>{{ item.price }}</td>
+            </tr>
+            <tr class="passenger-row" [class.open]="isPassengersOpen(item)">
+              <td colspan="8">
+                <div class="passenger-panel">
+                  <p class="hint" *ngIf="getPassengerRows(item).length === 0">No passengers booked for this {{ modeLabel.toLowerCase() }} yet.</p>
+                  <table class="passenger-table" *ngIf="getPassengerRows(item).length > 0">
+                    <thead><tr><th>Name</th><th>Email</th><th>Seat No</th><th>Amount</th></tr></thead>
+                    <tbody>
+                      <tr *ngFor="let row of getPassengerRows(item)">
+                        <td>{{ row.name }}</td><td>{{ row.email }}</td><td>{{ row.seatNo }}</td><td>{{ row.amount }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
         </tbody>
       </table>
     </div>
   </section>
 </section>
+

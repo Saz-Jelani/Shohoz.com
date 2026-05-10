@@ -32,6 +32,29 @@ interface BusTripConfig {
   isReady: boolean;
 }
 
+interface BookingTicket {
+  seat: string;
+  type?: 'seat' | 'cabin';
+}
+
+interface BookingPassenger {
+  firstName: string;
+  lastName: string;
+}
+
+interface BookingRecord {
+  id?: number;
+  mode?: 'Bus' | 'Launch';
+  bus?: BusScheduleEntry;
+  launch?: BusScheduleEntry;
+  email?: string;
+  seats?: string[];
+  cabinSeats?: string[];
+  tickets?: BookingTicket[];
+  passengers?: BookingPassenger[];
+  totalPayable?: number;
+}
+
 @Component({
   selector: 'app-admin-bus-management',
   templateUrl: './admin-bus-management.component.html',
@@ -98,6 +121,8 @@ export class AdminBusManagementComponent implements OnInit, OnDestroy {
   showNotice = false;
   confirmedSchedules: BusScheduleEntry[] = [];
   isLoadingConfirmed = false;
+  bookings: BookingRecord[] = [];
+  expandedScheduleKey = '';
   private routeModeSub?: Subscription;
 
   constructor(
@@ -122,6 +147,7 @@ export class AdminBusManagementComponent implements OnInit, OnDestroy {
     // load operators from API (json-server)
     this.loadOperators();
     this.loadConfirmedSchedules();
+    this.loadBookings();
   }
 
   ngOnDestroy(): void {
@@ -145,7 +171,10 @@ export class AdminBusManagementComponent implements OnInit, OnDestroy {
     this.noticeMessage = '';
     this.showNotice = false;
     this.confirmedSchedules = [];
+    this.bookings = [];
+    this.expandedScheduleKey = '';
     this.loadConfirmedSchedules();
+    this.loadBookings();
   }
 
   private loadOperators(): void {
@@ -373,6 +402,33 @@ export class AdminBusManagementComponent implements OnInit, OnDestroy {
           return idDiff;
         }
         return (this.toEpochMinutes(b.departureDate, b.departureTime) ?? 0) - (this.toEpochMinutes(a.departureDate, a.departureTime) ?? 0);
+      });
+  }
+
+  togglePassengers(item: BusScheduleEntry): void {
+    const key = this.getScheduleKey(item);
+    this.expandedScheduleKey = this.expandedScheduleKey === key ? '' : key;
+  }
+
+  isPassengersOpen(item: BusScheduleEntry): boolean {
+    return this.expandedScheduleKey === this.getScheduleKey(item);
+  }
+
+  getPassengerRows(item: BusScheduleEntry): Array<{ name: string; email: string; seatNo: string; amount: number }> {
+    const mode: 'Bus' | 'Launch' = this.isLaunchMode ? 'Launch' : 'Bus';
+    return this.bookings
+      .filter((booking) => this.bookingMatchesSchedule(booking, item, mode))
+      .flatMap((booking) => {
+        const passengerNames = (booking.passengers || []).map((p) => `${p.firstName || ''} ${p.lastName || ''}`.trim()).filter(Boolean);
+        const seats = this.getBookingSeatLabels(booking);
+        const rowCount = Math.max(passengerNames.length, seats.length, 1);
+        const eachAmount = rowCount > 0 ? Math.round((Number(booking.totalPayable) || 0) / rowCount) : 0;
+        return Array.from({ length: rowCount }, (_, index) => ({
+          name: passengerNames[index] || passengerNames[0] || 'N/A',
+          email: booking.email || 'N/A',
+          seatNo: seats[index] || seats[0] || 'N/A',
+          amount: eachAmount
+        }));
       });
   }
 
@@ -800,6 +856,52 @@ export class AdminBusManagementComponent implements OnInit, OnDestroy {
 
   private getScheduleService(): BusManagementService | LaunchManagementService {
     return this.isLaunchMode ? this.launchManagementService : this.busManagementService;
+  }
+
+  private loadBookings(): void {
+    this.busManagementService.getAllBookings().subscribe({
+      next: (rows) => {
+        this.bookings = rows || [];
+      },
+      error: () => {
+        this.bookings = [];
+      }
+    });
+  }
+
+  private getScheduleKey(item: BusScheduleEntry): string {
+    return `${item.busNumber}|${item.departureDate}|${item.departureTime}|${item.from}|${item.to}`;
+  }
+
+  private bookingMatchesSchedule(booking: BookingRecord, schedule: BusScheduleEntry, mode: 'Bus' | 'Launch'): boolean {
+    const bookingMode = booking.mode ?? (booking.launch ? 'Launch' : 'Bus');
+    if (bookingMode !== mode) {
+      return false;
+    }
+
+    const booked = (booking.bus || booking.launch) as BusScheduleEntry | undefined;
+    if (!booked) {
+      return false;
+    }
+
+    if (schedule.id != null && booked.id != null) {
+      return schedule.id === booked.id;
+    }
+
+    return schedule.busNumber === booked.busNumber
+      && schedule.from === booked.from
+      && schedule.to === booked.to
+      && schedule.departureDate === booked.departureDate
+      && schedule.departureTime === booked.departureTime;
+  }
+
+  private getBookingSeatLabels(booking: BookingRecord): string[] {
+    if (booking.tickets?.length) {
+      return booking.tickets.map((t) => t.type === 'cabin' ? `${t.seat} (Cabin)` : t.seat);
+    }
+    const regular = booking.seats || [];
+    const cabin = (booking.cabinSeats || []).map((seat) => `${seat} (Cabin)`);
+    return [...regular, ...cabin];
   }
 
   private loadConfirmedSchedules(): void {

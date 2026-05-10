@@ -505,6 +505,46 @@ input[type='file'] {
   color: #16304b;
 }
 
+.bus-link-btn {
+  border: 0;
+  background: transparent;
+  color: #0a7f5c;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}
+
+.passenger-row td {
+  padding: 0;
+  border-top: 0;
+}
+
+.passenger-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 260ms ease;
+  background: #f8fbff;
+}
+
+.passenger-row.open .passenger-panel {
+  max-height: 420px;
+  padding: 10px;
+}
+
+.passenger-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.passenger-table th,
+.passenger-table td {
+  border: 1px solid #dbe4ef;
+  padding: 7px 8px;
+  font-size: 0.84rem;
+  text-align: left;
+}
+
 @media (max-width: 991.98px) {
   .trip-list,
   .top-grid,
