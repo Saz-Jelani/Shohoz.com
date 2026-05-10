@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://shohoz-com.vercel.app'
+  apiBaseUrl: 'https://your-backend.onrender.com'
 };
