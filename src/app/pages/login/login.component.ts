@@ -12,6 +12,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   password = '';
   errorMessage = '';
   private readonly successToastStorageKey = 'shohoz_success_toast';
+  private readonly loginReturnUrlKey = 'shohoz_login_return_url';
+  returnUrl = '';
 
   readonly slideImages: string[] = [
     encodeURI('assets/log_reg/download (1).jpg'),
@@ -30,6 +32,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl')
+      || sessionStorage.getItem(this.loginReturnUrlKey)
+      || '';
     this.slideTimer = setInterval(() => {
       this.currentSlideIndex = (this.currentSlideIndex + 1) % this.slideImages.length;
     }, 2000);
@@ -46,14 +51,17 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.authService.login(this.email, this.password).subscribe({
       next: (ok) => {
         if (ok) {
-          const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/';
+          const returnUrlFromQuery = this.route.snapshot.queryParamMap.get('returnUrl');
+          const returnUrlFromSession = sessionStorage.getItem(this.loginReturnUrlKey);
+          const returnUrl = returnUrlFromQuery || returnUrlFromSession || '/';
+          sessionStorage.removeItem(this.loginReturnUrlKey);
           sessionStorage.setItem(this.successToastStorageKey, JSON.stringify({
             line1: 'Login',
             line2: 'Successfully Completed !',
             endAt: Date.now() + 3000
           }));
           window.dispatchEvent(new CustomEvent('shohoz-success-toast'));
-          this.router.navigateByUrl(returnUrl);
+          this.router.navigateByUrl(returnUrl, { replaceUrl: true });
           return;
         }
 

@@ -23,7 +23,7 @@
       <a class="forgot" href="javascript:void(0)">Forgot Password</a>
 
       <button type="submit">Log In</button>
-      <p class="create">Don't have an account? <a routerLink="/register">Create Account</a></p>
+      <p class="create">Don't have an account? <a [routerLink]="['/register']" [queryParams]="returnUrl ? { returnUrl: returnUrl } : null">Create Account</a></p>
     </form>
     <small class="copy">© Shohoz 2026</small>
   </div>
