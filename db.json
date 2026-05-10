@@ -17,6 +17,12 @@
       "email": "zelanysazzad@gmail.com",
       "password": "sazzad",
       "id": 3
+    },
+    {
+      "name": "user 1",
+      "email": "zelanysazzad@gmail.com",
+      "password": "zelany",
+      "id": 4
     }
   ],
   "operators": [
