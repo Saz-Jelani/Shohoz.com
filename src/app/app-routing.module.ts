@@ -19,20 +19,19 @@ const routes: Routes = [
   {
     path: '',
     component: MainLayoutComponent,
-    canActivate: [AuthGuard],
     children: [
       { path: '', component: HomeComponent },
       { path: 'bus/search', component: BusSearchResultsComponent },
       { path: 'launch/search', component: BusSearchResultsComponent },
-      { path: 'bus/passenger-details', component: PassengerDetailsComponent },
-      { path: 'launch/passenger-details', component: PassengerDetailsComponent },
-      { path: 'bus/review-pay', component: ReviewPayComponent },
-      { path: 'launch/review-pay', component: ReviewPayComponent },
+      { path: 'bus/passenger-details', component: PassengerDetailsComponent, canActivate: [AuthGuard] },
+      { path: 'launch/passenger-details', component: PassengerDetailsComponent, canActivate: [AuthGuard] },
+      { path: 'bus/review-pay', component: ReviewPayComponent, canActivate: [AuthGuard] },
+      { path: 'launch/review-pay', component: ReviewPayComponent, canActivate: [AuthGuard] },
       { path: 'launch-tickets', component: LaunchHomeComponent },
-      { path: 'my-profile', component: MyProfileComponent },
-      { path: 'change-password', component: ChangePasswordComponent },
-      { path: 'admin/bus-management', component: AdminBusManagementComponent },
-      { path: 'admin/launch-management', component: AdminBusManagementComponent }
+      { path: 'my-profile', component: MyProfileComponent, canActivate: [AuthGuard] },
+      { path: 'change-password', component: ChangePasswordComponent, canActivate: [AuthGuard] },
+      { path: 'admin/bus-management', component: AdminBusManagementComponent, canActivate: [AuthGuard] },
+      { path: 'admin/launch-management', component: AdminBusManagementComponent, canActivate: [AuthGuard] }
     ]
   },
   { path: '**', redirectTo: '' }
