@@ -5,10 +5,13 @@ import { AuthService } from '../../services/auth.service';
 import { BusManagementService } from '../../services/bus-management.service';
 import { LaunchManagementService } from '../../services/launch-management.service';
 import { BusScheduleEntry } from '../../models/bus-management.models';
+import { LaunchScheduleEntry } from '../../models/launch-management.models';
+
+type ScheduleEntry = BusScheduleEntry & Partial<LaunchScheduleEntry>;
 
 interface BookingDraft {
   mode?: 'Bus' | 'Launch';
-  bus: BusScheduleEntry;
+  bus: ScheduleEntry;
   seats: string[];
   tickets?: Array<{
     seat: string;
@@ -331,7 +334,7 @@ export class ReviewPayComponent implements OnInit, OnDestroy {
     const bus = this.booking.bus;
 
     const scheduleService = this.selectedMode === 'Launch' ? this.launchManagementService : this.busManagementService;
-    const applySeatLock = (schedule: BusScheduleEntry | null): void => {
+    const applySeatLock = (schedule: ScheduleEntry | null): void => {
       if (!schedule || schedule.id == null) {
         return;
       }

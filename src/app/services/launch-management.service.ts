@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { BusScheduleEntry } from '../models/bus-management.models';
+import { LaunchScheduleEntry } from '../models/launch-management.models';
 
 @Injectable({ providedIn: 'root' })
 export class LaunchManagementService {
@@ -9,23 +9,23 @@ export class LaunchManagementService {
 
   constructor(private readonly http: HttpClient) {}
 
-  createSchedule(payload: BusScheduleEntry): Observable<BusScheduleEntry> {
-    return this.http.post<BusScheduleEntry>(this.apiUrl, payload);
+  createSchedule(payload: LaunchScheduleEntry): Observable<LaunchScheduleEntry> {
+    return this.http.post<LaunchScheduleEntry>(this.apiUrl, payload);
   }
 
-  getSchedulesByBusNumber(busNumber: string): Observable<BusScheduleEntry[]> {
-    return this.http.get<BusScheduleEntry[]>(`${this.apiUrl}?busNumber=${encodeURIComponent(busNumber)}`);
+  getSchedulesByBusNumber(busNumber: string): Observable<LaunchScheduleEntry[]> {
+    return this.http.get<LaunchScheduleEntry[]>(`${this.apiUrl}?busNumber=${encodeURIComponent(busNumber)}`);
   }
 
-  getAllSchedules(): Observable<BusScheduleEntry[]> {
-    return this.http.get<BusScheduleEntry[]>(this.apiUrl);
+  getAllSchedules(): Observable<LaunchScheduleEntry[]> {
+    return this.http.get<LaunchScheduleEntry[]>(this.apiUrl);
   }
 
-  getScheduleById(id: number): Observable<BusScheduleEntry> {
-    return this.http.get<BusScheduleEntry>(`${this.apiUrl}/${id}`);
+  getScheduleById(id: number): Observable<LaunchScheduleEntry> {
+    return this.http.get<LaunchScheduleEntry>(`${this.apiUrl}/${id}`);
   }
 
-  updateSchedule(id: number, payload: Partial<BusScheduleEntry>): Observable<BusScheduleEntry> {
-    return this.http.patch<BusScheduleEntry>(`${this.apiUrl}/${id}`, payload);
+  updateSchedule(id: number, payload: Partial<LaunchScheduleEntry>): Observable<LaunchScheduleEntry> {
+    return this.http.patch<LaunchScheduleEntry>(`${this.apiUrl}/${id}`, payload);
   }
 }

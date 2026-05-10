@@ -22,5 +22,7 @@ export interface LaunchScheduleEntry {
   boardingPointTimes?: string[];
   unavailableSeats: string[];
   cabinUnavailableSeats?: string[];
+  cabinPriceEconomy?: number;
+  cabinPricePremium?: number;
   createdByUserId: number;
 }

@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BusScheduleEntry } from '../../models/bus-management.models';
+import { LaunchScheduleEntry } from '../../models/launch-management.models';
 import { AuthService } from '../../services/auth.service';
 import { BusManagementService } from '../../services/bus-management.service';
 import { LaunchManagementService } from '../../services/launch-management.service';
 
 type DrawerTab = 'seats' | 'boarding' | 'amenities' | 'policies' | 'details';
 type TripDetailsView = 'boarding' | 'dropping';
+type ScheduleEntry = BusScheduleEntry & Partial<LaunchScheduleEntry>;
 
 interface TripStop {
   label: string;
@@ -59,7 +61,7 @@ export class BusSearchResultsComponent implements OnInit {
   };
 
   selectedMode = 'Bus';
-  selectedBus: BusScheduleEntry | null = null;
+  selectedBus: ScheduleEntry | null = null;
   isDrawerOpen = false;
   activeTab: DrawerTab = 'seats';
   tripDetailsView: TripDetailsView = 'boarding';
@@ -95,7 +97,7 @@ export class BusSearchResultsComponent implements OnInit {
     private readonly launchManagementService: LaunchManagementService
   ) {}
 
-  openDrawer(bus: BusScheduleEntry): void {
+  openDrawer(bus: ScheduleEntry): void {
     if (this.drawerCloseTimer) {
       window.clearTimeout(this.drawerCloseTimer);
       this.drawerCloseTimer = undefined;
@@ -247,7 +249,7 @@ export class BusSearchResultsComponent implements OnInit {
     return this.selectedTickets.reduce((sum, item) => sum + item.price, 0);
   }
 
-  getDisplayPrice(bus: BusScheduleEntry): number {
+  getDisplayPrice(bus: ScheduleEntry): number {
     if (bus.discountPrice && bus.discountPrice < bus.price) {
       return bus.price - bus.discountPrice;
     }
@@ -402,7 +404,7 @@ export class BusSearchResultsComponent implements OnInit {
   }
 
   // Helpers to merge bookings into schedules (same logic used by search-hero)
-  private mergeBookedSeats(rows: BusScheduleEntry[], bookings: any[]): BusScheduleEntry[] {
+  private mergeBookedSeats(rows: ScheduleEntry[], bookings: any[]): ScheduleEntry[] {
     return rows.map((row) => {
       const seats = new Set<string>(row.unavailableSeats || []);
       const cabinSeats = new Set<string>(row.cabinUnavailableSeats || []);
@@ -424,7 +426,7 @@ export class BusSearchResultsComponent implements OnInit {
     });
   }
 
-  private bookingMatchesSchedule(row: BusScheduleEntry, booking: any): boolean {
+  private bookingMatchesSchedule(row: ScheduleEntry, booking: any): boolean {
     if (!booking || booking.status === 'cancelled') {
       return false;
     }
@@ -434,7 +436,7 @@ export class BusSearchResultsComponent implements OnInit {
       return false;
     }
 
-    const bookedBus = (booking.bus || booking.launch) as BusScheduleEntry;
+    const bookedBus = (booking.bus || booking.launch) as ScheduleEntry;
     if (!bookedBus) {
       return false;
     }

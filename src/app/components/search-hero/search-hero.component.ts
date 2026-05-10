@@ -2,9 +2,12 @@ import { Component, Input, OnInit, ViewChild, ElementRef, Output, EventEmitter }
 import { HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BusScheduleEntry } from '../../models/bus-management.models';
+import { LaunchScheduleEntry } from '../../models/launch-management.models';
 import { BusManagementService } from '../../services/bus-management.service';
 import { LaunchManagementService } from '../../services/launch-management.service';
 import { AuthService } from '../../services/auth.service';
+
+type ScheduleEntry = BusScheduleEntry & Partial<LaunchScheduleEntry>;
 
 @Component({
   selector: 'app-search-hero',
@@ -15,7 +18,7 @@ export class SearchHeroComponent implements OnInit {
   @Input() selectedMode = 'Bus';
   @Input() showInlineResults = false;
   @Input() compactView = false;
-  @Output() bookTicket = new EventEmitter<BusScheduleEntry>();
+  @Output() bookTicket = new EventEmitter<ScheduleEntry>();
 
   tripType: 'One Way' | 'Round Trip' = 'One Way';
   fromCity = '';
@@ -28,8 +31,8 @@ export class SearchHeroComponent implements OnInit {
   fromPlaceholder = 'From';
   toPlaceholder = 'To';
 
-  allSchedules: BusScheduleEntry[] = [];
-  searchResults: BusScheduleEntry[] = [];
+  allSchedules: ScheduleEntry[] = [];
+  searchResults: ScheduleEntry[] = [];
   // Master list of possible locations (includes locations without active schedules)
   masterLocations: string[] = ['Dhaka', 'Chattogram', "Cox's Bazar", 'Sylhet', 'Rajshahi', 'Khulna', 'Barishal', 'Rangpur'];
   allLocations: string[] = [];
@@ -319,18 +322,18 @@ export class SearchHeroComponent implements OnInit {
     }
   }
 
-  getAvailableSeats(item: BusScheduleEntry): number {
+  getAvailableSeats(item: ScheduleEntry): number {
     return 40 - item.unavailableSeats.length;
   }
 
-  getDiscountAmount(item: BusScheduleEntry): number {
+  getDiscountAmount(item: ScheduleEntry): number {
     if (!item.discountPrice || item.discountPrice >= item.price) {
       return 0;
     }
     return item.discountPrice;
   }
 
-  getDisplayPrice(item: BusScheduleEntry): number {
+  getDisplayPrice(item: ScheduleEntry): number {
     return this.getDiscountAmount(item) > 0 ? item.price - this.getDiscountAmount(item) : item.price;
   }
 
@@ -346,7 +349,7 @@ export class SearchHeroComponent implements OnInit {
     return [...new Set(this.searchResults.map((x) => x.to))].sort((a, b) => a.localeCompare(b));
   }
 
-  get filteredSearchResults(): BusScheduleEntry[] {
+  get filteredSearchResults(): ScheduleEntry[] {
     return this.searchResults.filter((item) => {
       if (this.filterAc && item.serviceType !== 'AC') {
         return false;
@@ -373,7 +376,7 @@ export class SearchHeroComponent implements OnInit {
     });
   }
 
-  get sortedFilteredSearchResults(): BusScheduleEntry[] {
+  get sortedFilteredSearchResults(): ScheduleEntry[] {
     const rows = [...this.filteredSearchResults];
     if (this.fareSort === 'asc') {
       rows.sort((a, b) => this.getDisplayPrice(a) - this.getDisplayPrice(b));
@@ -394,7 +397,7 @@ export class SearchHeroComponent implements OnInit {
     this.fareSort = '';
   }
 
-  getDuration(item: BusScheduleEntry): string {
+  getDuration(item: ScheduleEntry): string {
     const dep = this.parse12HourToMinutes(item.departureTime);
     const arr = this.parse12HourToMinutes(item.arrivalTime);
     if (dep === null || arr === null) {
@@ -456,7 +459,7 @@ export class SearchHeroComponent implements OnInit {
     });
   }
 
-  private mergeBookedSeats(rows: BusScheduleEntry[], bookings: any[]): BusScheduleEntry[] {
+  private mergeBookedSeats(rows: ScheduleEntry[], bookings: any[]): ScheduleEntry[] {
     return rows.map((row) => {
       const seats = new Set<string>(row.unavailableSeats || []);
       const cabinSeats = new Set<string>(row.cabinUnavailableSeats || []);
@@ -478,7 +481,7 @@ export class SearchHeroComponent implements OnInit {
     });
   }
 
-  private bookingMatchesSchedule(row: BusScheduleEntry, booking: any): boolean {
+  private bookingMatchesSchedule(row: ScheduleEntry, booking: any): boolean {
     if (!booking || booking.status === 'cancelled') {
       return false;
     }
@@ -488,7 +491,7 @@ export class SearchHeroComponent implements OnInit {
       return false;
     }
 
-    const bookedBus = (booking.bus || booking.launch) as BusScheduleEntry;
+    const bookedBus = (booking.bus || booking.launch) as ScheduleEntry;
     if (!bookedBus) {
       return false;
     }
