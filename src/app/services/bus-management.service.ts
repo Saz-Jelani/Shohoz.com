@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, shareReplay, tap } from 'rxjs';
 import { BusScheduleEntry } from '../models/bus-management.models';
 import { environment } from '../../environments/environment';
 
@@ -8,11 +8,15 @@ import { environment } from '../../environments/environment';
 export class BusManagementService {
   private readonly apiUrl = `${environment.apiBaseUrl}/busSchedules`;
   private readonly bookingsApiUrl = `${environment.apiBaseUrl}/bookings`;
+  private schedulesCache$?: Observable<BusScheduleEntry[]>;
+  private bookingsCache$?: Observable<any[]>;
 
   constructor(private readonly http: HttpClient) {}
 
   createSchedule(payload: BusScheduleEntry): Observable<BusScheduleEntry> {
-    return this.http.post<BusScheduleEntry>(this.apiUrl, payload);
+    return this.http.post<BusScheduleEntry>(this.apiUrl, payload).pipe(
+      tap(() => this.schedulesCache$ = undefined)
+    );
   }
 
   getSchedulesByBusNumber(busNumber: string): Observable<BusScheduleEntry[]> {
@@ -20,7 +24,10 @@ export class BusManagementService {
   }
 
   getAllSchedules(): Observable<BusScheduleEntry[]> {
-    return this.http.get<BusScheduleEntry[]>(this.apiUrl);
+    if (!this.schedulesCache$) {
+      this.schedulesCache$ = this.http.get<BusScheduleEntry[]>(this.apiUrl).pipe(shareReplay(1));
+    }
+    return this.schedulesCache$;
   }
 
   getScheduleById(id: number): Observable<BusScheduleEntry> {
@@ -28,10 +35,15 @@ export class BusManagementService {
   }
 
   updateSchedule(id: number, payload: Partial<BusScheduleEntry>): Observable<BusScheduleEntry> {
-    return this.http.patch<BusScheduleEntry>(`${this.apiUrl}/${id}`, payload);
+    return this.http.patch<BusScheduleEntry>(`${this.apiUrl}/${id}`, payload).pipe(
+      tap(() => this.schedulesCache$ = undefined)
+    );
   }
 
   getAllBookings(): Observable<any[]> {
-    return this.http.get<any[]>(this.bookingsApiUrl);
+    if (!this.bookingsCache$) {
+      this.bookingsCache$ = this.http.get<any[]>(this.bookingsApiUrl).pipe(shareReplay(1));
+    }
+    return this.bookingsCache$;
   }
 }

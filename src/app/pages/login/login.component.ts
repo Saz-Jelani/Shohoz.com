@@ -11,6 +11,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   email = '';
   password = '';
   errorMessage = '';
+  private readonly successToastStorageKey = 'shohoz_success_toast';
 
   readonly slideImages: string[] = [
     encodeURI('assets/log_reg/download (1).jpg'),
@@ -46,6 +47,12 @@ export class LoginComponent implements OnInit, OnDestroy {
       next: (ok) => {
         if (ok) {
           const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/';
+          sessionStorage.setItem(this.successToastStorageKey, JSON.stringify({
+            line1: 'Login',
+            line2: 'Successfully Completed !',
+            endAt: Date.now() + 3000
+          }));
+          window.dispatchEvent(new CustomEvent('shohoz-success-toast'));
           this.router.navigateByUrl(returnUrl);
           return;
         }

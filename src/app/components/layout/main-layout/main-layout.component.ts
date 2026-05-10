@@ -14,6 +14,8 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   private readonly routeSubscription: Subscription;
   private readonly successToastStorageKey = 'shohoz_success_toast';
   showSuccessToast = false;
+  successToastLine1 = 'Your Ticket is';
+  successToastLine2 = 'Successfully Confirmed !';
   private successToastEndAt = 0;
   private hideToastTimer?: number;
 
@@ -86,7 +88,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
       return;
     }
     try {
-      const payload = JSON.parse(raw) as { endAt?: number };
+      const payload = JSON.parse(raw) as { endAt?: number; line1?: string; line2?: string; message?: string };
       const endAt = Number(payload.endAt || 0);
       const remaining = endAt - Date.now();
       if (remaining <= 0) {
@@ -101,6 +103,8 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
       }
 
       this.successToastEndAt = endAt;
+      this.successToastLine1 = payload.line1 || 'Your Ticket is';
+      this.successToastLine2 = payload.line2 || payload.message || 'Successfully Confirmed !';
       this.showSuccessToast = true;
       this.setToastBodyLock(true);
       window.scrollTo({ top: 0, left: 0, behavior: 'auto' });

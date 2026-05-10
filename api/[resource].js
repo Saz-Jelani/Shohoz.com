@@ -10,6 +10,7 @@ module.exports = (req, res) => {
   const rows = getCollection(resource);
 
   if (req.method === 'GET') {
+    res.setHeader('Cache-Control', 's-maxage=120, stale-while-revalidate=600');
     const filters = { ...req.query };
     delete filters.resource;
     const filtered = rows.filter((item) =>

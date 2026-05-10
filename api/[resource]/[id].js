@@ -17,6 +17,7 @@ module.exports = (req, res) => {
   }
 
   if (req.method === 'GET') {
+    res.setHeader('Cache-Control', 's-maxage=120, stale-while-revalidate=600');
     res.status(200).json(rows[index]);
     return;
   }
