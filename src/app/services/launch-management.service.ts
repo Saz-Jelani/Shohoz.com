@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LaunchScheduleEntry } from '../models/launch-management.models';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class LaunchManagementService {
-  private readonly apiUrl = 'http://localhost:3000/launchSchedules';
+  private readonly apiUrl = `${environment.apiBaseUrl}/launchSchedules`;
 
   constructor(private readonly http: HttpClient) {}
 

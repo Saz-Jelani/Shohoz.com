@@ -6,6 +6,7 @@ import { BusManagementService } from '../../services/bus-management.service';
 import { LaunchManagementService } from '../../services/launch-management.service';
 import { BusScheduleEntry } from '../../models/bus-management.models';
 import { LaunchScheduleEntry } from '../../models/launch-management.models';
+import { environment } from '../../../environments/environment';
 
 type ScheduleEntry = BusScheduleEntry & Partial<LaunchScheduleEntry>;
 
@@ -68,7 +69,7 @@ export class ReviewPayComponent implements OnInit, OnDestroy {
   private readonly successMessage = 'Your Ticket Is Successfully Confirmed !';
   private successNavigateTimer?: number;
 
-  private readonly bookingsApiUrl = 'http://localhost:3000/bookings';
+  private readonly bookingsApiUrl = `${environment.apiBaseUrl}/bookings`;
 
   constructor(
     private readonly http: HttpClient,

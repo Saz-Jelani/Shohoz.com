@@ -2,10 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BusScheduleEntry } from '../models/bus-management.models';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class BusManagementService {
-  private readonly apiUrl = 'http://localhost:3000/busSchedules';
+  private readonly apiUrl = `${environment.apiBaseUrl}/busSchedules`;
+  private readonly bookingsApiUrl = `${environment.apiBaseUrl}/bookings`;
 
   constructor(private readonly http: HttpClient) {}
 
@@ -30,6 +32,6 @@ export class BusManagementService {
   }
 
   getAllBookings(): Observable<any[]> {
-    return this.http.get<any[]>('http://localhost:3000/bookings');
+    return this.http.get<any[]>(this.bookingsApiUrl);
   }
 }
