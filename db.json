@@ -557,6 +557,38 @@
       "cabinUnavailableSeats": [],
       "createdByUserId": 1,
       "id": 17
+    },
+    {
+      "from": "Rangpur",
+      "operatorName": "Shohagh",
+      "operatorImage": "assets/operators/shohag.png",
+      "busName": "AC Sleeper",
+      "busNumber": "0451",
+      "to": "Sylhet",
+      "serviceType": "Non AC",
+      "price": 700,
+      "discountPrice": null,
+      "departureDate": "2026-05-10",
+      "departureTime": "05:00 AM",
+      "arrivalTime": "08:00 AM",
+      "boardingPoints": [
+        "Jahaj Company",
+        "Modern Mor",
+        "Payra Chattar",
+        "Station Road",
+        "Shapla Chattar"
+      ],
+      "boardingPointTimes": [
+        "05:00 AM",
+        "05:30 AM",
+        "06:00 AM",
+        "06:30 AM",
+        "07:00 AM"
+      ],
+      "unavailableSeats": [],
+      "cabinUnavailableSeats": [],
+      "createdByUserId": 1,
+      "id": 18
     }
   ],
   "launchSchedules": [

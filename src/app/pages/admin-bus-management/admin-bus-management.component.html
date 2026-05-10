@@ -368,4 +368,40 @@
       <p>{{ noticeMessage }}</p>
     </div>
   </div>
+  <section class="confirmed-section">
+    <div class="confirmed-head">
+      <h2>Confirmed {{ modeLabel }} List (Last 2 Days up to {{ selectedDepartureDate }})</h2>
+      <p *ngIf="isLoadingConfirmed">Loading confirmed list...</p>
+      <p *ngIf="!isLoadingConfirmed && confirmedSchedulesUntilDate.length === 0">No confirmed {{ modeLabel.toLowerCase() }} schedule found up to selected date.</p>
+    </div>
+
+    <div class="confirmed-table-wrap" *ngIf="!isLoadingConfirmed && confirmedSchedulesUntilDate.length > 0">
+      <table class="confirmed-table">
+        <thead>
+          <tr>
+            <th>{{ modeLabel }} No</th>
+            <th>Operator</th>
+            <th>Route</th>
+            <th>Date</th>
+            <th>Departure</th>
+            <th>Arrival</th>
+            <th>Type</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of confirmedSchedulesUntilDate">
+            <td>{{ item.busNumber }}</td>
+            <td>{{ item.operatorName }}</td>
+            <td>{{ item.from }} → {{ item.to }}</td>
+            <td>{{ item.departureDate }}</td>
+            <td>{{ item.departureTime }}</td>
+            <td>{{ item.arrivalTime }}</td>
+            <td>{{ item.serviceType }}</td>
+            <td>{{ item.price }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 </section>

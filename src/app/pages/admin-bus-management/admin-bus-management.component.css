@@ -461,6 +461,50 @@ input[type='file'] {
   transform: translateY(0) scale(1);
 }
 
+.confirmed-section {
+  margin-top: 18px;
+  background: #fff;
+  border: 1px solid #d8e3dc;
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 12px 24px rgb(14 42 60 / 8%);
+}
+
+.confirmed-head h2 {
+  margin: 0 0 6px;
+  color: #12314b;
+  font-size: 1.05rem;
+}
+
+.confirmed-head p {
+  margin: 0;
+  color: #4b6078;
+}
+
+.confirmed-table-wrap {
+  margin-top: 10px;
+  overflow-x: auto;
+}
+
+.confirmed-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 780px;
+}
+
+.confirmed-table th,
+.confirmed-table td {
+  border: 1px solid #e0e8e2;
+  padding: 8px 10px;
+  text-align: left;
+  font-size: 0.88rem;
+}
+
+.confirmed-table th {
+  background: #f2f8f4;
+  color: #16304b;
+}
+
 @media (max-width: 991.98px) {
   .trip-list,
   .top-grid,

@@ -96,6 +96,8 @@ export class AdminBusManagementComponent implements OnInit, OnDestroy {
   isSubmitting = false;
   noticeMessage = '';
   showNotice = false;
+  confirmedSchedules: BusScheduleEntry[] = [];
+  isLoadingConfirmed = false;
   private routeModeSub?: Subscription;
 
   constructor(
@@ -119,6 +121,7 @@ export class AdminBusManagementComponent implements OnInit, OnDestroy {
     }
     // load operators from API (json-server)
     this.loadOperators();
+    this.loadConfirmedSchedules();
   }
 
   ngOnDestroy(): void {
@@ -141,6 +144,8 @@ export class AdminBusManagementComponent implements OnInit, OnDestroy {
     this.busMinDepartureAt = {};
     this.noticeMessage = '';
     this.showNotice = false;
+    this.confirmedSchedules = [];
+    this.loadConfirmedSchedules();
   }
 
   private loadOperators(): void {
@@ -351,6 +356,24 @@ export class AdminBusManagementComponent implements OnInit, OnDestroy {
       departureDate: this.selectedDepartureDate,
       isReady: false
     }));
+  }
+
+  get confirmedSchedulesUntilDate(): BusScheduleEntry[] {
+    const endDate = this.selectedDepartureDate;
+    const endDateObj = new Date(`${endDate}T00:00:00`);
+    const startDateObj = new Date(endDateObj);
+    startDateObj.setDate(startDateObj.getDate() - 1);
+    const startDate = `${startDateObj.getFullYear()}-${String(startDateObj.getMonth() + 1).padStart(2, '0')}-${String(startDateObj.getDate()).padStart(2, '0')}`;
+
+    return [...this.confirmedSchedules]
+      .filter((item) => !!item.departureDate && item.departureDate >= startDate && item.departureDate <= endDate)
+      .sort((a, b) => {
+        const idDiff = (Number(b.id) || 0) - (Number(a.id) || 0);
+        if (idDiff !== 0) {
+          return idDiff;
+        }
+        return (this.toEpochMinutes(b.departureDate, b.departureTime) ?? 0) - (this.toEpochMinutes(a.departureDate, a.departureTime) ?? 0);
+      });
   }
 
   onOperatorChange(value: string): void {
@@ -637,9 +660,9 @@ export class AdminBusManagementComponent implements OnInit, OnDestroy {
       next: () => {
         this.isSubmitting = false;
         this.successMessage = `All selected ${this.modeLabel.toLowerCase()} schedules saved successfully.`;
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
+        this.loadConfirmedSchedules();
+        this.selectedBusNumbers = [];
+        this.busTripConfigs = [];
       },
       error: () => {
         this.isSubmitting = false;
@@ -777,6 +800,20 @@ export class AdminBusManagementComponent implements OnInit, OnDestroy {
 
   private getScheduleService(): BusManagementService | LaunchManagementService {
     return this.isLaunchMode ? this.launchManagementService : this.busManagementService;
+  }
+
+  private loadConfirmedSchedules(): void {
+    this.isLoadingConfirmed = true;
+    this.getScheduleService().getAllSchedules().subscribe({
+      next: (rows) => {
+        this.confirmedSchedules = rows || [];
+        this.isLoadingConfirmed = false;
+      },
+      error: () => {
+        this.confirmedSchedules = [];
+        this.isLoadingConfirmed = false;
+      }
+    });
   }
 
   private to12HourLabel(totalMinutes: number): string {
