@@ -70,7 +70,9 @@ export class LoginComponent implements OnInit, OnDestroy {
         if (ok) {
           const returnUrlFromQuery = this.route.snapshot.queryParamMap.get('returnUrl');
           const returnUrlFromSession = sessionStorage.getItem(this.loginReturnUrlKey);
-          const returnUrl = returnUrlFromQuery || returnUrlFromSession || '/';
+          const pendingReturnUrl = returnUrlFromQuery || returnUrlFromSession || '';
+          const defaultReturnUrl = this.authService.isAdmin() ? '/admin/bus-management' : '/';
+          const returnUrl = pendingReturnUrl || defaultReturnUrl;
           sessionStorage.removeItem(this.loginReturnUrlKey);
           sessionStorage.setItem(this.successToastStorageKey, JSON.stringify({
             line1: 'Login',

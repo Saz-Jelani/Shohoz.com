@@ -4,7 +4,7 @@
       <a routerLink="/" aria-label="Shohoz home"><img src="assets/logo_icon.png" alt="Shohoz" class="logo" /></a>
 
       <div class="service-menu">
-        <div *ngFor="let item of services" class="service-item-wrap">
+        <div *ngFor="let item of visibleServices" class="service-item-wrap">
           <button
             type="button"
             class="service-btn"
@@ -16,11 +16,6 @@
             <span>{{ item.label }}</span>
             <span *ngIf="item.beta" class="beta">BETA</span>
           </button>
-
-          <div class="service-dropdown" *ngIf="isAdmin && openServiceMenu === item.label" (click)="$event.stopPropagation()">
-            <button type="button" class="service-dropdown-item" (click)="selectAdminMode(item.label, $event)">Admin Mode</button>
-            <button type="button" class="service-dropdown-item" (click)="selectMode(item.label, 'user')">User Mode</button>
-          </div>
         </div>
       </div>
 
@@ -122,13 +117,9 @@
       </div>
       <div class="mobile-mode-menu" [class.open]="isMobileMenuOpen" (click)="$event.stopPropagation()">
         <div *ngFor="let mode of mobileTravelModes" class="mobile-mode-item">
-          <button type="button" class="mobile-mode-btn" (click)="onMobileModeClick(mode, $event)">
+          <button type="button" class="mobile-mode-btn" [class.active]="mode === selectedMode" (click)="onMobileModeClick(mode, $event)">
             {{ mode }}
           </button>
-          <div class="mobile-mode-submenu" *ngIf="isAdmin && openMobileServiceMenu === mode">
-            <button type="button" class="mobile-submenu-btn" (click)="selectMode(mode, 'user')">User Mode</button>
-            <button type="button" class="mobile-submenu-btn" (click)="selectMode(mode, 'admin')">Admin Mode</button>
-          </div>
         </div>
       </div>
     </div>

@@ -28,6 +28,7 @@ import { ReviewPayComponent } from './pages/review-pay/review-pay.component';
 import { MyProfileComponent } from './pages/my-profile/my-profile.component';
 import { ChangePasswordComponent } from './pages/change-password/change-password.component';
 import { LaunchHomeComponent } from './pages/launch-home/launch-home.component';
+import { ComingSoonComponent } from './pages/coming-soon/coming-soon.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { LaunchHomeComponent } from './pages/launch-home/launch-home.component';
     ReviewPayComponent,
     MyProfileComponent,
     ChangePasswordComponent,
-    LaunchHomeComponent
+    LaunchHomeComponent,
+    ComingSoonComponent
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
   providers: [],

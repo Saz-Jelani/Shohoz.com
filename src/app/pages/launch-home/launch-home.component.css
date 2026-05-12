@@ -623,8 +623,8 @@
 }
 
 .purchase-step-section {
-  padding: 56px 90px 6px;
-  margin-top: 0;
+    padding: 45px 90px 6px;
+    margin-top: -184px;
 }
 
 .purchase-step {
@@ -711,7 +711,7 @@
   }
 
 .service-item-card {
-  text-align: center;
+  text-align: left;
   padding: 0 12px;
   margin-bottom: 26px;
 }
@@ -719,7 +719,7 @@
 .service-item-icon-wrap {
   width: 80px;
   height: 80px;
-  margin: 0 auto 16px;
+  margin: 0 0 16px;
 }
 
 .solution-title {
@@ -734,7 +734,7 @@
 }
 
 .solution-info {
-  margin: 0 auto;
+  margin: 0;
   max-width: 320px;
   color: #5f6b79;
   font-size: 0.96rem;

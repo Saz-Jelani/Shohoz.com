@@ -32,8 +32,12 @@ export class HeaderComponent {
     { label: 'Park', icon: 'assets/park.png', beta: true }
   ];
 
+  get visibleServices(): Array<{ label: string; icon: string; beta: boolean }> {
+    return this.services;
+  }
+
   get mobileTravelModes(): string[] {
-    return ['Bus', 'Launch'];
+    return this.visibleServices.map((service) => service.label);
   }
 
   constructor(private readonly authService: AuthService, private readonly router: Router) {}
@@ -63,12 +67,7 @@ export class HeaderComponent {
   handleServiceClick(mode: string, event?: MouseEvent): void {
     event?.stopPropagation();
     if (this.isAdmin) {
-      if (mode !== 'Bus' && mode !== 'Launch') {
-        this.openServiceMenu = null;
-        return;
-      }
-      this.openServiceMenu = this.openServiceMenu === mode ? null : mode;
-      this.isMobileMenuOpen = false;
+      this.selectMode(mode, 'admin');
       return;
     }
 
@@ -100,7 +99,7 @@ export class HeaderComponent {
   onMobileModeClick(mode: string, event?: MouseEvent): void {
     event?.stopPropagation();
     if (this.isAdmin) {
-      this.openMobileServiceMenu = this.openMobileServiceMenu === mode ? null : mode;
+      this.selectMode(mode, 'admin');
       return;
     }
     this.selectMode(mode, 'user');

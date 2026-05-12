@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Subscription, filter } from 'rxjs';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -19,7 +20,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   private successToastEndAt = 0;
   private hideToastTimer?: number;
 
-  constructor(private readonly router: Router) {
+  constructor(private readonly router: Router, private readonly authService: AuthService) {
     this.routeSubscription = this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe((event) => this.syncSelectedMode(event.urlAfterRedirects || event.url));
@@ -46,11 +47,22 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
 
   onServiceClick(payload: { mode: string; target: 'user' | 'admin' }): void {
     if (payload.target === 'admin') {
+      if (payload.mode === 'Bus') {
+        this.router.navigate(['/admin/bus-management']);
+        return;
+      }
+
       if (payload.mode === 'Launch') {
         this.router.navigate(['/admin/launch-management']);
         return;
       }
-      this.router.navigate(['/admin/bus-management']);
+
+      this.router.navigate(['/coming-soon'], { queryParams: { feature: payload.mode } });
+      return;
+    }
+
+    if (payload.mode !== 'Bus' && payload.mode !== 'Launch') {
+      this.router.navigate(['/coming-soon'], { queryParams: { feature: payload.mode } });
       return;
     }
 
@@ -63,6 +75,13 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   }
 
   private syncSelectedMode(url: string): void {
+    const tree = this.router.parseUrl(url);
+    const featureMode = (tree.queryParams['feature'] || '').toString().trim();
+    if (featureMode) {
+      this.selectedMode = featureMode;
+      return;
+    }
+
     if (
       url.startsWith('/launch-tickets')
       || url.startsWith('/admin/launch-management')
@@ -72,6 +91,11 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
       || url.includes('mode=Launch')
     ) {
       this.selectedMode = 'Launch';
+      return;
+    }
+
+    if (this.authService.isAdmin() && (url === '/' || url.startsWith('/?'))) {
+      this.selectedMode = '';
       return;
     }
 

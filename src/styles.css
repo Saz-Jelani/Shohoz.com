@@ -10,6 +10,7 @@ body {
   font-family: 'Hind Siliguri', sans-serif;
   background-color: #f1f5f2;
   color: #1b1f24;
+  overflow-x: hidden;
 }
 
 body.toast-active {
